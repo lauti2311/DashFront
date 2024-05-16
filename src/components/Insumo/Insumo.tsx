@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";

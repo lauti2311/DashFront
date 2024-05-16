@@ -8,21 +8,29 @@ import CategoriaLista from '../Categoria/CategoriaLista';
 import ICategoria from '../../types/Categoria';
 import { setCategoria } from '../../redux/slices/categoria';
 import CategoriaService from '../../services/CategoriaService';
+import ModalCategoria from '../Modals/ModalCategoria';
+
 
 const Categoria = () => {
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
-  const globalCategorias = useAppSelector((state) => state.categoria.categoria); // Obtiene las categorías globales del estado Redux
+  const globalCategorias = useAppSelector((state) => state.categoria.categoria);
   const categoriaService = new CategoriaService();
 
-  const [filteredData, setFilteredData] = useState<ICategoria[]>([]); // Estado local para almacenar los datos filtrados
+  const [filteredData, setFilteredData] = useState<ICategoria[]>([]);
+  const [open, setOpen] = useState(false); // Nuevo estado para controlar la visibilidad del modal
 
-  useEffect(() => {
+  const handleOpenModal = () => {
+    setOpen(true); // Cambia el valor de open a true
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false); // Cambia el valor de open a false
+  };
+
     const fetchCategorias = async () => {
       try {
-        // Crea una instancia del cliente BackendClient para las categorías
         const categorias = await categoriaService.getAll(url + 'categorias')
-        // Actualiza el estado global de las categorías en Redux
         dispatch(setCategoria(categorias));
         setFilteredData(categorias); 
       } catch (error) {
@@ -30,16 +38,18 @@ const Categoria = () => {
       }
     };
 
-    fetchCategorias();
-  }, [dispatch]);
 
-  // Manejador de búsqueda para filtrar las categorías
+useEffect(() => {
+    fetchCategorias();
+}), [fetchCategorias];
+
   const handleSearch = (query: string) => {
     const filtered = globalCategorias.filter((item: ICategoria) =>
       item.denominacion.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredData(filtered);
   };
+
 
   return (
     <Box component="main" sx={{ flexGrow: 1, my: 2 }}>
@@ -57,16 +67,16 @@ const Categoria = () => {
             }}
             variant="contained"
             startIcon={<Add />}
+            onClick={handleOpenModal} // Agrega el manejador de clics al botón
           >
             Categoría
           </Button>
         </Box>
-        {/* Barra de búsqueda */}
         <Box sx={{ mt: 2 }}>
           <SearchBar onSearch={handleSearch} />
         </Box>
-        {/* Renderiza el componente de lista de categorías con los datos filtrados */}
         <CategoriaLista categorias={filteredData} />
+        <ModalCategoria open={open} onClose={handleCloseModal} getCategories={fetchCategorias} /> {/* Pasa el estado y las funciones como props */}
       </Container>
     </Box>
   );

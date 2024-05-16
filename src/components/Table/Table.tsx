@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
