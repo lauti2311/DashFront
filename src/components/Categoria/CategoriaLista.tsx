@@ -10,9 +10,11 @@ import Categoria from '../../types/Categoria';
 
 interface CategoriaListaProps {
   categorias: Categoria[];
+  onDelete: (categoria: Categoria) => void;
+  onEdit: (categoria: Categoria) => void;
 }
 
-const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias }) => {
+const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onDelete, onEdit }) => {
   const [openMap, setOpenMap] = React.useState<{ [key: number]: boolean }>({});
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [selectedCategoria, setSelectedCategoria] = React.useState<Categoria | null>(null);
@@ -25,12 +27,12 @@ const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias }) => {
   };
 
   const handleEdit = () => {
-    // Aquí maneja la lógica para editar la categoría seleccionada
+    onEdit(selectedCategoria as Categoria);
     handleMenuClose();
   };
 
   const handleDelete = () => {
-    // Aquí maneja la lógica para eliminar la categoría seleccionada
+    onDelete(selectedCategoria as Categoria); 
     handleMenuClose();
   };
 

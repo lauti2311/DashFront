@@ -9,6 +9,7 @@ import ICategoria from '../../types/Categoria';
 import { setCategoria } from '../../redux/slices/categoria';
 import CategoriaService from '../../services/CategoriaService';
 import ModalCategoria from '../Modals/ModalCategoria';
+import ModalEliminarCategoria from '../Modals/EliminarCategoria';
 
 
 const Categoria = () => {
@@ -16,9 +17,11 @@ const Categoria = () => {
   const dispatch = useAppDispatch();
   const globalCategorias = useAppSelector((state) => state.categoria.categoria);
   const categoriaService = new CategoriaService();
-
+  const [selectedCategoria, setSelectedCategoria] = useState<ICategoria | null>(null);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [filteredData, setFilteredData] = useState<ICategoria[]>([]);
   const [open, setOpen] = useState(false); // Nuevo estado para controlar la visibilidad del modal
+  
 
   const handleOpenModal = () => {
     setOpen(true); // Cambia el valor de open a true
@@ -27,6 +30,30 @@ const Categoria = () => {
   const handleCloseModal = () => {
     setOpen(false); // Cambia el valor de open a false
   };
+
+  const handleDeleteCategoria = (categoria: ICategoria) => {
+    setSelectedCategoria(categoria);
+    setOpen(false);
+    setDeleteModal(true);
+};
+  const handleEditCategoria = (categoria: ICategoria) => {
+    setSelectedCategoria(categoria);
+    setOpen(true);
+};
+
+const handleDelete = async () => {
+  try {
+      if (selectedCategoria && selectedCategoria.id) {
+          await categoriaService.delete(url + 'categorias', selectedCategoria.id.toString());
+          console.log('Se ha eliminado correctamente.');
+          handleCloseModal(); // Cerramos el modal después de eliminar
+      } else {
+          console.error('No se puede eliminar la categoria');
+      }
+  } catch (error) {
+      console.error('Error al eliminar:', error);
+  }
+};
 
     const fetchCategorias = async () => {
       try {
@@ -75,8 +102,17 @@ useEffect(() => {
         <Box sx={{ mt: 2 }}>
           <SearchBar onSearch={handleSearch} />
         </Box>
-        <CategoriaLista categorias={filteredData} />
-        <ModalCategoria open={open} onClose={handleCloseModal} getCategories={fetchCategorias} /> {/* Pasa el estado y las funciones como props */}
+        <CategoriaLista categorias={filteredData} onDelete={handleDeleteCategoria} onEdit={handleEditCategoria} />
+        <ModalCategoria open={open} onClose={handleCloseModal} getCategories={fetchCategorias} categoryToEdit={selectedCategoria} /> {/* Pasa el estado y las funciones como props */}
+        <ModalEliminarCategoria show={deleteModal}
+                    categoria={selectedCategoria}
+                    onDelete={() => {
+                        setDeleteModal(false);
+                        handleDelete();
+                    }
+                    }
+                    onClose={() => setDeleteModal(false)}
+                />
       </Container>
     </Box>
   );
