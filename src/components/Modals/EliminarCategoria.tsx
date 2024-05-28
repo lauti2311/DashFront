@@ -10,7 +10,7 @@ interface EliminarCategoriaProps {
     onClose: () => void;
 }
 
-const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, onClose }) => {
+const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, onDelete, onClose }) => {
     const categoriaService = new CategoriaService();
     const url = import.meta.env.VITE_API_URL;
 
@@ -19,6 +19,7 @@ const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, 
             if (categoria && categoria.id) {
                 await categoriaService.delete(url + 'categorias', categoria.id.toString());
                 console.log('Se ha eliminado correctamente.');
+                onDelete(); // Llamamos a onDelete después de eliminar
                 onClose(); // Cerramos el modal después de eliminar
             } else {
                 console.error('No se puede eliminar la categoría porque no se proporcionó un ID válido.');

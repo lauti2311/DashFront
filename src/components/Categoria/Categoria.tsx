@@ -22,10 +22,12 @@ const Categoria = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpenModal = () => {
+    setSelectedCategoria(null); // Asegurarse de que no haya categoría seleccionada al agregar una nueva
     setOpen(true);
   };
 
   const handleCloseModal = () => {
+    setSelectedCategoria(null); // Restablecer la categoría seleccionada al cerrar el modal
     setOpen(false);
   };
 
@@ -40,18 +42,13 @@ const Categoria = () => {
     setOpen(true);
   };
 
-  const handleDelete = async () => {
-    try {
-      if (selectedCategoria && selectedCategoria.id) {
-        await categoriaService.delete(url + 'categorias', selectedCategoria.id.toString());
-        console.log('Se ha eliminado correctamente.');
-        handleCloseModal(); // Cerramos el modal después de eliminar
-        fetchCategorias(); // Refrescamos la lista después de eliminar
-      } else {
-        console.error('No se puede eliminar la categoria');
-      }
-    } catch (error) {
-      console.error('Error al eliminar:', error);
+  const handleDelete = () => {
+    if (selectedCategoria && selectedCategoria.id) {
+      const updatedCategorias = globalCategorias.filter((cat: ICategoria) => cat.id !== selectedCategoria.id);
+      dispatch(setCategoria(updatedCategorias));
+      setFilteredData(updatedCategorias);
+      setDeleteModal(false);
+      setSelectedCategoria(null);
     }
   };
 
@@ -103,12 +100,10 @@ const Categoria = () => {
         </Box>
         <CategoriaLista categorias={filteredData} onDelete={handleDeleteCategoria} onEdit={handleEditCategoria} />
         <ModalCategoria open={open} onClose={handleCloseModal} getCategories={fetchCategorias} categoryToEdit={selectedCategoria} />
-        <EliminarCategoria show={deleteModal}
+        <EliminarCategoria
+          show={deleteModal}
           categoria={selectedCategoria}
-          onDelete={() => {
-            setDeleteModal(false);
-            handleDelete();
-          }}
+          onDelete={handleDelete}
           onClose={() => setDeleteModal(false)}
         />
       </Container>
