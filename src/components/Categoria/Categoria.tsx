@@ -9,7 +9,7 @@ import ICategoria from '../../types/Categoria';
 import { setCategoria } from '../../redux/slices/categoria';
 import CategoriaService from '../../services/CategoriaService';
 import ModalCategoria from '../Modals/ModalCategoria';
-import ModalEliminarCategoria from '../Modals/EliminarCategoria';
+import EliminarCategoria from '../Modals/EliminarCategoria';
 
 const Categoria = () => {
   const url = import.meta.env.VITE_API_URL;
@@ -103,7 +103,7 @@ const Categoria = () => {
         </Box>
         <CategoriaLista categorias={filteredData} onDelete={handleDeleteCategoria} onEdit={handleEditCategoria} />
         <ModalCategoria open={open} onClose={handleCloseModal} getCategories={fetchCategorias} categoryToEdit={selectedCategoria} />
-        <ModalEliminarCategoria show={deleteModal}
+        <EliminarCategoria show={deleteModal}
           categoria={selectedCategoria}
           onDelete={() => {
             setDeleteModal(false);

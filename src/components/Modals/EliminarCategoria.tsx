@@ -3,14 +3,14 @@ import { Button, Modal } from 'react-bootstrap';
 import Categoria from '../../types/Categoria';
 import CategoriaService from '../../services/CategoriaService';
 
-interface ModalEliminarCategoriaProps {
+interface EliminarCategoriaProps {
     show: boolean;
     categoria: Categoria | null;
     onDelete: () => void;
     onClose: () => void;
 }
 
-const ModalEliminarCategoria: React.FC<ModalEliminarCategoriaProps> = ({ show, categoria, onClose }) => {
+const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, onClose }) => {
     const categoriaService = new CategoriaService();
     const url = import.meta.env.VITE_API_URL;
 
@@ -48,4 +48,4 @@ const ModalEliminarCategoria: React.FC<ModalEliminarCategoriaProps> = ({ show, c
     );
 };
 
-export default ModalEliminarCategoria;
+export default EliminarCategoria;
