@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,11 +19,22 @@ interface Props {
   columns: Column[];
 }
 
+interface ModalContextProps {
+  handleOpenEditModal: (rowData: Row) => void;
+  handleOpenDeleteModal: (rowData: Row) => void;
+}
+
+export const ModalContext = createContext<ModalContextProps>({
+  handleOpenEditModal: () => {},
+  handleOpenDeleteModal: () => {},
+});
+
 const TableComponent: React.FC<Props> = ({ data, columns }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState<keyof Row>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const { handleOpenEditModal, handleOpenDeleteModal } = React.useContext(ModalContext);
 // corregi como anónimo
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -78,14 +89,14 @@ const TableComponent: React.FC<Props> = ({ data, columns }) => {
                 </TableCell>
               ))}
               <TableCell>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton aria-label="editar">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton aria-label="eliminar">
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+              <IconButton aria-label="editar" onClick={() => handleOpenEditModal(row)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(row)}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
               </TableCell>
             </TableRow>
           ))}
