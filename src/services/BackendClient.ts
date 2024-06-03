@@ -20,7 +20,7 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
       // Si hay algún error, rechaza la promesa con el error
       return Promise.reject(error);
     }
-  }
+  } 
 
   // Método protegido para realizar una solicitud genérica para obtener todos los elementos
   protected async requestAll(path: string, options: RequestInit): Promise<T[]> {
