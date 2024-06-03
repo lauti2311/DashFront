@@ -93,6 +93,13 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
         "Content-Type": "application/json",
       },
     };
-    await this.request(path, options);
+    try {
+      const response = await fetch(path, options);
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
