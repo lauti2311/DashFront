@@ -1,7 +1,7 @@
-interface Categoria extends DataModel<Categoria>{
+interface ICategoria extends DataModel<ICategoria>{
     denominacion: string,
     articulos: [],
-    subCategorias: Categoria[]
+    subCategorias: ICategoria[]
 }
 
-export default Categoria;
+export default ICategoria;

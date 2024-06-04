@@ -1,7 +1,7 @@
 import ArticuloInsumo from "./ArticuloInsumo";
 import Imagenes from "./Imagenes";
 
-interface Promocion extends DataModel<Promocion>{
+interface IPromocion extends DataModel<IPromocion>{
     denominacion: string;
     fechaDesde: string;
     fechaHasta: string;
@@ -14,4 +14,4 @@ interface Promocion extends DataModel<Promocion>{
     imagenes: Imagenes[];
   }
 
-  export default Promocion;
+  export default IPromocion;
