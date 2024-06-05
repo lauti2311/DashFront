@@ -1,5 +1,4 @@
 import IImagenes from "./Imagenes";
-import Sucursal from "./Sucursal";
 
 interface IEmpresa extends DataModel<IEmpresa> {
     id: number;
@@ -8,7 +7,6 @@ interface IEmpresa extends DataModel<IEmpresa> {
     nombre: string;
     razonSocial: string;
     imagen: IImagenes;
-    sucursales: Sucursal;
 }
 
 export default IEmpresa;

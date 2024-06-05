@@ -1,0 +1,110 @@
+.empresa-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.empresa-card {
+  width: 190px;
+  height: 240px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.312);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empresa-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.clicked {
+  animation: click-animation 0.2s forwards;
+}
+
+@keyframes click-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.empresa-card img {
+  width: 95%;
+  height: 60%;
+  border-radius: 8px 8px 0 0;
+  object-fit: cover;
+}
+
+.placeholder-img {
+  width: 95%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  color: #aaa;
+  border-radius: 8px 8px 0 0;
+}
+
+.empresa-info {
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+}
+
+.empresa-info h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.empresa-info p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.button-container .MuiIconButton-root {
+  padding: 8px;
+}
+
+.button-container .edit-icon {
+  color: green;
+}
+
+.button-container .list-icon {
+  color: blue;
+}
+
+.button-container .delete-icon {
+  color: red;
+}
+
+.empresa-card img,
+.empresa-card .empresa-info {
+  user-select: none;
+}

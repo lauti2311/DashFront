@@ -102,4 +102,20 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
       return Promise.reject(error);
     }
   }
+
+  async uploadFile(url: string, file: File, id: string): Promise<Response> {
+    const path = url;
+    const formData = new FormData();
+    formData.append('uploads', file);
+    formData.append('id', id);
+
+    const options: RequestInit = {
+      method: "POST",
+      body: formData,
+    };
+
+    return fetch(path, options);
+  }
+  
 }
+

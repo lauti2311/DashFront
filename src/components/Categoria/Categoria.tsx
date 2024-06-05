@@ -85,7 +85,7 @@ const Categoria = () => {
             sx={{
               bgcolor: '#fb6376',
               '&:hover': {
-                bgcolor: '#d73754',
+                bgcolor: '#f73754',
               },
             }}
             variant="contained"
