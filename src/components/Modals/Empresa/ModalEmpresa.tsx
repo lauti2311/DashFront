@@ -1,10 +1,9 @@
-// EmpresaModal.tsx
-import React from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import IEmpresa from '../../types/Empresa';
-import EmpresaService from '../../services/EmpresaService';
+import IEmpresa from '../../../types/Empresa';
+import EmpresaService from '../../../services/EmpresaService';
 
 interface ModalEmpresaProps {
     open: boolean;
@@ -15,22 +14,48 @@ interface ModalEmpresaProps {
 
 const ModalEmpresa: React.FC<ModalEmpresaProps> = ({ open, onClose, getEmpresas, empresaToEdit }) => {
     const empresaService = new EmpresaService();
+    const [file, setFile] = useState<File | null>(null);
     const url = import.meta.env.VITE_API_URL;
 
     const initialValues: IEmpresa = empresaToEdit
-        ? empresaToEdit
+        ? {
+            ...empresaToEdit,
+            imagen: {
+                name: "",
+                url: "",
+                eliminado: false,
+                id: 0  // Asegúrate de proporcionar un valor para 'id'
+            }
+        }
         : {
             id: 0,
             eliminado: false,
+            nombre: "",
+            razonSocial: "",
             cuil: 0,
-            nombre: '',
-            razonSocial: '',
-            imagen: { url: '', name: '' },
+            imagen: {
+                name: "",
+                url: "",
+                eliminado: false,
+                id: 0  // Asegúrate de proporcionar un valor para 'id'
+            }
         };
 
     const handleClose = () => {
         onClose();
     };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setFile(e.target.files[0]);
+        }
+    };
+
+    useEffect(() => {
+        if (empresaToEdit) {
+            setFile(null); // Reset the file input when editing a new empresa
+        }
+    }, [empresaToEdit]);
 
     return (
         <Modal show={open} onHide={handleClose} size="lg" backdrop="static" keyboard={false} centered>
@@ -40,24 +65,34 @@ const ModalEmpresa: React.FC<ModalEmpresaProps> = ({ open, onClose, getEmpresas,
             <Modal.Body>
                 <Formik
                     validationSchema={Yup.object({
-                        nombre: Yup.string().required('Campo requerido'),
-                        razonSocial: Yup.string().required('Campo requerido'),
+                        nombre: Yup.string().required(<span style={{ color: 'red' }}>Campo requerido</span>),
+                        razonSocial: Yup.string().required(<span style={{ color: 'red' }}>Campo requerido</span>),
                         // add validation for other fields
                     })}
                     initialValues={initialValues}
                     onSubmit={async (values: IEmpresa) => {
                         try {
+                            let newCompanyId: string | null = null;
+
                             if (empresaToEdit) {
-                                await empresaService.put(url + 'empresas', values.id.toString(), values);
-                                console.log('Empresa actualizada correctamente.');
+                                await empresaService.put(url + "empresas", values.id.toString(), values);
+                                console.log("Se ha actualizado correctamente.");
+                                newCompanyId = values.id.toString();
                             } else {
-                                await empresaService.post(url + 'empresas', values);
-                                console.log('Empresa agregada correctamente.');
+                                const response = await empresaService.post(url + "empresas", values);
+                                console.log("Se ha agregado correctamente.");
+                                
+                                newCompanyId = response.id.toString();
+                            }
+
+                            if (file && newCompanyId) {
+                                const response = await empresaService.uploadFile(url + 'empresas/uploads', file, newCompanyId);
+                                console.log('Upload successful:', response);
                             }
                             getEmpresas();
                             handleClose();
                         } catch (error) {
-                            console.error('Error al realizar la operación:', error);
+                            console.error("Error al realizar la operación:", error);
                         }
                     }}
                 >
@@ -79,12 +114,24 @@ const ModalEmpresa: React.FC<ModalEmpresaProps> = ({ open, onClose, getEmpresas,
                                     <Field name="cuil" type="number" placeholder="CUIL" className="form-control mt-2" />
                                     <ErrorMessage name="cuil" className="error-message" component="div" />
                                 </div>
-                                
+
+                                <div className="mb-4">
+                                    <label htmlFor="imagen">Elegir Imagen:</label>
+                                    <br />
+                                    <input
+                                        type="file"
+                                        onChange={handleFileChange}
+                                        multiple
+                                    />
+                                    <ErrorMessage name="imagen" className="error-message" component="div" />
+                                </div>
+
                                 <div className="d-flex justify-content-end">
                                     <Button variant="outline-success" type="submit" className="custom-button">
                                         Enviar
                                     </Button>
                                 </div>
+
                             </Form>
                         </>
                     )}
