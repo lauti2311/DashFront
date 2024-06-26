@@ -3,23 +3,23 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import Categoria from '../../types/Categoria';
 
 
-interface IInitialState {
-  categoria: Categoria[];
+interface IInitialState<T> {
+  data: T;
 }
 
-const initialState: IInitialState = {
-  categoria: [],
-}
-
+// Estado inicial específico para Promocion[]
+const initialCategoriaState: IInitialState<Categoria[]> = {
+  data: [],
+};
 export const categoriaSlice = createSlice({
   name: 'categoriaState',
-  initialState,
+  initialState: initialCategoriaState,
   reducers: {
     setCategoria: (state, action: PayloadAction<Categoria[]>) => {
-      state.categoria = action.payload;
+      state.data = action.payload;
     },
     resetCategoria: (state) => {
-      state.categoria = [];
+      state.data = [];
     }
   },
 })

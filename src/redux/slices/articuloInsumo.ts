@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IArticuloInsumo from '../../types/ArticuloInsumo';
 
 interface IInitialState {
+  data: any;
   articuloInsumo: IArticuloInsumo[];
 }
 
 const initialState: IInitialState = {
   articuloInsumo: [],
+  data: undefined
 }
 
 export const articuloInsumoSlice = createSlice({

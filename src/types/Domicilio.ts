@@ -1,4 +1,5 @@
 import Localidad from "./Localidad";
+import DataModel from "./DataModel";
 
 interface IDomicilio extends DataModel<IDomicilio> {
     id: number;

@@ -1,9 +1,17 @@
+import DataModel from "./DataModel";
 
-
-interface IUsuario extends DataModel<IUsuario>{
+interface Usuario extends DataModel<Usuario> {
     id: number;
-    auth0Id: string;
     username: string;
+    email: string;
+    rol: string;
+
+    empleado: {
+        tipoEmpleado: string;
+        sucursal: {
+            id: number;
+        };
+    };
 }
 
-export default IUsuario;
+export default Usuario;

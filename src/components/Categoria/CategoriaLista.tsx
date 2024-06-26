@@ -7,17 +7,23 @@ import Collapse from '@mui/material/Collapse';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
 import Categoria from '../../types/Categoria';
+import ModalSubCategoria from '../Modals/ModalCategoria/SubCategoria';
+import { useState } from 'react';
 
 interface CategoriaListaProps {
   categorias: Categoria[];
-  onDelete: (categoria: Categoria) => void;
+  getCategories: () => void;
   onEdit: (categoria: Categoria) => void;
+  onDelete: (categoria: Categoria) => void;
+  onAddSubCategoria: (categoria: Categoria) => void;
 }
 
-const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onDelete, onEdit }) => {
+const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onEdit, onDelete, getCategories }) => {
   const [openMap, setOpenMap] = React.useState<{ [key: number]: boolean }>({});
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [selectedCategoria, setSelectedCategoria] = React.useState<Categoria | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
 
   const handleClick = (id: number) => {
     setOpenMap((prevOpenMap) => ({
@@ -34,6 +40,9 @@ const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onDelete, o
   const handleDelete = () => {
     onDelete(selectedCategoria as Categoria); 
     handleMenuClose();
+  };
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   const handleDetail = () => {
@@ -55,81 +64,75 @@ const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onDelete, o
     const isOpen = openMap[categoria.id] || false;
     const tieneSubcategorias = categoria.subCategorias && categoria.subCategorias.length > 0;
 
+
+      return (
+        <React.Fragment key={categoria.id}>
+          <ListItemButton onClick={() => handleClick(categoria.id)}>
+            <ListItemText primary={categoria.denominacion} />
+            <IconButton
+              aria-label="more"
+              aria-controls="categoria-menu"
+              aria-haspopup="true"
+              onClick={(event) => handleMenuOpen(event, categoria)}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            {tieneSubcategorias && (isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
+            <IconButton
+              aria-label="add-subcategoria"
+              onClick={(event) => {
+                event.stopPropagation(); // Evitar que el clic llegue al ListItemButton
+                setSelectedCategoria(categoria);
+                setModalOpen(true);
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </ListItemButton>
+          {tieneSubcategorias && (
+            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {categoria.subCategorias.map((subcategoria) => (
+                  <ListItemButton key={subcategoria.id} sx={{ pl: 4 }}>
+                    <ListItemText primary={subcategoria.denominacion} />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Collapse>
+          )}
+        </React.Fragment>
+      );
+    };
+  
     return (
-      <React.Fragment key={categoria.id}>
-        <ListItemButton onClick={() => handleClick(categoria.id)}>
-          <ListItemText primary={categoria.denominacion} />
-          <IconButton
-            aria-label="more"
-            aria-controls="categoria-menu"
-            aria-haspopup="true"
-            onClick={(event) => handleMenuOpen(event, categoria)}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          {tieneSubcategorias && (isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
-        </ListItemButton>
+      <List
+        sx={{ width: '100%', bgcolor: 'background.paper' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            {/* Categorías */}
+          </ListSubheader>
+        }
+      >
+        {categorias.map((categoria) => renderCategoria(categoria))}
         <Menu
           id="categoria-menu"
           anchorEl={anchorEl}
-          open={Boolean(anchorEl && selectedCategoria?.id === categoria.id)}
+          open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleEdit}>Editar</MenuItem>
           <MenuItem onClick={handleDelete}>Eliminar</MenuItem>
-          <MenuItem onClick={handleDetail}>Ver Detalle</MenuItem>
         </Menu>
-        {tieneSubcategorias && (
-          <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {categoria.subCategorias.map((subcategoria) => (
-                <React.Fragment key={subcategoria.id}>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary={subcategoria.denominacion} />
-                    <IconButton
-                      aria-label="more"
-                      aria-controls="categoria-menu"
-                      aria-haspopup="true"
-                      onClick={(event) => handleMenuOpen(event, subcategoria)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </ListItemButton>
-                  <Menu
-                    id="categoria-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl && selectedCategoria?.id === subcategoria.id)}
-                    onClose={handleMenuClose}
-                  >
-                    <MenuItem onClick={handleEdit}>Editar</MenuItem>
-                    <MenuItem onClick={handleDelete}>Eliminar</MenuItem>
-                    <MenuItem onClick={handleDetail}>Ver Detalle</MenuItem>
-                  </Menu>
-                </React.Fragment>
-              ))}
-            </List>
-          </Collapse>
-        )}
-      </React.Fragment>
+        <ModalSubCategoria 
+          open={modalOpen}
+          categoria={selectedCategoria}
+          onClose={handleCloseModal}
+          getCategories={() => getCategories()}
+          />
+      </List>
     );
   };
-
-  const categoriasPrincipales = categorias.filter(categoria => !categorias.some(cat => cat.subCategorias?.some(sub => sub.id === categoria.id)));
-
-  return (
-    <List
-      sx={{ width: '100%', bgcolor: 'background.paper' }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-          Categorías
-        </ListSubheader>
-      }
-    >
-      {categoriasPrincipales.map((categoria) => renderCategoria(categoria))}
-    </List>
-  );
-};
 
 export default CategoriaLista;

@@ -1,6 +1,7 @@
 import Domicilio from "./Domicilio";
 import IEmpresa from "./Empresa";
 import IImagenes from "./Imagenes";
+import DataModel from "./DataModel";
 
 interface ISucursal extends DataModel<ISucursal> {
     nombre: string;

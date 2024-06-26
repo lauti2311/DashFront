@@ -1,41 +1,51 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import Categoria from '../../types/Categoria';
-import CategoriaService from '../../services/CategoriaService';
+import CategoriaService from '../../../services/CategoriaService';
+import CategoriaSDTO from '../../../services/dtos/CategoriaSDTO';
+import Categoria from '../../../types/Categoria';
 
-interface EliminarCategoriaProps {
+
+interface ModalEliminarCategoriaProps {
     show: boolean;
     categoria: Categoria | null;
+    getCategories: () => void;
     onDelete: () => void;
     onClose: () => void;
 }
 
-const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, onDelete, onClose }) => {
+const ModalEliminarCategoria: React.FC<ModalEliminarCategoriaProps> = ({ show, categoria, onClose, getCategories }) => {
     const categoriaService = new CategoriaService();
     const url = import.meta.env.VITE_API_URL;
+    const categoriaSservice = new CategoriaSDTO();
 
     const handleEliminar = async () => {
         try {
             if (categoria && categoria.id) {
-                await categoriaService.delete(url + 'categorias', categoria.id.toString());
+                // Elimino las subcategorias de la categoria que elimino
+                categoria.subCategorias.map(async subCategoria => {
+                    await categoriaSservice.delete(url + 'categorias', subCategoria.id.toString());
+                });
+
+                await categoriaService.delete(url + 'categoria', categoria.id.toString());
                 console.log('Se ha eliminado correctamente.');
-                onDelete(); // Llamamos a onDelete después de eliminar
+                getCategories();
                 onClose(); // Cerramos el modal después de eliminar
             } else {
                 console.error('No se puede eliminar la categoría porque no se proporcionó un ID válido.');
             }
         } catch (error) {
             console.error('Error al eliminar la categoría:', error);
+            onClose();
         }
     };
 
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Eliminar</Modal.Title>
+                <Modal.Title>Eliminar Categoría</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                ¿Quieres eliminar la siguiente categoria? "{categoria?.denominacion}"?
+                ¿Estás seguro de que deseas eliminar la categoría "{categoria?.denominacion}"?
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClose}>
@@ -49,4 +59,4 @@ const EliminarCategoria: React.FC<EliminarCategoriaProps> = ({ show, categoria, 
     );
 };
 
-export default EliminarCategoria;
+export default ModalEliminarCategoria;

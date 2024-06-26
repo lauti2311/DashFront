@@ -1,4 +1,5 @@
 import Pais from "./Pais";
+import DataModel from "./DataModel";
 
 interface IProvincia extends DataModel<IProvincia> {
     id: number;

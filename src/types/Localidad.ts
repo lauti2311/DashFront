@@ -1,4 +1,5 @@
 import Provincia from "./Provincia";
+import DataModel from "./DataModel";
 
 interface ILocalidad extends DataModel<ILocalidad> {
     id: number;

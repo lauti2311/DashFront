@@ -1,4 +1,5 @@
 import IImagenes from "./Imagenes";
+import DataModel from "./DataModel";
 
 interface IEmpresa extends DataModel<IEmpresa> {
     id: number;
