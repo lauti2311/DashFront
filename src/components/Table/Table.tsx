@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { TablePagination, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useAuth0 } from '@auth0/auth0-react';
 // import Usuario from '../../types/Usuario';
 // import UsuarioService from '../../services/UsuarioService';
 import PedidoService from '../../services/PedidoService';
@@ -36,7 +35,6 @@ const TableComponent: React.FC<Props> = ({ data, columns, handleOpenEditModal, h
   // const [usuarioIsLoading, setUsuarioIsLoading] = useState<boolean>(true);
   // const [rolUsuario, setRolUsuario] = useState<string | undefined>();
   const url = import.meta.env.VITE_API_URL;
-  const { getAccessTokenSilently } = useAuth0();
   const [facturaCreada, setFacturaCreada] = useState(false);
   const pedidoService = new PedidoService();
 
@@ -72,7 +70,7 @@ const TableComponent: React.FC<Props> = ({ data, columns, handleOpenEditModal, h
 
   const crearFactura = async (pedidoId: string, clienteEmail: string) => {
     try {
-      await pedidoService.crearFactura(url, pedidoId, await getAccessTokenSilently({}));
+      await pedidoService.crearFactura(url, pedidoId);
       console.log(facturaCreada)
       setFacturaCreada(true);
       enviarFactura(pedidoId, clienteEmail);
@@ -85,7 +83,7 @@ const TableComponent: React.FC<Props> = ({ data, columns, handleOpenEditModal, h
   const enviarFactura = async (pedidoId: string, userEmail: string) => {
     console.log(userEmail)
     try {
-      await pedidoService.enviarFactura(url, pedidoId, userEmail, await getAccessTokenSilently({}));
+      await pedidoService.enviarFactura(url, pedidoId, userEmail);
       alert('Factura enviada por correo electrónico');
       // window.location.reload();
       // fetchUsuario();
