@@ -9,8 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListIcon from '@mui/icons-material/List';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AgregarEmpresa from './AgregarEmpresa';
-import ModalEmpresa from '../Modals/Empresa/ModalEmpresa'; // Importa el componente ModalEmpresa
-import { useNavigate } from 'react-router-dom';
+import ModalEmpresa from '../Modals/ModalEmpresa'; // Importa el componente ModalEmpresa
 
 interface Row {
   [key: string]: unknown;
@@ -19,33 +18,17 @@ interface Row {
 const EmpresaCard: React.FC = () => {
   const empresaService = new EmpresaService();
   const [filterData, setFilterData] = useState<Row[]>([]);
-  const [clickedEmpresaId, setClickedEmpresaId] = useState<null | number>(null);
+  const [clickedEmpresaId] = useState<null | number>(null);
   const [modalOpen, setModalOpen] = useState(false); // Estado para controlar la apertura del modal
-  const [empresaToEdit, setEmpresaToEdit] = useState<null | Empresa>(null); // Estado para la empresa a editar
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const handleEdit = (empresa: Empresa) => {
-    setEmpresaToEdit(empresa);
-    setModalOpen(true);
+    alert(`Empresa ID: ${empresa.id}`);
   };
 
-  const handleDelete = async (empresa: Empresa) => {
-    try {
-      const updatedEmpresa = { ...empresa, eliminado: true };
-      await empresaService.put(url + "empresas", empresa.id.toString(), updatedEmpresa);
-      // Actualizar el estado local después de eliminar
-      const updatedData = filterData.map(item =>
-        item.id === empresa.id ? { ...item, eliminado: true } : item
-      );
-      setFilterData(updatedData);
-      // Mostrar una alerta u otra acción de confirmación
-      alert(`Empresa eliminada ID: ${empresa.id}`);
-    } catch (error) {
-      console.error("Error al eliminar empresa:", error);
-      // Manejo de errores: mostrar un mensaje de error al usuario, etc.
-    }
+  const handleDelete = (empresa: Empresa) => {
+    alert(`Eliminamos la empresa ID: ${empresa.id}`);
   };
 
   const handleDetail = (empresa: Empresa) => {
@@ -89,21 +72,22 @@ const EmpresaCard: React.FC = () => {
 
   useEffect(() => {
     fetchEmpresa();
-  }, [fetchEmpresa]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick = (empresa: Empresa) => {
-    navigate(`/sucursales/${empresa.id}`);
-  }; 
+    alert(`Nombre: ${empresa.nombre}\nRazón Social: ${empresa.razonSocial}\nID: ${empresa.id}\nImagen: ${empresa.imagen}\nEliminado: ${empresa.eliminado}\nCUIL: ${empresa.cuil}`);
+  };
 
   const handleAddEmpresa = () => {
-    setEmpresaToEdit(null); // Resetea la empresa a editar
     setModalOpen(true); // Cambia el estado para abrir el modal
   };
 
   return (
     <div className="empresa-list">
       <AgregarEmpresa onClick={() => handleAddEmpresa()} />
-      <ModalEmpresa open={modalOpen} onClose={() => setModalOpen(false)} getEmpresas={fetchEmpresa} empresaToEdit={empresaToEdit} />
+      {/* Integra el modal y pasa el estado y la función para cerrarlo */}
+      <ModalEmpresa open={modalOpen} onClose={() => setModalOpen(false)} getEmpresas={fetchEmpresa} />
       {filterData.map((empresa) => (
         <div
           key={empresa.id}
