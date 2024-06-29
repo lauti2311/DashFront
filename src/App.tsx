@@ -12,7 +12,6 @@ import Rol from './components/Rol/Rol';
 import BaseNavbar from './components/common/BaseNavbar';
 import Promocion from './components/Promocion/Promocion';
 import Usuario from './components/Usuario/Usuario';
-import Sucursal from './components/Sucursal/Sucursal';
 
 const App: React.FC = () => {
   return (
@@ -21,23 +20,22 @@ const App: React.FC = () => {
         <BaseNavbar />
       </div>
       <div className='d-flex'>
-        <BasicSidebar />
-        <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/empresas" element={<Empresa />} />
-          <Route path="/productos" element={<Producto />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/insumos" element={<Insumo />} />
-          <Route path="/categorias" element={<Categoria />} />
-          <Route path="/empleados" element={<Empleado />} />
-          <Route path="/roles" element={<Rol />} />
-          <Route path="/usuario" element={<Usuario />} />
-          <Route path="/promociones" element={<Promocion />} />
-          <Route path="/sucursales" element={<Sucursal />} />
-          <Route path="/sucursales/:empresaId" element={<Sucursal />} />
-          {/* Otras rutas */}
-        </Routes>
-      </div>
+      <BasicSidebar />
+
+            <Routes>
+              <Route path="/" element={<Inicio />} />
+              <Route path="/empresas" element={<Empresa />} />
+              <Route path="/productos" element={<Producto />} />
+              <Route path="/perfil" element={<Perfil />} />
+              <Route path="/insumos" element={<Insumo />} />
+              <Route path="/categorias" element={<Categoria />} />
+              <Route path="/empleados" element={<Empleado />} />
+              <Route path="/roles" element={<Rol />} />
+              <Route path="/usuario" element={<Usuario />} />
+              <Route path="/promociones" element={<Promocion />} />
+              {/* Otras rutas */}
+            </Routes>
+            </div>
     </Router>
   );
 }
