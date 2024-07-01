@@ -1,3 +1,4 @@
+import DataModel from "./DataModel";
 import Domicilio from "./Domicilio";
 import IEmpresa from "./Empresa";
 import IImagenes from "./Imagenes";

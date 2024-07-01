@@ -1,10 +1,9 @@
+import DataModel from "./DataModel";
 import Localidad from "./Localidad";
 
 interface IDomicilio extends DataModel<IDomicilio> {
-    id: number;
-    eliminado: boolean;
     calle: string;
-    numero: BigInteger;
+    numero: number;
     cp: number;
     piso: number;
     nroDpto: number;
