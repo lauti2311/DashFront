@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ListIcon from '@mui/icons-material/List';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AgregarEmpresa from './AgregarEmpresa';
-import ModalEmpresa from '../Modals/ModalEmpresa'; // Importa el componente ModalEmpresa
+import ModalEmpresa from '../Modals/ModalEmpresa/ModalEmpresa'; // Importa el componente ModalEmpresa
 
 interface Row {
   [key: string]: unknown;

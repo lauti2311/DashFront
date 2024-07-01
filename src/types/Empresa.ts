@@ -1,3 +1,4 @@
+import DataModel from "./DataModel";
 import IImagenes from "./Imagenes";
 
 interface IEmpresa extends DataModel<IEmpresa> {

@@ -1,17 +1,21 @@
-import ArticuloInsumo from "./ArticuloInsumo";
+import DataModel from "./DataModel";
 import Imagenes from "./Imagenes";
+import PromocionDetalle from "./PromocionDetalle";
+import SucursalDto from "./dto/SucursalDto";
+import { TipoPromocion } from "./enums/TipoPromocion";
 
-interface IPromocion extends DataModel<IPromocion>{
-    denominacion: string;
-    fechaDesde: string;
-    fechaHasta: string;
-    horaDesde: string;
-    horaHasta: string;
-    descripcionDescuento: string;
-    precioPromocional: number;
-    tipoPromocion: string;
-    articulos: ArticuloInsumo[];
-    imagenes: Imagenes[];
+interface Promocion extends DataModel<Promocion>{
+  denominacion: string,
+  fechaDesde: string,
+  fechaHasta: string,
+  horaDesde: string,
+  horaHasta: string,
+  descripcionDescuento: string,
+  precioPromocional: number,
+  tipoPromocion: TipoPromocion,
+  imagenes: Imagenes[],
+  sucursales: SucursalDto[],
+  promocionDetalle: PromocionDetalle[]
   }
 
-  export default IPromocion;
+  export default Promocion;

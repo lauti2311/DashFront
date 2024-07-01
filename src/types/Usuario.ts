@@ -1,3 +1,4 @@
+import DataModel from "./DataModel";
 
 
 interface IUsuario extends DataModel<IUsuario>{

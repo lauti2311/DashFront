@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import articuloManufacturadoSlice from '../slices/articuloManufacturado'
 import { articuloInsumoSlice } from '../slices/articuloInsumo' 
-import { PromocionSlice } from '../slices/Promocion'
+import { promocionSlice } from '../slices/Promocion'
 import { categoriaSlice } from '../slices/categoria'
 import { usuariosSlice } from '../slices/UsuarioS'
 import modalReducer from '../slices/Modal'
@@ -12,7 +12,7 @@ export const store = configureStore({
   reducer: {
     articuloManufacturado: articuloManufacturadoSlice,
     articuloInsumo: articuloInsumoSlice.reducer, 
-    promocion: PromocionSlice.reducer,
+    promocion: promocionSlice.reducer,
     categoria: categoriaSlice.reducer,
     usuario: usuariosSlice.reducer,
     modal: modalReducer,

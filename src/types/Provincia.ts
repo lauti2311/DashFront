@@ -1,3 +1,4 @@
+import DataModel from "./DataModel";
 import Pais from "./Pais";
 
 interface IProvincia extends DataModel<IProvincia> {
