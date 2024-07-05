@@ -25,6 +25,7 @@ import {
   } from "@mui/material";
 import EliminarSucursal from "../Modals/ModalSucursal/EliminarSucursal";
 import ModalSucursal from "../Modals/ModalSucursal/ModalSucursal";
+import { BaseNavBar } from "../common/BaseNavbar";
 interface Row {
   [key: string]: any;
 }
@@ -172,6 +173,8 @@ export const Sucursales = () => {
   };
 
   return (
+    <>
+    <BaseNavBar title="Sucursales"></BaseNavBar>
     <Box
     component="main"
     sx={{
@@ -350,5 +353,6 @@ export const Sucursales = () => {
         />
       </Container>
     </Box>
+    </>
   );
 };
