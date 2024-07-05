@@ -17,6 +17,9 @@ interface Column {
 interface Props {
   data: Row[];
   columns: Column[];
+  handleOpenEditModal: (rowData: Row) => void;
+  handleOpenDeleteModal: (rowData: Row) => void;
+  isListaPedidos?: boolean;
 }
 
 interface ModalContextProps {

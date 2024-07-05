@@ -1,13 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import TableComponent from "../Table/Table";
-import SearchBar from "../common/SearchBar";
 import { Add } from "@mui/icons-material";
-
+import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
+import ArticuloInsumoService from "../../services/ArticuloInsumoService.ts";
+import { toggleModal } from "../../redux/slices/Modal";
+import SearchBar from "../../components/common/SearchBar";
+import TableComponent from "../../components/Table/Table.tsx";
+import ModalEliminarArticuloInsumo from "../Modals/ModalInsumos/ModalEliminarArticuloInsumo.tsx";
+import ModalArticuloInsumo from "../Modals/ModalInsumos/ModalArticuloInsumo.tsx";
+import ArticuloInsumo from "../../types/ArticuloInsumo";
+import { handleSearch } from "../../utils/utils";
 import { setArticuloInsumo } from "../../redux/slices/articuloInsumo";
-import InsumoService from "../../services/InsumoService";
+import UnidadMedida from "../../types/UnidadMedida";
+import { useParams } from "react-router-dom";
+import SideBar from "../common/BasicSidebar";
 
 interface Row {
   [key: string]: any;
@@ -19,96 +26,159 @@ interface Column {
   renderCell: (rowData: Row) => JSX.Element;
 }
 
-const Insumo = () => {
-  // Obtiene la función de despacho de acciones de Redux.
-  const dispatch = useAppDispatch();
-  // Obtiene el estado global de Redux relacionado con los artículos de insumo.
-  const globalArticulosInsumos = useAppSelector((state) => state.articuloInsumo.articuloInsumo);
+export const ListaArticulosInsumo = () => {
   const url = import.meta.env.VITE_API_URL;
-  const insumoService = new InsumoService();
+  const dispatch = useAppDispatch();
+  const articuloInsumoService = new ArticuloInsumoService();
+  const [filterData, setFilterData] = useState<Row[]>([]);
+  const [articuloToEdit, setArticuloToEdit] = useState<ArticuloInsumo | null>(
+    null
+  );
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const globalArticuloInsumo = useAppSelector(
+    (state) => state.articuloInsumo.data
+  );
+  const { sucursalId } = useParams();
 
-  // Estado local para almacenar los datos filtrados.
-  const [filteredData, setFilteredData] = useState<Row[]>([]);
+  const fetchArticulosInsumo = useCallback(async () => {
+    try {
+      if (sucursalId) {
+        const sucursalIdNumber = parseInt(sucursalId);
+        const articulosInsumo = await articuloInsumoService.insumos(
+          url,
+          sucursalIdNumber
+        );
 
-  // Efecto que se ejecuta al cargar el componente para obtener los artículos de insumo.
-  useEffect(() => {
-    const fetchArticulosInsumos = async () => {
-      try {
-        // Obtiene todos los artículos de insumo.
-        const articulosInsumos = await insumoService.getAll(url + 'articulosInsumos')
-        // Envía los artículos de insumo al estado global de Redux.
-        dispatch(setArticuloInsumo(articulosInsumos)); 
-        // Establece los datos filtrados para su visualización.
-        setFilteredData(articulosInsumos); 
-      } catch (error) {
-        console.error("Error al obtener los artículos de insumo:", error);
+        dispatch(setArticuloInsumo(articulosInsumo));
+        setFilterData(articulosInsumo);
       }
-    };
+    } catch (error) {
+      console.error("Error al obtener los artículos de insumo:", error);
+    }
+  }, [dispatch, articuloInsumoService, url, sucursalId]);
 
-    fetchArticulosInsumos();
-  }, [dispatch]); 
+  useEffect(() => {
+    fetchArticulosInsumo();
+    onSearch("");
+  }, [fetchArticulosInsumo]);
 
-  // Función para manejar la búsqueda de artículos de insumo.
-  const handleSearch = (query: string) => {
-    // Filtra los artículos de insumo globales según la consulta de búsqueda.
-    const filtered = globalArticulosInsumos.filter((item) =>
-      item.denominacion.toLowerCase().includes(query.toLowerCase())
-    );
-    // Establece los datos filtrados para su visualización.
-    setFilteredData(filtered);
+  const handleOpenDeleteModal = (rowData: Row) => {
+    setArticuloToEdit({
+      id: rowData.id,
+      eliminado: rowData.eliminado,
+      denominacion: rowData.denominacion,
+      precioVenta: rowData.precioVenta,
+      imagenes: rowData.imagenes,
+      precioCompra: rowData.precioCompra,
+      stockActual: rowData.stockActual,
+      stockMaximo: rowData.stockMaximo,
+      stockMinimo: rowData.stockMinimo,
+      esParaElaborar: rowData.esParaElaborar,
+      unidadMedida: rowData.unidadMedida,
+      categoria: rowData.categoria,
+      sucursal: rowData.sucursal,
+    });
+    setDeleteModalOpen(true);
   };
 
-  // Columnas de la tabla de artículos de insumo.
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    fetchArticulosInsumo();
+  };
+  const handleAddArticuloInsumo = () => {
+    setArticuloToEdit(null);
+    dispatch(toggleModal({ modalName: "modal" }));
+  };
+
+  const handleOpenEditModal = (rowData: Row) => {
+    setArticuloToEdit({
+      id: rowData.id,
+      eliminado: rowData.eliminado,
+      denominacion: rowData.denominacion,
+      precioVenta: rowData.precioVenta,
+      imagenes: rowData.imagenes,
+      precioCompra: rowData.precioCompra,
+      stockActual: rowData.stockActual,
+      stockMaximo: rowData.stockMaximo,
+      stockMinimo: rowData.stockMinimo,
+      esParaElaborar: rowData.esParaElaborar,
+      unidadMedida: rowData.unidadMedida,
+      categoria: rowData.categoria,
+      sucursal: rowData.sucursal,
+    });
+    dispatch(toggleModal({ modalName: "modal" }));
+  };
+
+  const onSearch = (query: string) => {
+    if (globalArticuloInsumo) {
+      handleSearch(query, globalArticuloInsumo, setFilterData);
+    }
+  };
+
   const columns: Column[] = [
-    {
-      id: "imagen",
-      label: "Imagen",
-      renderCell: (rowData) => (
-        <img
-          src={rowData.imagenes.length > 0 ? rowData.imagenes[0].url : ""}
-          alt="Imagen"
-          style={{ width: 50, height: 50 }}
-        />
-      ),
-    },
     { id: "denominacion", label: "Nombre", renderCell: (rowData) => <>{rowData.denominacion}</> },
-    { id: "precioCompra", label: "Precio de compra", renderCell: (rowData) => <>{rowData.precioCompra}</> },
-    { id: "precioVenta", label: "Precio de Venta", renderCell: (rowData) => <>{rowData.precioVenta}</> },
-    { id: "stock", label: "Stock", renderCell: (rowData) => <>{rowData.stockActual}</> },
+    { id: "categoria", label: "Categoría", renderCell: (rowData) => <>{rowData.categoria.denominacion}</> },
+    { id: "precioVenta", label: "Precio Venta", renderCell: (rowData) => <>{rowData.precioVenta}</> },
+    { id: "precioCompra", label: "Precio Compra", renderCell: (rowData) => <>{rowData.precioCompra}</> },
+    { id: "stockActual", label: "Stock Actual", renderCell: (rowData) => <>{rowData.stockActual}</> },
+    { id: "stockMaximo", label: "Stock Maximo", renderCell: (rowData) => <>{rowData.stockMaximo}</> },
+    { id: "stockMinimo", label: "Stock Minimo", renderCell: (rowData) => <>{rowData.stockMinimo}</> },
+    { id: "esParaElaborar", label: "Es para elaborar", renderCell: (rowData) => <span>{rowData.esParaElaborar ? "Sí" : "No"}</span> },
     {
-      id: "elaboracion",
-      label: "¿Es para elaborar?",
-      renderCell: (rowData) => <>{rowData.esParaElaborar ? "Sí" : "No"}</>,
+      id: "unidadMedida",
+      label: "Unidad Medida",
+      renderCell: (rowData) => {
+        const unidadMedida: UnidadMedida = rowData.unidadMedida;
+        if (unidadMedida && unidadMedida.denominacion) {
+          return <span>{unidadMedida.denominacion}</span>;
+        } else {
+          return <span>Sin unidad de medida</span>;
+        }
+      },
     },
   ];
 
   return (
-    <Box component="main" sx={{ flexGrow: 1, my: 2}}>
+    <Box component="main" sx={{ flexGrow: 1, my: 2 }}>      
       <Container>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 1 }}>
           <Typography variant="h5" gutterBottom>
-            Insumos
+            Artículos de Insumo
           </Typography>
           <Button
             sx={{
-              bgcolor: "#fb6376",
-              "&:hover": {
-                bgcolor: "#d73754",
+              bgcolor: '#fb6376',
+              '&:hover': {
+                bgcolor: '#f73754',
               },
             }}
             variant="contained"
             startIcon={<Add />}
+            onClick={handleAddArticuloInsumo}
           >
-            Insumo
+            Nuevo Artículo
           </Button>
         </Box>
-        <Box sx={{mt:2 }}>
-          <SearchBar onSearch={handleSearch} />
+        <Box sx={{ mt: 2 }}>
+          <SearchBar onSearch={onSearch} />
         </Box>
-        <TableComponent data={filteredData} columns={columns} />
+        <TableComponent
+          data={filterData}
+          columns={columns}
+          handleOpenEditModal={handleOpenEditModal}
+          handleOpenDeleteModal={handleOpenDeleteModal}
+          isListaPedidos={false}
+        />
+        <ModalEliminarArticuloInsumo
+          show={deleteModalOpen}
+          onHide={handleCloseDeleteModal}
+          articuloInsumo={articuloToEdit}
+        />
+        <ModalArticuloInsumo
+          getArticulosInsumo={fetchArticulosInsumo}
+          articuloToEdit={articuloToEdit !== null ? articuloToEdit : undefined}
+        />
       </Container>
     </Box>
   );
 };
-
-export default Insumo;
