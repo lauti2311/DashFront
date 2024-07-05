@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EliminarEmpresa from '../Modals/ModalEmpresa/EliminarEmpresa';
 import { Link } from "react-router-dom";
+import { BaseNavBar } from '../common/BaseNavbar';
 
 
 interface Row {
@@ -103,6 +104,8 @@ export const Empresas = () => {
   };
 
   return (
+    <>
+    <BaseNavBar title="Empresas"></BaseNavBar>
     <Box
       component="main"
       sx={{
@@ -283,5 +286,6 @@ export const Empresas = () => {
         />
       </Container>
     </Box>
+    </>
   );
 };
