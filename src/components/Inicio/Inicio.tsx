@@ -2,7 +2,9 @@ import { Box, Grid, Container, Typography } from "@mui/material";
 import ChartCard from "./ChartCard";
 import BasePie from "./BasePie";
 import BaseBar from "./BaseBar";
+import { BaseNavBar } from "../common/BaseNavbar";
 import { CCol, CContainer, CRow } from "@coreui/react";
+import SideBar from "../common/BasicSidebar";
 import React from "react";
 
 // Contenido para las tarjetas de inicio
@@ -34,9 +36,11 @@ import React from "react";
 const Inicio: React.FC = () => {
     return (
         <React.Fragment>
+            <BaseNavBar title="" />
             <CContainer fluid>
             <CRow>
                 <CCol xs="auto" className="sidebar">
+                    <SideBar />
                 </CCol>
                 <CCol>
                 <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 4}}>
