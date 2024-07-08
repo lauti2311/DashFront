@@ -3,7 +3,7 @@ import { BaseNavBar } from "./BaseNavbar"
 import SideBar from "./BasicSidebar"
 import { Outlet } from "react-router-dom"
 
-
+//Layout general
 export const Layout = () => {
   return <> 
     <BaseNavBar title=""></BaseNavBar>
