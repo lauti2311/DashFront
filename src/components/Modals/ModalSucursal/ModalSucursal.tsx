@@ -134,7 +134,7 @@ interface ModalSucursalProps {
   
     const fetchProvinciasData = async (paisId: number | null) => {
       try {
-        const todasProvincias = await provinviaService.getAll(url + "provincias");
+        const todasProvincias = await provinviaService.getAll(url + "provincia");
         if (paisId) {
           const provinciaPais = todasProvincias.filter(
             (provincia: any) => provincia.pais.id === paisId
