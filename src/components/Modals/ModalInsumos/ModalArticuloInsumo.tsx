@@ -300,31 +300,25 @@ const ModalArticuloInsumo: React.FC<ModalArticuloInsumoProps> = ({
                     component="div"
                   />
 
-                  <label htmlFor="categoria">Categoria:</label>
+                <label htmlFor="categoria">Categoria:</label>
                   <Field
                     name="categoria"
                     as="select"
                     className="form-control"
-                    onChange={(event: { target: { value: string } }) => {
-                      const categoriaSelect = parseInt(event.target.value);
-                      const selectedCategoria = categorias.find(
-                        (categoria) => categoria.id === categoriaSelect
-                      );
-
-                      if (selectedCategoria) {
-                        setFieldValue("categoria", selectedCategoria);
-                      } else {
-                        console.error("No se encontró la categoria seleccionada");
-                      }
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                      const selectedCategoria = categorias.find(categoria => categoria.id === Number(e.target.value));
+                      setFieldValue("categoria", selectedCategoria || initialValues.categoria);
                     }}
-                    value={values.categoria ? values.categoria.id : ""}
+                    value={values.categoria.id}
                   >
-                    {categorias.map((categoria) => (
-                      <option key={categoria.id} value={categoria.id}>
+                    <option value="0">Seleccione una categoría</option>
+                    {categorias.map((categoria, index) => (
+                      <option key={index} value={categoria.id}>
                         {categoria.denominacion}
                       </option>
                     ))}
                   </Field>
+
                 </Col>
                 <Col>
                   <label htmlFor="stockActual">Stock Actual:</label>
