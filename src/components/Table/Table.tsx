@@ -80,7 +80,7 @@ const TableComponent: React.FC<Props> = ({ data, columns }) => {
                 </TableSortLabel>
               </TableCell>
             ))}
-            <TableCell>Acciones</TableCell> {/* Agregar una columna para las acciones */}
+            {/* <TableCell>Acciones</TableCell> Agregar una columna para las acciones */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -93,12 +93,12 @@ const TableComponent: React.FC<Props> = ({ data, columns }) => {
               ))}
               <TableCell>
               <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton aria-label="editar" onClick={() => handleOpenEditModal(row)}>
+              {/* <IconButton aria-label="editar" onClick={() => handleOpenEditModal(row)}>
                 <EditIcon />
               </IconButton>
               <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(row)}>
                 <DeleteIcon />
-              </IconButton>
+              </IconButton> */}
             </Box>
               </TableCell>
             </TableRow>

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -204,11 +205,11 @@ const ModalArticuloInsumo: React.FC<ModalArticuloInsumoProps> = ({
                 .required('Seleccione una categoría')
                 .test('is-not-zero', 'El ID de categoría no puede ser cero', value => value !== 0),
             }),
-            unidadMedida: Yup.object().shape({
+          unidadMedida: Yup.object().shape({
               id: Yup.number()
                 .typeError('Debe ser un número')
                 .min(1, 'Debe seleccionar una unidad de medida')
-                .test('is-not-zero', 'El ID de categoría no puede ser cero', value => value !== 0),
+                .test('is-not-zero', 'El ID de unidad Medida no puede ser cero', value => value !== 0),
             }),
           })}
           initialValues={initialValues}
