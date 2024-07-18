@@ -1,13 +1,10 @@
 import DataModel from "../DataModel";
-import Domicilio from "../Domicilio";
+import DomicilioShortDto from "./DomicilioShortDto";
 
 
 interface SucursalDto extends DataModel<SucursalDto>{
     nombre: string;
-    horarioApertura: string;
-    horarioCierre: string;
-    esCasaMatriz: boolean;
-    domicilio: Domicilio;
+    domicilio: DomicilioShortDto;
 }
 
 export default SucursalDto;
