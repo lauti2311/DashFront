@@ -15,7 +15,8 @@ import { setArticuloInsumo } from "../../redux/slices/articuloInsumo";
 import UnidadMedida from "../../types/UnidadMedida";
 import EditIcon from '@mui/icons-material/Edit';
 import { useParams } from "react-router-dom";
-import SideBar from "../common/BasicSidebar";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 interface Row {
   [key: string]: any;
