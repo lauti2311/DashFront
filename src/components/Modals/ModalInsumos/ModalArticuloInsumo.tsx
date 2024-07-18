@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -332,7 +333,11 @@ const ModalArticuloInsumo: React.FC<ModalArticuloInsumoProps> = ({
                       </option>
                     ))}
                   </Field>
-
+                  <ErrorMessage
+                    name="categoria.id"
+                    className="error-message text-danger"
+                    component="div"
+                  />
                 </Col>
                 <Col>
                   <label htmlFor="stockActual">Stock Actual:</label>
@@ -393,12 +398,18 @@ const ModalArticuloInsumo: React.FC<ModalArticuloInsumoProps> = ({
                     }}
                     value={values.unidadMedida ? values.unidadMedida.id : ""}
                   >
+                    <option value="0">Seleccione una unidad de medida</option>
                     {unidadesMedida.map((unidad) => (
                       <option key={unidad.id} value={unidad.id}>
                         {unidad.denominacion}
                       </option>
                     ))}
                   </Field>
+                  <ErrorMessage
+                    name="unidadMedida.id"
+                    className="error-message text-danger"
+                    component="div"
+                  />
 
                   <label htmlFor="imagenes">Imágenes:</label>
                   <input

@@ -15,7 +15,7 @@ import { setArticuloInsumo } from "../../redux/slices/articuloInsumo";
 import UnidadMedida from "../../types/UnidadMedida";
 import EditIcon from '@mui/icons-material/Edit';
 import { useParams } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
+import SideBar from "../common/BasicSidebar";
 
 interface Row {
   [key: string]: any;
@@ -40,7 +40,6 @@ export const ListaArticulosInsumo = () => {
     (state) => state.articuloInsumo.data
   );
   const { sucursalId } = useParams();
-
   const fetchArticulosInsumo = useCallback(async () => {
     try {
       if (sucursalId) {
