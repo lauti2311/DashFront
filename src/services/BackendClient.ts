@@ -1,22 +1,28 @@
 import { AbstractBackendClient } from "./AbstractBackendClient";
 
 export default abstract class BackendClient<T> extends AbstractBackendClient<T> {
-  protected async request(path: string, options: RequestInit): Promise<T> {
+  protected async request<T>(path: string, options: RequestInit): Promise<T> {
     try {
+      // Realiza una solicitud fetch con la ruta y las opciones proporcionadas
       const response = await fetch(path, options);
-      const text = await response.text(); // Obtén el texto en lugar de asumir JSON
 
-      console.log('Respuesta del servidor:', text); // Log de la respuesta del servidor
-
+      // Verifica si la respuesta es exitosa
       if (!response.ok) {
         console.log(response.statusText);
+        // Si no es exitosa, lanza un error con el mensaje de estado de la respuesta
         throw new Error(response.statusText);
       }
 
-      return text ? JSON.parse(text) : {}; // Si el texto no está vacío, parsea JSON
+      // Intenta obtener el cuerpo de la respuesta como texto
+      const text = await response.text();
+      // Si el texto está vacío, retorna un objeto vacío
+      if (!text) return {} as T;
+
+      // Intenta convertir el texto en JSON y retornarlo
+      return JSON.parse(text);
     } catch (error) {
-      console.error("Error en la solicitud:", error);
-      throw error;
+      // Si hay algún error, rechaza la promesa con el error
+      return Promise.reject(error);
     }
   }
 
