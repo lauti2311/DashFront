@@ -314,7 +314,7 @@ const ModalArticuloInsumo: React.FC<ModalArticuloInsumoProps> = ({
                     component="div"
                   />
 
-                  <label htmlFor="categoria">Categoria:</label>
+                <label htmlFor="categoria">Categoria:</label>
                   <Field
                     name="categoria"
                     as="select"
