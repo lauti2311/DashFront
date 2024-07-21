@@ -1,9 +1,9 @@
-import ArticuloInsumo from "./ArticuloInsumo";
+import ArticuloInsumoShortDto from "./dto/ArticuloInsumoShortDto";
 import DataModel from "./DataModel";
 
 interface IArticuloManufacturadoDetalle extends  DataModel<IArticuloManufacturadoDetalle> {
     cantidad: number;
-    articuloInsumo: ArticuloInsumo;
+    articuloInsumo: ArticuloInsumoShortDto
 }
 
 export default IArticuloManufacturadoDetalle;
