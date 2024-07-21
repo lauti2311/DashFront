@@ -1,17 +1,23 @@
 import ArticuloManufacturadoDetalle from "./ArticuloManufacturadoDetalle";
+import Categoria from "./Categoria";
+// import Categoria from "./Categoria";
 import DataModel from "./DataModel";
-import Imagenes from "./Imagenes";
+import Imagen from "./Imagenes";
 import UnidadMedida from "./UnidadMedida";
+import SucursalDto from "./dto/SucursalDto";
+// import CategoriaShorDto from "./dto/CategoriaShorDto";
 
-interface IArticuloManufacturado extends DataModel<IArticuloManufacturado>  {
+interface IArticuloManufacturado extends DataModel<IArticuloManufacturado> {
     denominacion: string;
     precioVenta: number;
-    imagenes:Imagenes [];
+    imagenes: Imagen[];
     unidadMedida: UnidadMedida;
     descripcion: string;
     tiempoEstimadoMinutos: number;
     preparacion: string;
     articuloManufacturadoDetalles: ArticuloManufacturadoDetalle[];
-  }
-  
-  export default IArticuloManufacturado;
+    categoria: Categoria;
+    sucursal: SucursalDto;
+}
+
+export default IArticuloManufacturado;

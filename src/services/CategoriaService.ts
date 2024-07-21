@@ -46,7 +46,7 @@ export default class CategoriaService extends BackendClient<ICategoria> {
     
     public async categoriaManufacturadoSucursal(url: string, idSucursal: number): Promise<Categoria[]> {
       try {
-        const path = `${url}categoria/sucursal/manufacturado/${idSucursal}`;
+        const path = `${url}categoria/sucursal/${idSucursal}`;
         const response = await fetch(path, { method: "GET" ,
           headers: {
               Accept: "application/json",

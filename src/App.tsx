@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Empresas } from './components/Empresa/Empresa';
-import Producto from './components/Producto/Producto';
+import { ListaProductos } from './components/Producto/ListaProductos';
 // import Perfil from './components/Perfil/Perfil';
 import { ListaArticulosInsumo } from './components/Insumo/Insumo';
 import Categoria from './components/Categoria/Categoria';
@@ -18,7 +18,7 @@ const App: React.FC = () => {
     <Router>
             <Routes>
               <Route element={<Layout/>}>
-              <Route path="/productos/lista/:sucursalId" element={<Producto />} />
+              <Route path="/productos/lista/:sucursalId" element={<ListaProductos />} />
               {/* <Route path="/perfil" element={<Perfil />} /> */}
               <Route path="/inicio/:sucursalId" element={<Inicio />} /> ta
               <Route path='/articuloInsumo/lista/:sucursalId' element={<ListaArticulosInsumo />} />

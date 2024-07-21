@@ -2,27 +2,28 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import ArticuloManufacturado from '../../types/ArticuloManufacturado';
 
-interface IInitialState {
-  articuloManufacturado: ArticuloManufacturado[];
+interface IInitialState<T> {
+  data: T;
 }
 
-const initialState: IInitialState = {
-  articuloManufacturado: [],
-}
+// Estado inicial específico para Promocion[]
+const initialArticuloManufacturado: IInitialState<ArticuloManufacturado[]> = {
+  data: [],
+};
 
 export const articuloManufacturadoSlice = createSlice({
   name: 'articuloManufacturadoState',
-  initialState,
+  initialState: initialArticuloManufacturado,
   reducers: {
-    setArticuloManufacturado: (state, action: PayloadAction<ArticuloManufacturado[]>) => {
-      state.articuloManufacturado = action.payload;
+    setData: (state, action: PayloadAction<ArticuloManufacturado[]>) => {
+      state.data = action.payload;
     },
-    resetArticuloManufacturado: (state) => {
-      state.articuloManufacturado = [];
+    resetData: (state) => {
+      state.data = [];
     }
   },
-})
+});
 
-export const { setArticuloManufacturado, resetArticuloManufacturado } = articuloManufacturadoSlice.actions;
+export const { setData: setArticuloManufacturado, resetData: resetArticuloManufacturado } = articuloManufacturadoSlice.actions;
 
 export default articuloManufacturadoSlice.reducer;
