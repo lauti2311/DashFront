@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, Typography, Button, Container } from "@mui/material";
+import { Box, Typography, Button, Container, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
 import { setArticuloManufacturado } from "../../redux/slices/articuloManufacturado.ts";
@@ -14,6 +14,8 @@ import UnidadMedida from "../../types/UnidadMedida.ts";
 import { handleSearch } from "../../utils/utils.ts";
 import SearchBar from "../common/SearchBar.tsx";
 import { useParams } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Row {
   [key: string]: any;
@@ -177,6 +179,16 @@ export const ListaProductos = () => {
         }
       }
     },
+    { id: "acciones", label: "Acciones", renderCell: (rowData) => (
+      <>
+         <IconButton aria-label="editar" onClick={() => handleOpenEditModal(rowData)}>        
+         <EditIcon /> 
+              </IconButton>
+              <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(rowData)}>      
+              <DeleteIcon />         
+              </IconButton>
+      </>
+    ) }
   ];
 
   return (
