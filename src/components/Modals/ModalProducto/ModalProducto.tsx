@@ -258,6 +258,8 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     console.log(newValue)
   };
 
+  
+
   return (
     <Modal
       id={"modal"}
@@ -285,7 +287,20 @@ const ModalProducto: React.FC<ModalProductProps> = ({
             preparacion: Yup.string().required("Campo requerido"),
             tiempoEstimadoMinutos: Yup.number().required("Campo requerido"),
             imagenes: Yup.array().min(1, "Debe agregar al menos una imagen").required("Campo requerido"),
-           
+            categoria: Yup.object().shape({
+              id: Yup.number()
+                .typeError('Debe ser un número')
+                .min(1, 'Debe seleccionar una categoría')
+                .required('Seleccione una categoría')
+                .test('is-not-zero', 'El ID de categoría no puede ser cero', value => value !== 0),
+            }),
+            unidadMedida: Yup.object().shape({
+              id: Yup.number()
+                .typeError('Debe ser un número')
+                .min(1, 'Debe seleccionar una unidad de medida')
+                .required('Seleccione una unidad de medida')
+                .test('is-not-zero', 'El ID de categoría no puede ser cero', value => value !== 0),
+            }),
           })}
           
           initialValues={initialValues}
@@ -399,6 +414,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                     }}
                     value={values.categoria ? values.categoria.id : ""}
                   >
+                    <option value="0">Seleccione una categoría</option>
                     {categorias.map((categoria) => (
                       <option key={categoria.id} value={categoria.id}>
                         {categoria.denominacion}
@@ -459,6 +475,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                     }}
                     value={values.unidadMedida ? values.unidadMedida.id : ""}
                   >
+                    <option value="0">Seleccione una unidad de medida</option>
                     {unidadesMedida.map((unidad) => (
                       <option key={unidad.id} value={unidad.id}>
                         {unidad.denominacion}
