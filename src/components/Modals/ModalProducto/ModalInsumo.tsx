@@ -226,6 +226,7 @@ const ModalInsumo: React.FC<ModalInsumoProps> = ({
                       <Button
                         variant="danger"
                         onClick={() => handleEliminarInsumo(detalle.articuloInsumo)}
+                        style={{ backgroundColor: '#fb6376', borderColor: '#fb6376', color: '#ffffff' }}
                       >
                         Eliminar
                       </Button>
@@ -242,7 +243,7 @@ const ModalInsumo: React.FC<ModalInsumoProps> = ({
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleGuardarInsumo}>
+        <Button variant="primary" onClick={handleGuardarInsumo} style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}>
           Guardar Insumo
         </Button>
       </Modal.Footer>

@@ -505,9 +505,11 @@ const ModalProducto: React.FC<ModalProductProps> = ({
               </Row>
               <Row>
                 <Col>
-                  <Button                   
+                  <Button
+                  
                     type="button"
                     variant="primary"
+                    style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                     onClick={() => setShowInsumoModal(true)}
                   >
                     {productToEdit ? "Editar Insumos" : "Agregar insumos"}
@@ -543,6 +545,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 <Button
                   type="submit"
                   variant="primary"
+                  style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                   disabled={isSubmitting || detalles.length === 0}
                 >
                   {isSubmitting ? "Guardando..." : "Guardar"}
