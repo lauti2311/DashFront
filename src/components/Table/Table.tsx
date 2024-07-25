@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createContext, useState } from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, IconButton, Box } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination, Box } from '@mui/material';
 
 interface Row {
   [key: string]: any;
@@ -37,7 +35,6 @@ const TableComponent: React.FC<Props> = ({ data, columns }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState<keyof Row>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const { handleOpenEditModal, handleOpenDeleteModal } = React.useContext(ModalContext);
 // corregi como anónimo
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);

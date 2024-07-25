@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { cilBarChart, cilCart, cilFastfood, cilUser } from "@coreui/icons";
+import { cilBarChart, cilBlur, cilCart, cilFastfood, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import { CNavItem, CNavTitle, CSidebar, CSidebarNav } from "@coreui/react";
 import '@coreui/coreui/dist/css/coreui.min.css';
@@ -37,7 +37,7 @@ const { sucursalId} = useParams();
                     </CNavItem>
                         <CNavItem>
                             <Link to={`/categorias/${sucursalId}`}className="nav-link">
-                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                <CIcon className="nav-icon" icon={cilBlur} />
                                 Categorías
                             </Link>
                         </CNavItem>

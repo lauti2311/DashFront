@@ -200,15 +200,15 @@ export const Sucursales = () => {
             sx={{
               maxWidth: 345,
               boxShadow: 3,
-              borderRadius: 16,
+              borderRadius: 2,
               cursor: "pointer",
               transition: "transform 0.3s, box-shadow 0.3s",
               "&:hover": {
-                transform: "scale(1.05)",
                 boxShadow: 6,
-                backgroundColor: "#f5f5f5",
+                backgroundColor: "#f5f5f5", 
+                transform: "scale(1.05)"
               },
-            }}
+              }}
           >
             <CardContent
               sx={{
@@ -244,13 +244,13 @@ export const Sucursales = () => {
               sx={{
                 maxWidth: 345,
                 boxShadow: 3,
-                borderRadius: 16,
+                borderRadius: 2,
                 cursor: "pointer",
                 transition: "transform 0.3s, box-shadow 0.3s",
                 "&:hover": {
-                  transform: "scale(1.05)",
                   boxShadow: 6,
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#f5f5f5", 
+                  transform: "scale(1.05)"
                 },
               }}
             >
@@ -262,7 +262,7 @@ export const Sucursales = () => {
                   image={sucursal.imagen}
                   sx={{
                     objectFit: "cover",
-                    borderRadius: "16px 16px 0 0",
+                    borderRadius: "8px 8px 0 0", // Rounded corners for the top
                     maxHeight: 140,
                   }}
                 />
