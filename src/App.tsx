@@ -12,7 +12,6 @@ import Usuario from './components/Usuario/Usuario';
 import { Sucursales } from './components/Sucursal/Sucursal';
 import Inicio from './components/Inicio/Inicio';
 import { Layout } from './components/common/GeneralLayout';
-
 const App: React.FC = () => {
   return (
     <Router>
@@ -20,7 +19,7 @@ const App: React.FC = () => {
               <Route element={<Layout/>}>
               <Route path="/productos/lista/:sucursalId" element={<ListaProductos />} />
               {/* <Route path="/perfil" element={<Perfil />} /> */}
-              <Route path="/inicio/:sucursalId" element={<Inicio />} /> ta
+              <Route path="/inicio/:sucursalId" element={<Inicio />} /> 
               <Route path='/articuloInsumo/lista/:sucursalId' element={<ListaArticulosInsumo />} />
               <Route path="/categorias/:sucursalId" element={<Categoria />} />
               <Route path="/empleados" element={<Empleado />} />
@@ -30,7 +29,6 @@ const App: React.FC = () => {
               {/* Route path="/promociones" element={<Promocion />} /> */}
               <Route path="/" element={ <Empresas />} />
               <Route path="/sucursales/:empresaId" element={<Sucursales/>} />  
-              {/* Otras rutas */}
             </Routes>
     </Router>
   );

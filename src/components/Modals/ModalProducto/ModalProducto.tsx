@@ -51,14 +51,14 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     precioVenta: productToEdit?.precioVenta || totalPrecioVenta,
     imagenes: productToEdit ? productToEdit.imagenes.map(
       (imagen: any) =>
-        ({
-          url: imagen.url,
-          name: "image",
-          id: imagen.id
-        } as ImagenArticulo)
+      ({
+        url: imagen.url,
+        name: "image",
+        id: imagen.id
+      } as ImagenArticulo)
     )
-  : [],    
-  unidadMedida: productToEdit?.unidadMedida ? { ...productToEdit.unidadMedida } : {
+      : [],
+    unidadMedida: productToEdit?.unidadMedida ? { ...productToEdit.unidadMedida } : {
       id: 0,
       eliminado: false,
       denominacion: "",
@@ -70,7 +70,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
       const articuloInsumo = detalle.articuloInsumo || {};
       const categoria = articuloInsumo.categoria || {};
       const sucursal = articuloInsumo.sucursal || { id: 0 };
-  
+
       return {
         id: detalle.id,
         cantidad: detalle.cantidad,
@@ -119,7 +119,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
       },
     },
   };
-  
+
   const modal = useAppSelector((state: any) => state.modal.modal);
   const dispatch = useAppDispatch();
 
@@ -137,7 +137,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
         file,
         preview: URL.createObjectURL(file),
       }));
-  
+
       // Combinar imágenes existentes con las nuevas imágenes seleccionadas
       const combinedImages = [...existingImages, ...newFilesArray];
       setFieldValue("imagenes", combinedImages);
@@ -155,7 +155,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
         const articulosInsumos = await insumoService.insumosParaElaborar(
           `${url}`, sucursalIdNumber
         );
-  
+
         setInsumos(articulosInsumos);
       }
     } catch (error) {
@@ -205,16 +205,16 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     setDetalles(detalles); // Guardar los detalles en el estado
     const sumaPrecios = detalles.map((detalle: any) =>
       detalle.cantidad * detalle.articuloInsumo.precioVenta
-    ).reduce((total: number, precioVenta: number) => total + precioVenta, 0);  
-    console.log(sumaPrecios)  
+    ).reduce((total: number, precioVenta: number) => total + precioVenta, 0);
+    console.log(sumaPrecios)
     setTotalPrecioVenta(sumaPrecios);
   };
-  
+
   useEffect(() => {
     setDetalles(productToEdit?.articuloManufacturadoDetalles || []);
     if (productToEdit) {
       setTotalPrecioVenta(productToEdit.precioVenta);
-    }  
+    }
   }, [productToEdit]);
 
   const handleUpload = async (articuloId: string) => {
@@ -245,7 +245,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
       // Actualizar values.imagenes eliminando la imagen correspondiente
       // Llamar a setFieldValue para actualizar el estado con las imágenes actualizadas
       setFieldValue("imagenes", images);
-      getProducts(); 
+      getProducts();
       console.log('Imagen eliminada correctamente.');
     } catch (error) {
       console.error('Error al eliminar la imagen:', error);
@@ -258,7 +258,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     console.log(newValue)
   };
 
-  
+
 
   return (
     <Modal
@@ -280,9 +280,9 @@ const ModalProducto: React.FC<ModalProductProps> = ({
           validationSchema={Yup.object({
             denominacion: Yup.string().required("Campo requerido"),
             precioVenta: Yup.number()
-            .required('Campo requerido')
-            .typeError('Debe ser un número válido')
-            .test('is-not-nan', 'El valor no puede ser NaN', value => !isNaN(value)),             
+              .required('Campo requerido')
+              .typeError('Debe ser un número válido')
+              .test('is-not-nan', 'El valor no puede ser NaN', value => !isNaN(value)),
             descripcion: Yup.string().required("Campo requerido"),
             preparacion: Yup.string().required("Campo requerido"),
             tiempoEstimadoMinutos: Yup.number().required("Campo requerido"),
@@ -302,7 +302,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 .test('is-not-zero', 'El ID de categoría no puede ser cero', value => value !== 0),
             }),
           })}
-          
+
           initialValues={initialValues}
           onSubmit={async (values: ArticuloManufacturado) => {
             try {
@@ -320,11 +320,11 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 productoId = productToEdit.id.toString();
                 if (files.length > 0 && productoId) {
                   handleUpload(productoId);
-                } 
+                }
               } else {
                 values.precioVenta = totalPrecioVenta;
                 values.articuloManufacturadoDetalles = detalles;
-                if(sucursalId){
+                if (sucursalId) {
                   const sucursalIdNumber = parseInt(sucursalId);
                   values.sucursal.id = sucursalIdNumber;
                 }
@@ -337,7 +337,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 productoId = response.id.toString();
                 if (files.length > 0 && productoId) {
                   handleUpload(productoId);
-                } 
+                }
               }
 
               getProducts();
@@ -398,31 +398,21 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                     name="categoria"
                     as="select"
                     className="form-control"
-                    onChange={(event: { target: { value: string } }) => {
-                      const categoriaSelect = parseInt(event.target.value);
-                      const selectedCategoria = categorias.find(
-                        (categoria) => categoria.id === categoriaSelect
-                      );
-
-                      if (selectedCategoria) {
-                        setFieldValue("categoria", selectedCategoria);
-                      } else {
-                        console.error(
-                          "No se encontró la categoria seleccionada"
-                        );
-                      }
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                      const selectedCategoria = categorias.find(categoria => categoria.id === Number(e.target.value));
+                      setFieldValue("categoria", selectedCategoria || initialValues.categoria);
                     }}
-                    value={values.categoria ? values.categoria.id : ""}
+                    value={values.categoria.id}
                   >
                     <option value="0">Seleccione una categoría</option>
-                    {categorias.map((categoria) => (
-                      <option key={categoria.id} value={categoria.id}>
+                    {categorias.map((categoria, index) => (
+                      <option key={index} value={categoria.id}>
                         {categoria.denominacion}
                       </option>
                     ))}
                   </Field>
                   <ErrorMessage
-                    name="categoria"
+                    name="categoria.id"
                     className="error-message text-danger"
                     component="div"
                   />
@@ -482,9 +472,8 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                       </option>
                     ))}
                   </Field>
-
                   <ErrorMessage
-                    name="unidadMedida"
+                    name="unidadMedida.id"
                     className="error-message text-danger"
                     component="div"
                   />
@@ -506,7 +495,6 @@ const ModalProducto: React.FC<ModalProductProps> = ({
               <Row>
                 <Col>
                   <Button
-                  
                     type="button"
                     variant="primary"
                     style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
@@ -518,9 +506,9 @@ const ModalProducto: React.FC<ModalProductProps> = ({
               </Row>
               {values.imagenes.length > 0 && (
                 <Row>
-                  <ImageSlider images={values.imagenes} urlParteVariable="articuloManufacturado" 
-                  onDeleteImage={(images) => handleDeleteImage(images, setFieldValue)}
-                  />                
+                  <ImageSlider images={values.imagenes} urlParteVariable="articuloManufacturado"
+                    onDeleteImage={(images) => handleDeleteImage(images, setFieldValue)}
+                  />
                 </Row>
               )}
               <ModalInsumo
