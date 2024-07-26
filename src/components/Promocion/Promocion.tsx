@@ -2,16 +2,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import TableComponent from "../Table/Table";
-import SearchBar from "../common/SearchBar";
-
-import { setPromocion } from "../../redux/slices/Promocion";
-import PromocionService from "../../services/PromocionService";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
+import PromocionService from "../../services/PromocionService.ts";
+import Promocion from "../../types/Promocion.ts";
+import { setPromocion } from "../../redux/slices/Promocion.ts";
+import { toggleModal } from "../../redux/slices/Modal.ts";
+import SearchBar from "../../components/common/SearchBar.tsx";
+import TableComponent from "../../components/Table/Table.tsx";
+import ModalEliminarPromocion from "../../components/Modals/Promocion/ModalEliminarPromocion.tsx";
+import ModalPromocion from "../../components/Modals/Promocion/ModalPromocion.tsx";
+import { handleSearch } from "../../utils/utils.ts";
 import { useParams } from "react-router-dom";
-import { toggleModal } from "../../redux/slices/Modal";
-import Promocion from "../../types/Promocion";
 
 interface Row {
   [key: string]: any;
@@ -23,8 +24,7 @@ interface Column {
   renderCell: (rowData: Row) => JSX.Element;
 }
 
-export const ListaPromo = () => {
-  const { getAccessTokenSilently } = useAuth0();
+export const ListaPromocion = () => {
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +60,7 @@ const handleOpenDeleteModal = (rowData: Row) => {
   const handleDelete = async () => {
     try {
       if (promocionToEdit && promocionToEdit.id) {
-        await promocionService.delete(url + 'promocion', promocionToEdit.id.toString(), await getAccessTokenSilently({}));
+        await promocionService.delete(url + 'promociones', promocionToEdit.id.toString());
         console.log('Se ha eliminado correctamente.');
         handleCloseDeleteModal(); // Cerrar el modal de eliminación
         fetchPromocion(); // Actualizar la lista de promociones después de la eliminación
@@ -84,7 +84,7 @@ const handleOpenDeleteModal = (rowData: Row) => {
         
         const sucursalIdNumber = parseInt(sucursalId);
 
-        const promociones = await promocionService.promocionesSucursal(url, sucursalIdNumber, await getAccessTokenSilently({}));
+        const promociones = await promocionService.promocionesSucursal(url, sucursalIdNumber);
         // Actualizar el estado con las promociones 
         dispatch(setPromocion(promociones));
         setFilterData(promociones);
@@ -144,33 +144,61 @@ const onSearch = (query: string) => {
     { id: "tipoPromocion", label: "Tipo Promoción", renderCell: (rowData) => <>{rowData.tipoPromocion}</> },
   ];
 
-
   return (
-    <Box component="main" sx={{ flexGrow: 1, my: 2}}>
-      <Container>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
+  <React.Fragment>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        my: 2,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            my: 1,
+          }}
+        >
           <Typography variant="h5" gutterBottom>
             Promociones
           </Typography>
           <Button
             sx={{
-              bgcolor: "#fb6376",
-              "&:hover": {
-                bgcolor: "#d73754",
+              bgcolor: '#fb6376',
+              '&:hover': {
+                bgcolor: '#fb6376',
               },
             }}
             variant="contained"
             startIcon={<Add />}
+            onClick={handleAddPromocion}
           >
-            Promoción
+            Promocion
           </Button>
         </Box>
         <Box sx={{ mt: 2 }}>
-          <SearchBar onSearch={handleSearch} />
-        </Box>
-        <TableComponent data={filteredData} columns={columns} />
+          <SearchBar onSearch={onSearch} />
+        </Box> 
+        <TableComponent
+          data={filterData}
+          columns={columns}
+          handleOpenEditModal={handleOpenEditModal}
+          handleOpenDeleteModal={handleOpenDeleteModal} // Pasa la función para abrir la modal de eliminación
+          isListaPedidos={false}
+          
+        />
+        <ModalEliminarPromocion show={deleteModalOpen} onHide={handleCloseDeleteModal} promocion={promocionToEdit} onDelete={handleDelete} />
+        {/* Llamando a ModalPromocion con la prop fetchPromocion y promocionToEdit */}
+        <ModalPromocion getPromocion={fetchPromocion} promocionToEdit={promocionToEdit !== null ? promocionToEdit : undefined} />
       </Container>
     </Box>
+  </React.Fragment>
   );
-};
-
+}
