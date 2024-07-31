@@ -10,7 +10,7 @@ interface ModalEliminarPromocionProps {
     onDelete: () => void;
   }
   
-  const ModalEliminarPromocion: React.FC<ModalEliminarPromocionProps> = ({ show, onHide, promocion }) => {
+  const ModalEliminarPromocion: React.FC<ModalEliminarPromocionProps> = ({ show, onHide, promocion, onDelete }) => {
     const promocionService = new PromocionService();
     const url = import.meta.env.VITE_API_URL;
 
@@ -18,15 +18,18 @@ interface ModalEliminarPromocionProps {
     const handleDelete = async () => {
       try {
         if (promocion && promocion.id) {
-          await promocionService.delete(url + 'promocion', promocion.id.toString());
+          await promocionService.delete(url + 'promociones', promocion.id.toString());
           console.log(promocion.id.toString())
           console.log('Se ha eliminado correctamente.');
+          onDelete();
           onHide(); // Cerramos el modal
         } else {
           console.error('No se puede eliminar la promocion porque no se proporcionó un ID válido.');
         }
       } catch (error) {
         console.error('Error al eliminar la promocion:', error);
+        onDelete();
+        onHide();
       }
     };
 

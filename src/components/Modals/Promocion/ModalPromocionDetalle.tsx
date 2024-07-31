@@ -54,20 +54,22 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
 
   const handleAgregarInsumos = () => {
     const existingInsumos = selectedInsumos.filter(insumo => detalles.some(detalle => detalle.articulo.id === insumo.id));
-    
+  
     if (existingInsumos.length > 0) {
       alert(`Los siguientes insumos ya están agregados: ${existingInsumos.map(insumo => insumo.denominacion).join(", ")}`);
-    } else {
-      const newDetalles = selectedInsumos.map((insumo) => ({
-        cantidad: 1,
-        eliminado: false,
-        articulo: insumo,
-        id: 0,
-      }));
-    
-      setDetalles([...detalles, ...newDetalles]);
-      setSelectedInsumos([]);
     }
+  
+    const newInsumos = selectedInsumos.filter(insumo => !detalles.some(detalle => detalle.articulo.id === insumo.id));
+  
+    const newDetalles = newInsumos.map((insumo) => ({
+      cantidad: 1,
+      eliminado: false,
+      articulo: insumo,
+      id: 0,
+    }));
+  
+    setDetalles([...detalles, ...newDetalles]);
+    setSelectedInsumos([]);
   };
 
   const handleCantidadChange = (
@@ -83,6 +85,10 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
   };
 
   const handleGuardarInsumo = () => {
+    if (detalles.length === 0) {
+      alert("No se pueden guardar promociones sin detalles.");
+      return;
+    }
     handleAddInsumo(detalles);
     handleClose();
     console.log(detalles);
@@ -210,12 +216,7 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
                       />
                     </td>
                     <td>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleEliminarInsumo(index)}
-                      >
-                        Eliminar
-                      </Button>
+                      <Button variant="danger" onClick={() => handleEliminarInsumo(index)}>Eliminar</Button>
                     </td>
                   </tr>
                 ))}
@@ -225,8 +226,11 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
         )}
       </Modal.Body>
       <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cerrar
+        </Button>
         <Button variant="primary" onClick={handleGuardarInsumo}>
-          Guardar Productos
+          Guardar
         </Button>
       </Modal.Footer>
     </Modal>

@@ -127,24 +127,13 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      if(sucursalId){
-        const sucursalIdNumber = parseInt(sucursalId); // Convertir sucursalId a número si es una cadena
-
-        const productData = await productoService.manufacturados(
-          url, sucursalIdNumber
-        );
-        const insumData = await articuloInsumoService.insumos(
-          url, sucursalIdNumber
-        );
-        // Filtrar los productos manufacturados y los insumos
-        const insumos = insumData.filter((insumo) => !insumo.esParaElaborar);
-        // setArticuloManufacturado(productData);
-        // setArticuloInsumo(insumos);
-        // Combinar los productos manufacturados y los insumos en un solo array
-  
+      if (sucursalId) {
+        const sucursalIdNumber = parseInt(sucursalId);
+        const productData = await productoService.manufacturados(url, sucursalIdNumber);
+        const insumData = await articuloInsumoService.insumos(url, sucursalIdNumber);
+        const insumos = insumData.filter(insumo => !insumo.esParaElaborar);
         const combinedData = [...productData, ...insumos];
-
-        const mergedProducts = combinedData.map((value) => ({
+        const mergedProducts = combinedData.map(value => ({
           id: value.id,
           categoria: value.categoria,
           denominacion: value.denominacion,
@@ -157,12 +146,11 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
           tiempoEstimadoMinutos: value.tiempoEstimadoMinutos || 0,
           unidadMedida: value.unidadMedida,
         }));
-        console.log(mergedProducts)
         setProductos(mergedProducts);
       }
     };
     fetchData();
-  }, []);
+  }, [sucursalId, url]);
   const fetchSucursales = async () => {
     try {
       if (sucursalId) {
@@ -219,6 +207,7 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
       setFiles(Array.from(e.target.files));
     }
   };
+
   
   useEffect(() => {
     setDetalles(promocionToEdit?.promocionDetalle || []);
@@ -306,53 +295,44 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
             .min(1, 'Debe seleccionar al menos una sucursal'),
           })}
           initialValues={initialValues}
-          onSubmit={async (values) => {
-            try {
-              let promocion = undefined;
+        onSubmit={async (values) => {
+          try {
+            let promocion = undefined;
 
-              if (promocionToEdit) {
-                                
-                const sucursalesSeleccionadas = values.sucursales;
-                values.promocionDetalle = detalles;
-                values.precioPromocional = totalPrecioPromocional
-                // añadimos todas las sucursales seleccionadas al array de sucursales en values
-                values.sucursales = sucursalesSeleccionadas;
-                promocion = await promocionService.put(
-                  url + "promociones",
-                  values.id.toString(),
-                  values
-                );
+            if (promocionToEdit) {
+              values.promocionDetalle = detalles;
+              values.precioPromocional = totalPrecioPromocional;
+              promocion = await promocionService.put(
+                url + "promociones",
+                values.id.toString(),
+                values
+              );
 
-                const promocionId = promocion.id.toString();
-                if (files.length > 0 && promocionId) {
-                  handleUpload(promocionId);
-                }
-              } else {
-                // Realizar todas las solicitudes 'post' de manera concurrente y recolectar sus respuestas
-                const sucursalesSeleccionadas = values.sucursales;
-                // Ahora, en lugar de agregar una sola sucursal (como la de ID 1),
-                // añadimos todas las sucursales seleccionadas al array de sucursales en values
-                values.sucursales = sucursalesSeleccionadas;
-                values.promocionDetalle = detalles;
-                values.precioPromocional = totalPrecioPromocional
-                promocion = await promocionService.post(url + "promociones", values);
-
-                const promocionId = promocion.id.toString();
-                if (files.length > 0 && promocionId) {
-                  handleUpload(promocionId);
-                }
+              const promocionId = promocion.id.toString();
+              if (files.length > 0 && promocionId) {
+                handleUpload(promocionId);
               }
+            } else {
+              values.promocionDetalle = detalles;
+              values.precioPromocional = totalPrecioPromocional;
+              promocion = await promocionService.post(url + "promociones", values);
 
-              getPromocion();
-              handleClose();
-            } catch (error) {
-              console.error("Error al realizar la operación:", error);
+              const promocionId = promocion.id.toString();
+              if (files.length > 0 && promocionId) {
+                handleUpload(promocionId);
+              }
             }
-          }}
-        >
-          {({ values, setFieldValue, isSubmitting  }) => (
-            <Form autoComplete="off">
-              <div className="row">
+
+            getPromocion();
+            handleClose();
+          } catch (error) {
+            console.error("Error al realizar la operación:", error);
+          }
+        }}
+      >
+        {({ values, setFieldValue, isSubmitting }) => (
+          <Form autoComplete="off">
+            <div className="row">
                 <div className="col-md-4 mb-4">
                   <label htmlFor="denominacion">Denominación:</label>
                   <Field

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, Typography, Button, Container } from "@mui/material";
+import { Box, Typography, Button, Container, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
 import PromocionService from "../../services/PromocionService.ts";
@@ -9,6 +9,8 @@ import { setPromocion } from "../../redux/slices/Promocion.ts";
 import { toggleModal } from "../../redux/slices/Modal.ts";
 import SearchBar from "../../components/common/SearchBar.tsx";
 import TableComponent from "../../components/Table/Table.tsx";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ModalEliminarPromocion from "../../components/Modals/Promocion/ModalEliminarPromocion.tsx";
 import ModalPromocion from "../../components/Modals/Promocion/ModalPromocion.tsx";
 import { handleSearch } from "../../utils/utils.ts";
@@ -57,24 +59,31 @@ const handleOpenDeleteModal = (rowData: Row) => {
     });
   setDeleteModalOpen(true); // Utiliza el estado directamente para abrir la modal de eliminación
 };
-  const handleDelete = async () => {
-    try {
-      if (promocionToEdit && promocionToEdit.id) {
-        await promocionService.delete(url + 'promociones', promocionToEdit.id.toString());
-        console.log('Se ha eliminado correctamente.');
-        handleCloseDeleteModal(); // Cerrar el modal de eliminación
-        fetchPromocion(); // Actualizar la lista de promociones después de la eliminación
-      } else {
-        console.error('No se puede eliminar la Promocion porque no se proporcionó un ID válido.');
-      }
-    } catch (error) {
-      console.error('Error al eliminar la promocion:', error);
-    }
-  };
 
   const handleCloseDeleteModal = () => {
-    setDeleteModalOpen(false); // Utiliza el estado directamente para cerrar la modal de eliminación
-  };
+    setDeleteModalOpen(false); 
+    // Utiliza el estado directamente para cerrar la modal de eliminación
+};
+const handleDelete = async () => {
+  try {
+    if (promocionToEdit && promocionToEdit.id) {
+      await promocionService.delete(url + 'promociones', promocionToEdit.id.toString());
+      console.log('Se ha eliminado correctamente.');
+
+      // Update the globalPromocion and filterData state to remove the deleted promotion
+      const updatedPromociones = globalPromocion.filter(p => p.id !== promocionToEdit.id);
+      dispatch(setPromocion(updatedPromociones));
+      setFilterData(updatedPromociones);
+
+      handleCloseDeleteModal(); // Cerrar el modal de eliminación
+    } else {
+      console.error('No se puede eliminar la Promocion porque no se proporcionó un ID válido.');
+    }
+  } catch (error) {
+    console.error('Error al eliminar la promocion:', error);
+  }
+};
+
 
    // Definiendo fetchSucursal con useCallback
    const fetchPromocion = useCallback(async () => {
@@ -142,6 +151,16 @@ const onSearch = (query: string) => {
     { id: "descripcionDescuento", label: "Descripcion Descuento", renderCell: (rowData) => <>{rowData.descripcionDescuento}</> },
     { id: "precioPromocional", label: "Precio Promocional", renderCell: (rowData) => <>{rowData.precioPromocional}</> },
     { id: "tipoPromocion", label: "Tipo Promoción", renderCell: (rowData) => <>{rowData.tipoPromocion}</> },
+    { id: "acciones", label: "Acciones", renderCell: (rowData) => (
+      <>
+         <IconButton aria-label="editar" onClick={() => handleOpenEditModal(rowData)}>        
+         <EditIcon /> 
+              </IconButton>
+              <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(rowData)}>      
+              <DeleteIcon />         
+              </IconButton>
+      </>
+    ) }
   ];
 
   return (
@@ -197,7 +216,7 @@ const onSearch = (query: string) => {
         <ModalEliminarPromocion show={deleteModalOpen} onHide={handleCloseDeleteModal} promocion={promocionToEdit} onDelete={handleDelete} />
         {/* Llamando a ModalPromocion con la prop fetchPromocion y promocionToEdit */}
         <ModalPromocion getPromocion={fetchPromocion} promocionToEdit={promocionToEdit !== null ? promocionToEdit : undefined} />
-      </Container>
+        </Container>
     </Box>
   </React.Fragment>
   );
