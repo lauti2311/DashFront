@@ -60,8 +60,8 @@ export const ListaArticulosInsumo = () => {
 
   useEffect(() => {
     fetchArticulosInsumo();
-    onSearch("");
-  }, [fetchArticulosInsumo]);
+    onSearch('');
+  }, []);
 
   const handleOpenDeleteModal = (rowData: Row) => {
     setArticuloToEdit({
@@ -84,8 +84,11 @@ export const ListaArticulosInsumo = () => {
 
   const handleCloseDeleteModal = () => {
     setDeleteModalOpen(false);
-    fetchArticulosInsumo();
   };
+  const onDeleteArticuloInsumo = (id: number) => {
+    setFilterData(prevFilterData => prevFilterData.filter(item => item.id !== id));
+  };
+
   const handleAddArticuloInsumo = () => {
     setArticuloToEdit(null);
     dispatch(toggleModal({ modalName: "modal" }));
@@ -184,6 +187,7 @@ export const ListaArticulosInsumo = () => {
           show={deleteModalOpen}
           onHide={handleCloseDeleteModal}
           articuloInsumo={articuloToEdit}
+          onDeleteArticuloInsumo={onDeleteArticuloInsumo} // Pasamos la función de eliminación
         />
         <ModalArticuloInsumo
           getArticulosInsumo={fetchArticulosInsumo}
