@@ -1,7 +1,7 @@
 import DataModel from "./DataModel";
 import Imagenes from "./Imagenes";
 import PromocionDetalle from "./PromocionDetalle";
-import SucursalDto from "./dto/SucursalDto";
+import SucursalShorDto from "./dto/SucursalShortDto";
 import { TipoPromocion } from "./enums/TipoPromocion";
 
 interface Promocion extends DataModel<Promocion>{
@@ -14,7 +14,7 @@ interface Promocion extends DataModel<Promocion>{
   precioPromocional: number,
   tipoPromocion: TipoPromocion,
   imagenes: Imagenes[],
-  sucursales: SucursalDto[],
+  sucursales: SucursalShorDto[],
   promocionDetalle: PromocionDetalle[]
   }
 

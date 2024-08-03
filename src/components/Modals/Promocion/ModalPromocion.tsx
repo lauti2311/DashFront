@@ -150,7 +150,7 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
       }
     };
     fetchData();
-  }, [sucursalId, url]);
+  }, []);
   const fetchSucursales = async () => {
     try {
       if (sucursalId) {
@@ -300,12 +300,15 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
             let promocion = undefined;
 
             if (promocionToEdit) {
+              const sucursalesSeleccionadas = values.sucursales;
               values.promocionDetalle = detalles;
               values.precioPromocional = totalPrecioPromocional;
+              values.sucursales = sucursalesSeleccionadas;
               promocion = await promocionService.put(
                 url + "promociones",
                 values.id.toString(),
                 values
+                
               );
 
               const promocionId = promocion.id.toString();
@@ -313,9 +316,14 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
                 handleUpload(promocionId);
               }
             } else {
+              const sucursalesSeleccionadas = values.sucursales;
+              values.sucursales = sucursalesSeleccionadas;
               values.promocionDetalle = detalles;
               values.precioPromocional = totalPrecioPromocional;
-              promocion = await promocionService.post(url + "promociones", values);
+              promocion = await promocionService.post(
+                url + "promociones",
+                values
+              );
 
               const promocionId = promocion.id.toString();
               if (files.length > 0 && promocionId) {
@@ -531,6 +539,7 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
                     type="button"
                     variant="primary"
                     onClick={() => setShowInsumoModal(true)}
+                    style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                   >
                     {promocionToEdit ? "Editar productos" : "Agregar productos"}
                   </Button>
@@ -555,8 +564,8 @@ const ModalPromocion: React.FC<ModalPromocionProps> = ({
                   type="submit"
                   variant="primary"
                   disabled={isSubmitting || detalles.length === 0}
-                  color="#fb6376"
-                >
+                  style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+                  >
                   {isSubmitting ? "Guardando..." : "Guardar"}
                 </Button>
               </div>
