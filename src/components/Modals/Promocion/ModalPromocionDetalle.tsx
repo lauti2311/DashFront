@@ -57,20 +57,21 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
   
     if (existingInsumos.length > 0) {
       alert(`Los siguientes insumos ya están agregados: ${existingInsumos.map(insumo => insumo.denominacion).join(", ")}`);
+    }else {
+      const newDetalles = selectedInsumos.map((insumo) => ({
+        cantidad: 1,
+        eliminado: false,
+        articulo: insumo,
+        id: 0,
+      }));
+    
+      setDetalles([...detalles, ...newDetalles]);
+      setSelectedInsumos([]);
     }
-  
-    const newInsumos = selectedInsumos.filter(insumo => !detalles.some(detalle => detalle.articulo.id === insumo.id));
-  
-    const newDetalles = newInsumos.map((insumo) => ({
-      cantidad: 1,
-      eliminado: false,
-      articulo: insumo,
-      id: 0,
-    }));
-  
-    setDetalles([...detalles, ...newDetalles]);
-    setSelectedInsumos([]);
   };
+  
+    //const newInsumos = selectedInsumos.filter(insumo => !detalles.some(detalle => detalle.articulo.id === insumo.id));
+  
 
   const handleCantidadChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -145,12 +146,14 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
             onChange={handleSearchChange}
           />
           {selectedInsumos.length > 1 && (
-            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4">
+            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4" style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+>
               Agregar productos
             </Button>
           )}
           {selectedInsumos.length === 1 && (
-            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4">
+            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4" style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+>
               Agregar producto
             </Button>
           )}
@@ -226,10 +229,12 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={handleClose} style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+        >
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleGuardarInsumo}>
+        <Button variant="primary" onClick={handleGuardarInsumo} style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+        >
           Guardar
         </Button>
       </Modal.Footer>
