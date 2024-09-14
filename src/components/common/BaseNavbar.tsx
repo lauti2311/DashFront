@@ -6,44 +6,59 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
-import Divider from '@mui/material/Divider';
-import { useParams } from 'react-router-dom';
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import { useLocation, useParams } from 'react-router-dom';
 import SucursalService from '../../services/Sucursal';
 import { useState } from 'react';
-import { Dialog, DialogTitle, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface BaseNavBarProps{
   title: string;
 }
 
 export const BaseNavBar = ({ title} : BaseNavBarProps) =>{
-
-  const[dialogOpen, setDialogOpen] = useState(false);
-
-
-
-
-  const handleProfileMenuOpen = () => {
-    setDialogOpen(true);
-  }
-  
-  
-  const handleMenuClose = () => {
-    setDialogOpen(false);
-  };
-
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const url = import.meta.env.VITE_API_URL;
   const {sucursalId} = useParams();
   const sucursalService = new SucursalService();
   const [sucursalName, setSucursalName] = useState('');
+  const { isAuthenticated, loginWithRedirect, logout, getAccessTokenSilently, user } = useAuth0();
+  const location = useLocation();
+  
+  const handleLogin = () => {
+    loginWithRedirect();
+  };
+
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleGoBack = () => {
+    window.history.back(); // Simular el comportamiento de navegar hacia atrás en el historial del navegador
+  };
+
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: "http://localhost:5173/"
+      }
+    });
+  };
+
+  
+
+ 
 
   const fetchSucursalData = async () => {
     try{
       if (sucursalId){
-        const sucursal = await sucursalService.get(url + 'sucursales', sucursalId);
+        const sucursal = await sucursalService.get(url + 'sucursales', sucursalId, await getAccessTokenSilently({}));
         setSucursalName(sucursal.nombre);
     }
   }catch(error){
@@ -54,60 +69,83 @@ export const BaseNavBar = ({ title} : BaseNavBarProps) =>{
 React.useEffect(() => {
   fetchSucursalData();
 }, [sucursalId]);
-  if(title === ''){
-    title = `${sucursalName}`;
-  }
-return(
-  <Box sx= {{ marginBottom: 1}}>
-    <AppBar position="static" sx={{bgcolor: "#FB6376", height: 80, marginBottom: 1}}>
-      <Toolbar>
-        <Typography
-          variant="h6"
-          noWrap
-          component="div"
-          sx={{ flexGrow:1, justifyContent: 'center', fontSize: 24, fontWeight: 'bold'}}
+    const displayedTitle = title === '' ? `Sucursal ${sucursalName}` : title;
+return (
+    <Box sx={{ marginBottom: 1 }}>
+      <AppBar position="static" sx={{ bgcolor: "#9c27b0", height: 80, marginBottom: 1, display: 'flex', justifyContent: 'center' }}>
+        <Toolbar>
+          {location.pathname !== '/' && user && user['https://apiauth.com/roles'][0] === 'SUPERADMIN' && (
+            <IconButton
+              size="large"
+              edge="start"
+              aria-label="go back"
+              color="inherit"
+              sx={{ marginRight: 1 }}
+              onClick={handleGoBack} // Manejar clic en el botón de flecha hacia atrás
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, fontSize: '1.7rem' }}
           >
-            {title}
+            {displayedTitle}
           </Typography>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
+          <Box component="div" sx={{ display: 'flex', alignItems: 'center' }}>
+            <p style={{ margin: 0 }}>
+              {user?.name}
+            </p>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
             >
               <AccountCircle />
             </IconButton>
-      </Toolbar>
-    </AppBar>
-    <Dialog onClose={handleMenuClose} open={dialogOpen}>
-      <DialogTitle>Perfil</DialogTitle>
-      <List>
-        <ListItem button>
-          <ListItemIcon>
-            <Person2OutlinedIcon />
-            
-          </ListItemIcon>
-          <ListItemText primary= "Perfil"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <SettingsOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary= "Configuración"/>
-        </ListItem>
-        <Divider / >
-        <ListItem button>
-          <ListItemIcon>
-            <LunchDiningOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary= "Cerrar Sesión"/>
-        </ListItem>
-
-      </List>
-    </Dialog>
-  </Box>
-)
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {!isAuthenticated && (
+                <MenuItem onClick={() => { handleLogin(); handleMenuClose(); }}>
+                  <ListItemIcon>
+                    <LoginOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Login" />
+                </MenuItem>
+              )}
+              {isAuthenticated && (
+                <MenuItem onClick={() => { handleLogout(); handleMenuClose(); }}>
+                  <ListItemIcon>
+                    <LoginOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Cerrar Sesión" />
+                </MenuItem>
+              )}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
+    )
 }
+
+export default BaseNavBar;

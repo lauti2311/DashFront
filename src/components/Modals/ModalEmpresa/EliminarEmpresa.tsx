@@ -1,6 +1,8 @@
 import { Modal, Button } from "react-bootstrap";
 import EmpresaService from "../../../services/EmpresaService";
 import IEmpresa from "../../../types/Empresa";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 interface EliminarEmpresaProps {
     show: boolean;
@@ -11,11 +13,23 @@ interface EliminarEmpresaProps {
   const EliminarEmpresa: React.FC<EliminarEmpresaProps> = ({ show, onHide, empresa }) => {
       const empresaService = new EmpresaService();
       const url = import.meta.env.VITE_API_URL;
+      const { getAccessTokenSilently } = useAuth0();
+      const [isDeleting, setIsDeleting] = useState(false);
+      
+      
+      const handleDeleteClick = async () => {
+        setIsDeleting(true);
+        try {
+          await handleDelete();
+        } finally {
+          setIsDeleting(false);
+        }
+      };
     
       const handleDelete = async () => {
         try {
           if (empresa && empresa.id) {
-            await empresaService.delete(url + 'empresas',empresa.id.toString());
+            await empresaService.delete(url + 'empresas',empresa.id.toString(), await getAccessTokenSilently());
             console.log('Se ha eliminado correctamente.');
             onHide(); 
           } else {
@@ -39,9 +53,9 @@ interface EliminarEmpresaProps {
             <Button variant="secondary" onClick={onHide}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
-              Eliminar
-            </Button>
+            <Button className='text-light' variant="danger" onClick={handleDeleteClick} disabled={isDeleting}>
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
+          </Button>
           </Modal.Footer>
         </Modal>
       );

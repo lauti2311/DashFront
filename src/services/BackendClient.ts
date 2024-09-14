@@ -41,29 +41,36 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
     }
   }
 
-  async get(url: string, id: string): Promise<T> {
+  async get(url: string, id: string, token: string): Promise<T> {
     const path = `${url}/${id}`;
     const options: RequestInit = {
       method: "GET",
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
     };
     return this.request(path, options);
   }
 
-  async getAll(url: string): Promise<T[]> {
+  async getAll(url: string, token: string): Promise<T[]> {
     const path = url;
     const options: RequestInit = {
       method: "GET",
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
     };
     return this.requestAll(path, options);
   }
 
-  async post(url: string, data: T): Promise<T> {
+  async post(url: string, data: T, token: string): Promise<T> {
     const path = url;
     const options: RequestInit = {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(data),
     };
@@ -71,26 +78,28 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
     return this.request(path, options);
   }
 
-  async put(url: string, id: string, data: T): Promise<T> {
+  async put(url: string, id: string, data: T, token: string): Promise<T> {
     const path = `${url}/${id}`;
     const options: RequestInit = {
       method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(data),
     };
     return this.request(path, options);
   }
 
-  async delete(url: string, id: string): Promise<void> {
+  async delete(url: string, id: string, token: string): Promise<void> {
     const path = `${url}/${id}`;
     const options: RequestInit = {
       method: "DELETE",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
     };
     
@@ -103,7 +112,7 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
     }
   }
 
-  async uploadFile(url: string, file: File, id: string): Promise<Response> {
+  async uploadFile(url: string, file: File, id: string, token: string): Promise<Response> {
     const path = url;
     const formData = new FormData();
     formData.append('uploads', file);
@@ -112,17 +121,21 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
     const options: RequestInit = {
       method: "POST",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     };
 
     return fetch(path, options);
   }
-  async deleteImage(url: string,publicId: string, id: string): Promise<Response> {
+  async deleteImage(url: string,publicId: string, id: string, token: string): Promise<Response> {
     const encodedPublicId = encodeURIComponent(publicId);
     const encodedId = encodeURIComponent(id);
     const path = `${url}/deleteImg?publicId=${encodedPublicId}&id=${encodedId}`;
       const options: RequestInit = {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json", // Ajusta según el tipo de contenido necesario por tu backend
       },
     };

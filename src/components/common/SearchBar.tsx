@@ -36,12 +36,10 @@ const SearchBar: React.FC<Props> = ({ onSearch }) => {
         endAdornment: (
           <InputAdornment position="end">
             {searchQuery && (
-              // Botón para borrar la consulta de búsqueda.
               <IconButton onClick={handleClearSearch} edge="end">
                 <CloseIcon />
               </IconButton>
             )}
-            {/* Botón para activar la búsqueda. */}
             <IconButton edge="end">
               <SearchIcon />
             </IconButton>
