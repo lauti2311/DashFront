@@ -10,6 +10,7 @@ import { toggleModal } from "../../../redux/slices/Modal";
 import { useParams } from "react-router-dom";
 import SucursalService from "../../../services/Sucursal";
 import Sucursal from "../../../types/Sucursal";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface ModalCategoriaProps {
@@ -30,16 +31,17 @@ const ModalCategoria: React.FC<ModalCategoriaProps> = ({
   const { sucursalId } = useParams();
   const sucursalService = new SucursalService();
   const [sucursales, setSucursales] = useState<Sucursal[]>([]);
-
+  const { getAccessTokenSilently } = useAuth0();
   const fetchSucursalData = async () => {
     try {
       if (sucursalId) {
         const sucursalSeleccionada = await sucursalService.get(
           url + "sucursales",
-          sucursalId
+          sucursalId,
+          await getAccessTokenSilently({})
         );
         const empresaId = sucursalSeleccionada.empresa.id;
-        const todasSucursales = await sucursalService.getAll(url + "sucursales");
+        const todasSucursales = await sucursalService.getAll(url + "sucursales", await getAccessTokenSilently({}));
         const sucursalesEmpresa = todasSucursales.filter(
           (sucursal) => sucursal.empresa.id === empresaId
         );
@@ -122,7 +124,8 @@ const ModalCategoria: React.FC<ModalCategoriaProps> = ({
                 await categoriaService.put(
                   url + "categoria",
                   values.id.toString(),
-                  values
+                  values,
+                  await getAccessTokenSilently({})
                 );
                 console.log("Categoría actualizada correctamente.", values);
               } else {
@@ -131,7 +134,7 @@ const ModalCategoria: React.FC<ModalCategoriaProps> = ({
                 // añadimos todas las sucursales seleccionadas al array de sucursales en values
                 values.sucursales = sucursalesSeleccionadas;
 
-                await categoriaService.post(url + "categoria", values);
+                await categoriaService.post(url + "categoria", values, await getAccessTokenSilently({}));
                 console.log("Categoría agregada correctamente.", values);
 
               }

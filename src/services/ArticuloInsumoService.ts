@@ -3,14 +3,14 @@ import  BackendClient  from "./BackendClient";
 
 export default class ArticuloInsumoService extends BackendClient<ArticuloInsumo> {
     
-    public async insumos(url: string, idSucursal: number): Promise<ArticuloInsumo[]> {
+    public async insumos(url: string, idSucursal: number, token: string): Promise<ArticuloInsumo[]> {
         try {
           const path = `${url}articuloInsumo/sucursal/${idSucursal}`;
           const response = await fetch(path, { method: "GET" ,
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                // Authorization: `Bearer ${token}`
+                 Authorization: `Bearer ${token}`
             },});      
           if (!response.ok) {
             throw new Error(response.statusText);

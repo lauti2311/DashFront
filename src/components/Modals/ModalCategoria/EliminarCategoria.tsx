@@ -3,6 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import CategoriaService from '../../../services/CategoriaService';
 import CategoriaSDTO from '../../../services/dtos/CategoriaSDTO';
 import Categoria from '../../../types/Categoria';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
 interface ModalEliminarCategoriaProps {
@@ -17,16 +18,18 @@ const ModalEliminarCategoria: React.FC<ModalEliminarCategoriaProps> = ({ show, c
     const categoriaService = new CategoriaService();
     const url = import.meta.env.VITE_API_URL;
     const categoriaSservice = new CategoriaSDTO();
+    const { getAccessTokenSilently } = useAuth0();
+
 
     const handleEliminar = async () => {
         try {
             if (categoria && categoria.id) {
                 // Elimino las subcategorias de la categoria que elimino
                 categoria.subCategorias.map(async subCategoria => {
-                    await categoriaSservice.delete(url + 'categorias', subCategoria.id.toString());
+                    await categoriaSservice.delete(url + 'categorias', subCategoria.id.toString(), await getAccessTokenSilently());
                 });
 
-                await categoriaService.delete(url + 'categoria', categoria.id.toString());
+                await categoriaService.delete(url + 'categoria', categoria.id.toString(), await getAccessTokenSilently());
                 console.log('Se ha eliminado correctamente.');
                 getCategories();
                 onClose(); // Cerramos el modal después de eliminar

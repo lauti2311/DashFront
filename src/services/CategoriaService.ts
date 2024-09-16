@@ -5,13 +5,14 @@ import  BackendClient  from "./BackendClient";
 
 // Clase CategoriaService que extiende BackendClient para interactuar con la API de personas
 export default class CategoriaService extends BackendClient<ICategoria> {
-    public async categoriaSucursal(url: string, idSucursal: number): Promise<Categoria[]> {
+    public async categoriaSucursal(url: string, idSucursal: number, token: string): Promise<Categoria[]> {
       try {
         const path = `${url}categoria/sucursal/${idSucursal}`;
         const response = await fetch(path, { method: "GET" ,
           headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
           },});
         if (!response.ok) {
           throw new Error(response.statusText);
@@ -24,13 +25,14 @@ export default class CategoriaService extends BackendClient<ICategoria> {
         throw error;
       }
     }
-    public async categoriaInsumoSucursal(url: string, idSucursal: number): Promise<Categoria[]> {
+    public async categoriaInsumoSucursal(url: string, idSucursal: number, token: string): Promise<Categoria[]> {
       try {
         const path = `${url}categoria/sucursal/insumo/${idSucursal}`;
         const response = await fetch(path, { method: "GET" ,
           headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
           },});
         if (!response.ok) {
           throw new Error(response.statusText);
@@ -44,13 +46,14 @@ export default class CategoriaService extends BackendClient<ICategoria> {
       }
     }
     
-    public async categoriaManufacturadoSucursal(url: string, idSucursal: number): Promise<Categoria[]> {
+    public async categoriaManufacturadoSucursal(url: string, idSucursal: number, token: string): Promise<Categoria[]> {
       try {
         const path = `${url}categoria/sucursal/${idSucursal}`;
         const response = await fetch(path, { method: "GET" ,
           headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
           },});
         if (!response.ok) {
           throw new Error(response.statusText);

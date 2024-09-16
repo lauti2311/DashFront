@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import { Add } from "@mui/icons-material";
@@ -11,12 +12,11 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { setCategoria } from "../../redux/slices/categoria.ts";
 import { handleSearch } from "../../utils/utils.ts";
 import { useParams } from "react-router-dom";
-
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Categoria = () => {
 
   const url = import.meta.env.VITE_API_URL;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const categoriaService = new CategoriaService();
   const dispatch = useAppDispatch();
   const [filteredData, setFilterData] = useState<ICategoria[]>([]);
@@ -24,7 +24,7 @@ const Categoria = () => {
   const [selectedCategoria, setSelectedCategoria] = useState<ICategoria | null>(
     null
   );
-  // const selectedSucursal = useAppSelector((state) => state.sucursales.selected);
+  const { getAccessTokenSilently } = useAuth0();
   const { sucursalId } = useParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [eliminarModalOpen, setEliminarModalOpen] = useState(false);
@@ -34,7 +34,7 @@ const Categoria = () => {
       if(sucursalId){
         const parsedSucursalId = parseInt(sucursalId, 10); 
 
-        const categorias = await categoriaService.categoriaSucursal(url, parsedSucursalId);
+        const categorias = await categoriaService.categoriaSucursal(url, parsedSucursalId, await getAccessTokenSilently({}));
   
         // Filtrar las subcategorías para obtener sus IDs
         const subCategoriaIds = categorias.filter(categoria => categoria.subCategorias.length > 0)
@@ -55,7 +55,6 @@ const Categoria = () => {
   useEffect(() => {
     fetchCategorias();
     onSearch(""); // Llamada a onSearch para filtrar los datos iniciales
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEditarCategoria = (categoria: ICategoria) => {
@@ -86,7 +85,7 @@ const Categoria = () => {
       if (selectedCategoria && selectedCategoria.id) {
         await categoriaService.delete(
           url + "categoria",
-          selectedCategoria.id.toString()
+          selectedCategoria.id.toString(), await getAccessTokenSilently({})
         );
         console.log("Se ha eliminado correctamente.");
         handleCloseModal(); // Cerramos el modal después de eliminar
