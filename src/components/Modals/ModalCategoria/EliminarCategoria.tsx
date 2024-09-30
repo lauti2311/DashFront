@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import CategoriaService from '../../../services/CategoriaService';
-import CategoriaSDTO from '../../../services/dtos/CategoriaSDTO';
 import Categoria from '../../../types/Categoria';
 import { useAuth0 } from '@auth0/auth0-react';
+import CategoriaSDTO from '../../../services/serviceDTO/CategoriasDTO';
 
 
 interface ModalEliminarCategoriaProps {

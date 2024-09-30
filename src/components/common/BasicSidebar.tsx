@@ -20,7 +20,7 @@ const SideBar: React.FC = () => {
 
   const fetchUsuario = async () => {
     try {
-      const usuario = await usuarioService.getByEmail(url + "usuarioCliente/role/" + user?.email, {
+      const usuario = await usuarioService.getByEmail(url + "usuarios/role/" + user?.email, {
         headers: {
           Authorization: `Bearer ${await getAccessTokenSilently({})}`
         }
@@ -124,7 +124,7 @@ const SideBar: React.FC = () => {
           {
             ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
             ? <CNavItem>
-                <Link to={`/usuario/${sucursalId}`} className="nav-link">
+                <Link to={`/usuarios/${sucursalId}`} className="nav-link">
                   <CIcon customClassName="nav-icon" icon={icon.cilPeople} />
                   Usuarios
                 </Link>

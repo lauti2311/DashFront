@@ -2,10 +2,10 @@ import React, { useState, useCallback } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Categoria from "../../../types/Categoria";
-import CategoriaSDTO from "../../../services/dtos/CategoriaSDTO";
-import CategoriaService from "../../../services/CategoriaService";
 import CategoriaDto from "../../../types/dto/CategoriaDto";
 import { useAuth0 } from "@auth0/auth0-react";
+import CategoriaSDTO from "../../../services/serviceDTO/CategoriasDTO";
+import CategoriaService from "../../../services/CategoriaService";
 
 
 // Define la interfaz para las props del componente

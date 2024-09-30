@@ -3,14 +3,18 @@ import { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Button, Container, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import TableComponent, { ModalContext} from "../Table/Table";
 import SearchBar from "../common/SearchBar";
 import UsuarioService from "../../services/UsuarioService";
 import Usuario from "../../types/Usuario";
 import { toggleModal } from "../../redux/slices/Modal";
-import { setUser } from "../../redux/slices/UsuarioS";
-import ModalUsuario from "../Modals/ModalUsuario";
-import Eliminarusuario from "../Modals/EliminarUsuario";
+import ModalUsuario from "../Modals/ModalUsuario/ModalUsuario";
+import Eliminarusuario from "../Modals/ModalUsuario/EliminarUsuario";
+import TableComponent from "../Table/Table";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useParams } from "react-router-dom";
+import { handleSearch } from "../../utils/utils";
+import React from "react";
+import { setUsuario } from "../../redux/slices/UsuarioS";
 
 interface Row {
   [key: string]: any;
@@ -25,10 +29,11 @@ interface Column {
 export const ListaUsuarios = () => {
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
+  const { sucursalId } = useParams();
   const usuarioService = new UsuarioService();
-  // Estado global de Redux
+  const { getAccessTokenSilently } = useAuth0();
   const globalUsuario = useAppSelector(
-    (state) => state.usuario.usuario
+    (state) => state.usuario.data
   );
   const [filterData, setFilterData] = useState<Row[]>([]);
   const [usuarioToEdit, setUsuarioToEdit] = useState<Usuario | null>(null); // Estado para el usuario seleccionado para eliminar
@@ -40,8 +45,8 @@ export const ListaUsuarios = () => {
   // Definiendo fetchUsuarios con useCallback
   const fetchUsuarios = useCallback(async () => {
     try {
-      const usuarios = await usuarioService.getAll(url + 'usuarios');
-      dispatch(setUser(usuarios));
+      const usuarios = await usuarioService.getAll(url + 'usuarios', await getAccessTokenSilently({}));
+      dispatch(setUsuario(usuarios));
       setFilterData(usuarios);
       setLoading(false);
     } catch (error) {
@@ -53,6 +58,7 @@ export const ListaUsuarios = () => {
   useEffect(() => {
     // Llamando a fetchUsuarios dentro de useEffect
     fetchUsuarios();
+    onSearch("");
   }, [fetchUsuarios]); // fetchUsuarios se pasa como dependencia
 
   const handleAddUser = () => {
@@ -63,23 +69,33 @@ export const ListaUsuarios = () => {
   const handleOpenEditModal = (rowData: Row) => {
     setUsuarioToEdit({
       id: rowData.id,
-      auth0Id: rowData.auth0Id,
-      username: rowData.username
+      eliminado: rowData.eliminado,
+      username: rowData.username,
+      email: rowData.email,
+      rol: rowData.rol,
+      empleado: {
+        tipoEmpleado: rowData.rol,
+        sucursal: {id: +(sucursalId || 0)}
+      }
     });
     dispatch(toggleModal({ modalName: 'modal' }));
   };
-  const handleSearch = (query: string) => {
-    const filtered = globalUsuario.filter((item) =>
-      item.username.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilterData(filtered);
+
+  const onSearch = (query: string) => {
+    handleSearch(query, globalUsuario, setFilterData);
   };
 
   const handleOpenDeleteModal = (rowData: Row) => {
     setUsuarioToEdit({
       id: rowData.id,
-      auth0Id: rowData.auth0Id,
-      username: rowData.username
+      eliminado: rowData.eliminado,
+      username: rowData.username,
+      email: rowData.email,
+      rol: rowData.rol,
+      empleado: {
+        tipoEmpleado: rowData.rol,
+        sucursal: {id: +(sucursalId || 0)}
+      }
     });
     setDeleteModalOpen(true);
   };
@@ -92,7 +108,7 @@ export const ListaUsuarios = () => {
   const handleDeleteUser = async () => {
     try {
       if (usuarioToEdit && usuarioToEdit.id) {
-        await usuarioService.delete(url + 'usuarios', usuarioToEdit.id.toString());
+        await usuarioService.delete(url + 'usuarios', usuarioToEdit.id.toString(), await getAccessTokenSilently({})); // Eliminar el usuario
         console.log('Usuario eliminado correctamente.');
         // Cerrar el modal de eliminar
         handleCloseDeleteModal();
@@ -113,47 +129,63 @@ export const ListaUsuarios = () => {
   ];
 
   return (
-    <Box component="main" sx={{ flexGrow: 1, my: 2 }}>
-      <Container>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 1 }}>
-          <Typography variant="h5" gutterBottom>
-            Usuarios
-          </Typography>
-          <Button
+    <React.Fragment>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          my: 2,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box
             sx={{
-              bgcolor: "#cc5533",
-              "&:hover": {
-                bgcolor: "#b23e1f",
-              },
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
             }}
-            variant="contained"
-            startIcon={<Add />}
-            onClick={handleAddUser}
           >
-            User
-          </Button>
-        </Box>
-
-
-        <Box sx={{ mb: 2 }}>
-          <SearchBar onSearch={handleSearch} />
-        </Box>
-
-
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress />
+            <Typography variant="h5" gutterBottom>
+              Usuarios
+            </Typography>
+            <Button
+              className="btn-primary"
+              variant="contained"
+              startIcon={<Add />}
+              onClick={handleAddUser}
+            >
+              Usuario
+            </Button>
           </Box>
-        ) : (
-            <ModalContext.Provider value={{ handleOpenEditModal, handleOpenDeleteModal }}>
-            <TableComponent data={filterData} columns={columns} />
-            {/* Modales */}
-            <ModalUsuario getUsuarios={fetchUsuarios} usuarioToEdit={usuarioToEdit !== null ? usuarioToEdit : undefined} />
-            <Eliminarusuario show={deleteModalOpen} onHide={handleCloseDeleteModal} usuario={usuarioToEdit} onDelete={handleDeleteUser} />
-          </ModalContext.Provider>
-        )}
-      </Container>
-    </Box>
+
+          {/* Barra de búsqueda */}
+          <Box sx={{ mb: 2 }}>
+            <SearchBar onSearch={onSearch} />
+          </Box>
+
+          {/* Tabla de usuarios */}
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableComponent data={filterData} columns={columns} handleOpenEditModal={handleOpenEditModal} handleOpenDeleteModal={handleOpenDeleteModal} isListaPedidos={false}/>
+          )}
+
+          
+          {/* Modal de Usuario */}
+          <ModalUsuario sucursalId={+(sucursalId || 0)} getUsuarios={fetchUsuarios} usuarioToEdit={usuarioToEdit !== null ? usuarioToEdit : undefined} />
+
+          {/* Modal de Eliminar Usuario */}
+          <Eliminarusuario show={deleteModalOpen} onHide={handleCloseDeleteModal} usuario={usuarioToEdit} onDelete={handleDeleteUser} />
+        </Container>
+      </Box>
+    </React.Fragment>
   );
 }
 

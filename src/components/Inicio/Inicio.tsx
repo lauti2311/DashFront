@@ -1,9 +1,6 @@
-import { Box, Grid, Container, Typography } from "@mui/material";
-import ChartCard from "./ChartCard";
-import BasePie from "./BasePie";
-import BaseBar from "./BaseBar";
-import { CCol, CContainer, CRow } from "@coreui/react";
+import { Box, Container } from "@mui/material";
 import React from "react";
+import { Graficos } from "../Graficos/Graficos";
 
 // Contenido para las tarjetas de inicio
 // const productosContent = {
@@ -33,45 +30,14 @@ import React from "react";
 //Renderización del componente
 const Inicio: React.FC = () => {
     return (
-        <React.Fragment>
-            <CContainer fluid>
-            <CRow>
-                <CCol xs="auto" className="sidebar">
-                </CCol>
-                <CCol>
-                <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 4}}>
-                    <Container>
-                        <Typography component="h1" variant="h5" color="initial" >Bienvenido</Typography>
-                    <Grid
-                        container
-                        spacing={3}
-                        sx={{ py: 2, alignContent: 'center' , justifyContent: 'center' }}
-                    >
-                        <Grid item xs={12} md={6}>
-                            <ChartCard title="Gráfico de Barras">
-                                <BaseBar />
-                            </ChartCard>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <ChartCard title="Gráfico de Pastel">
-                                <BasePie />
-                            </ChartCard>
-                        </Grid>
-                    </Grid>
-                    <Grid
-                        container
-                        spacing={3}
-                        sx={{ alignContent: 'center' , justifyContent: 'center'}}
-                        >
-
-                        </Grid>
-                    </Container>
-                </Box>
-                </CCol>
-            </CRow>
-        </CContainer>
-        </React.Fragment>
+      <React.Fragment>
+        <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 4 }}>
+          <Container>
+            <Graficos></Graficos>
+          </Container>
+        </Box>
+      </React.Fragment>
     );
-};
+  };
 
 export default Inicio;

@@ -1,37 +1,49 @@
 import { Modal, Button } from "react-bootstrap";
 import SucursalService from "../../../services/Sucursal";
 import ISucursal from "../../../types/Sucursal";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 interface EliminarSucursalProps {
   show: boolean;
   onHide: () => void;
   sucursal: ISucursal | null;
   onDelete: () => void; // Esta función debe actualizar el estado de la interfaz de usuario
+  getSucursal: () => void;
+
 }
   
-  const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ show, onHide, sucursal, onDelete }) => {
+  const EliminarSucursal: React.FC<EliminarSucursalProps> = ({ show, onHide, sucursal, getSucursal, onDelete }) => {
       const sucursalService = new SucursalService();
       const url = import.meta.env.VITE_API_URL;
-    
+      const [isDeleting, setIsDeleting] = useState(false);
+      const { getAccessTokenSilently } = useAuth0();
+
+      const handleDeleteClick = async () => {
+        setIsDeleting(true);
+        try {
+          await handleDelete();
+        } finally {
+          setIsDeleting(false);
+        }
+      };
+
       const handleDelete = async () => {
         try {
           if (sucursal && sucursal.id) {
-            const response = await sucursalService.delete(url + 'sucursales', sucursal.id.toString());
-            console.log('Respuesta del servidor al eliminar:', response);
-            console.log('Se ha eliminado correctamente.');
-            onHide(); // Cerramos el modal
-            onDelete(); // Actualizamos el estado de la interfaz de usuario
-          } else {
-            console.error('No se puede eliminar la sucursal porque no se proporcionó un ID válido.');
+            await sucursalService.delete(url + 'sucursales', sucursal.id.toString(), await getAccessTokenSilently({}));
+              console.log('Se ha eliminado correctamente.');
+              getSucursal();
+              onDelete();
+              onHide(); // Cerramos el modal
+            } else {
+              console.error('No se puede eliminar la sucursal porque no se proporcionó un ID válido.');
+            }
+          } catch (error) {
+            console.error('Error al eliminar la sucursal:', error);
           }
-        } catch (error) {
-          console.error('Error al eliminar la sucursal:', error);
-          onHide();
-        }
       };
-  
-      
-    
+
       return (
         <Modal show={show} onHide={onHide}>
           <Modal.Header closeButton>
@@ -44,13 +56,13 @@ interface EliminarSucursalProps {
             <Button variant="secondary" onClick={onHide}>
               Cancelar
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
-              Eliminar
-            </Button>
+            <Button className='text-light' variant="danger" onClick={handleDeleteClick} disabled={isDeleting}>
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
+          </Button>
           </Modal.Footer>
         </Modal>
       );
     };
-    
   
   export default EliminarSucursal;
+  

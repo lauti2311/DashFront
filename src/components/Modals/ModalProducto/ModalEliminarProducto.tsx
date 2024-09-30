@@ -1,6 +1,8 @@
 import { Button, Modal } from 'react-bootstrap';
 import ArticuloManufacturadoService from '../../../services/ArticuloManufacturadoService';
 import ArticuloManufacturado from '../../../types/ArticuloManufacturado';
+import { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface ModalDeleteProductsProps {
     show: boolean;
@@ -9,7 +11,9 @@ interface ModalDeleteProductsProps {
     onDelete: () => void;
 }
 
-const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHide, product, onDelete }) => {
+const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHide, product, onDelete }) => { 
+    const { getAccessTokenSilently } = useAuth0();
+    const [isDeleting, setIsDeleting] = useState(false);
     const productService = new ArticuloManufacturadoService();
     const url = import.meta.env.VITE_API_URL;
 
@@ -20,7 +24,7 @@ const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHid
             if (product && product.id) {
                 const deleteUrl = `${url}articuloManufacturado`;
                 console.log(`Eliminando producto con URL: ${deleteUrl}`);
-                await productService.delete(deleteUrl, product.id.toString());
+                await productService.delete(deleteUrl, product.id.toString(), await getAccessTokenSilently({}));
                 console.log('Se ha eliminado correctamente.');
                 onDelete(); // Llama a la función onDelete
                 onHide(); // Cerramos el modal
@@ -34,6 +38,15 @@ const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHid
         }
     }
 
+    const handleDeleteClick = async () => {
+        setIsDeleting(true);
+        try {
+          await handleDelete();
+        } finally {
+          setIsDeleting(false);
+        }
+      };
+
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
@@ -46,8 +59,8 @@ const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHid
                 <Button variant="secondary" onClick={onHide}>
                     Cancelar
                 </Button>
-                <Button variant="danger" onClick={handleDelete}>
-                    Eliminar
+                <Button className='text-light' variant="danger" onClick={handleDeleteClick} disabled={isDeleting}>
+                    {isDeleting ? 'Eliminando...' : 'Eliminar'}
                 </Button>
             </Modal.Footer>
         </Modal>

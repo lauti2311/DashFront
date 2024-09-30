@@ -72,7 +72,7 @@ React.useEffect(() => {
     const displayedTitle = title === '' ? `Sucursal ${sucursalName}` : title;
 return (
     <Box sx={{ marginBottom: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "#9c27b0", height: 80, marginBottom: 1, display: 'flex', justifyContent: 'center' }}>
+      <AppBar position="static" sx={{ bgcolor: "#FB6376", height: 80, marginBottom: 1, display: 'flex', justifyContent: 'center' }}>
         <Toolbar>
           {location.pathname !== '/' && user && user['https://apiauth.com/roles'][0] === 'SUPERADMIN' && (
             <IconButton

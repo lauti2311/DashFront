@@ -6,7 +6,6 @@ interface IModalState {
 }
 
 const initialState: IModalState = {
-  modal: false,
 };
 
 // Definimos la interfaz para la acción del payload

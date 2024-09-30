@@ -68,7 +68,7 @@ const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onEditar, o
                   {categoria.esInsumo && 
                     <span 
                       className="badge ms-2"
-                      style={{ backgroundColor: '#9c27b0', color: 'white' }}
+                      style={{ backgroundColor: '#FB6376', color: 'white' }}
                     >                      
                     para elaborar
                     </span>

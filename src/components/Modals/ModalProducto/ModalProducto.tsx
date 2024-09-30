@@ -18,7 +18,8 @@ import ArticuloInsumoShortService from "../../../services/dtos/ArticuloInsumoSho
 // import ArticuloManufacturadoDetalleService from "../../../../services/ArticuloManufacturadoDetalleService.ts";
 import { useParams } from "react-router-dom";
 import ImagenArticulo from "../../../types/ImagenArticulo.ts";
-import ImageSlider from "../../ui/ImageSlider/ImagenSlider.tsx";
+import { useAuth0 } from "@auth0/auth0-react";
+import ImageControl from "../../ImagesControl/ImagesControl.tsx";
 
 interface ModalProductProps {
   getProducts: () => void;
@@ -43,6 +44,8 @@ const ModalProducto: React.FC<ModalProductProps> = ({
   const [modalColor, setModalColor] = useState<string>(""); // Estado para controlar el color de fondo de la modal
   const [detalles, setDetalles] = useState<ArticuloManufacturadoDetalle[]>([]);
   const [totalPrecioVenta, setTotalPrecioVenta] = useState<number>(0);
+  const { getAccessTokenSilently } = useAuth0();
+
 
   const initialValues: ArticuloManufacturado = {
     id: productToEdit ? productToEdit.id : 0,
@@ -165,7 +168,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
 
   const fetchUnidadesMedida = async () => {
     try {
-      const unidades = await unidadService.getAll(`${url}unidadMedida`);
+      const unidades = await unidadService.getAll(`${url}unidadMedida`, await getAccessTokenSilently({}));
       setUnidadesMedida(unidades);
     } catch (error) {
       console.error("Error al obtener las unidades de medida:", error);
@@ -176,7 +179,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     try {
       if (sucursalId) {
         const parsedSucursalId = parseInt(sucursalId, 10);
-        const categorias = await categoriaService.categoriaManufacturadoSucursal(url, parsedSucursalId);
+        const categorias = await categoriaService.categoriaManufacturadoSucursal(url, parsedSucursalId, await getAccessTokenSilently({}));
         setCategorias(categorias);
       }
     } catch (error) {
@@ -220,11 +223,13 @@ const ModalProducto: React.FC<ModalProductProps> = ({
   const handleUpload = async (articuloId: string) => {
     if (files.length > 0 && articuloId) {
       try {
+        const accessToken = await getAccessTokenSilently({});
         const uploadPromises = files.map(file =>
           productoService.uploadFile(
             `${url}articuloManufacturado/uploads`,
             file,
             articuloId,
+            accessToken
           )
         );
         const responses = await Promise.all(uploadPromises);
@@ -315,7 +320,8 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 await productoService.put(
                   url + "articuloManufacturado",
                   values.id.toString(),
-                  values
+                  values,
+                  await getAccessTokenSilently({})
                 );
                 productoId = productToEdit.id.toString();
                 if (files.length > 0 && productoId) {
@@ -331,7 +337,8 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 values.imagenes = [];
                 const response = await productoService.post(
                   url + "articuloManufacturado",
-                  values
+                  values,
+                  await getAccessTokenSilently({})
                 );
 
                 productoId = response.id.toString();
@@ -506,7 +513,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
               </Row>
               {values.imagenes.length > 0 && (
                 <Row>
-                  <ImageSlider images={values.imagenes} urlParteVariable="articuloManufacturado"
+                  <ImageControl images={values.imagenes} urlParteVariable="articuloManufacturado"
                     onDeleteImage={(images) => handleDeleteImage(images, setFieldValue)}
                   />
                 </Row>

@@ -69,7 +69,7 @@ export const Empresas = () => {
 
   const fetchUser = async () =>{
     try {
-      const usuario = await usuarioService.getByEmail(url + "usuarios/getByEmail" + user?.email,{
+      const usuario = await usuarioService.getByEmail(url + "usuarios/role/" + user?.email,{
         headers: {
           Authorization: `Bearer ${await getAccessTokenSilently({})}`,
         }
@@ -109,7 +109,7 @@ export const Empresas = () => {
       nombre: rowData.nombre,
       razonSocial: rowData.razonSocial,
       cuil: rowData.cuil,
-      imagen: rowData.imagen.url,
+      imagenes: rowData.imagenes,
     });
     setDeleteModalOpen(true);
   };
@@ -131,7 +131,7 @@ export const Empresas = () => {
       nombre: rowData.nombre,
       razonSocial: rowData.razonSocial,
       cuil: rowData.cuil,
-      imagen: rowData.imagen,
+      imagenes: rowData.imagenes,
     });
     dispatch(toggleModal({ modalName: "modal" }));
   };
@@ -276,7 +276,7 @@ if (!user) {
                                     }
                                 >
                                     <Link
-                                        to={`/sucursal/${empresa.id}`}
+                                        to={`/sucursales/${empresa.id}`}
                                         style={{ textDecoration: "none" }}
                                     >
                                         <Typography

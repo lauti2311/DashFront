@@ -2,27 +2,28 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import Usuario from '../../types/Usuario';
 
-interface InitialState {
-  usuario: Usuario[]; // Cambia el tipo del estado a una matriz de Usuario
+interface IInitialState<T> {
+  data: T;
 }
 
-const initialState: InitialState = {
-  usuario: [],
-}
+// Estado inicial específico
+const usuarioState: IInitialState<Usuario[]> = {
+  data: [],
+};
 
-export const usuariosSlice = createSlice({
+export const usuarioSlice = createSlice({
   name: 'usuarioState',
-  initialState,
+  initialState: usuarioState,
   reducers: {
-    setUser: (state, action: PayloadAction<Usuario[]>) => {
-      state.usuario = action.payload;
+    setData: (state, action: PayloadAction<Usuario[]>) => {
+      state.data = action.payload;
     },
-    resetUser: (state) => {
-      state.usuario = [];
+    resetData: (state) => {
+      state.data = [];
     }
   },
-})
+});
 
-export const { setUser, resetUser } = usuariosSlice.actions;
+export const { setData: setUsuario, resetData: resetUsuario } = usuarioSlice.actions;
 
-export default usuariosSlice.reducer;
+export default usuarioSlice.reducer;

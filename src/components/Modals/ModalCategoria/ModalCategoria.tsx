@@ -76,7 +76,7 @@ const ModalCategoria: React.FC<ModalCategoriaProps> = ({
           horarioApertura: sucursal.horarioApertura,
           horarioCierre: sucursal.horarioCierre,
           esCasaMatriz: sucursal.esCasaMatriz,
-          imagen: sucursal.imagenes,
+          imagenes: sucursal.imagenes,
           domicilio: sucursal.domicilio,
           empresa: sucursal.empresa,
           eliminado: sucursal.eliminado || false,
@@ -259,6 +259,7 @@ const ModalCategoria: React.FC<ModalCategoriaProps> = ({
                 <Button
                   type="submit"
                   variant="primary"
+                  style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Guardando..." : "Guardar"}

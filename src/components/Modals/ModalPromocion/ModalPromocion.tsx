@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuth0 } from "@auth0/auth0-react";
-import { Formik, Field, ErrorMessage } from "formik";
+import { Formik, Field, ErrorMessage, Form } from "formik";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { useParams, Form } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../../hooks/redux";
 import { toggleModal } from "../../../redux/slices/Modal";
 import PromocionService from "../../../services/PromocionService";
@@ -11,6 +11,16 @@ import PromocionDetalle from "../../../types/PromocionDetalle";
 import ArticuloDto from "../../../types/dto/ArticuloDto";
 import { TipoPromocion } from "../../../types/enums/TipoPromocion";
 import IPromocion from "../../../types/Promocion";
+import ImageControl from "../../ImagesControl/ImagesControl";
+import SucursalShortDtoService from "../../../services/dtos/SucursalShortDtoService";
+import SucursalShorDto from "../../../types/dto/SucursalShortDto";
+import ArticuloManufacturadoService from "../../../services/ArticuloManufacturadoService";
+import ArticuloInsumoService from "../../../services/ArticuloInsumoService";
+import Promocion from "../../../types/Promocion";
+import CategoriaSDTO from "../../../services/dtos/CategoriasSDTO";
+import IImagenes from "../../../types/Imagenes";
+import * as Yup from "yup";
+import ModalPromocionDetalle from "./ModalPromocionDetalle";
 
 interface ModalPromocionProps {
     getPromocion: () => void;
@@ -96,7 +106,7 @@ interface ModalPromocionProps {
                 : {
                     denominacion: "",
                     esInsumo: false,
-                  } as CategoriaShorDto,
+                  } as CategoriaSDTO,
             } as ArticuloDto,
           }))
         : [],
@@ -107,7 +117,7 @@ interface ModalPromocionProps {
                 url: imagen.url,
                 name: "image",
                 id: imagen.id
-              } as Imagen)
+              } as IImagenes)
           )
         : [],
     };
@@ -158,14 +168,17 @@ interface ModalPromocionProps {
     }, []);
     const fetchSucursales = async () => {
       try {
+        const token = await getAccessTokenSilently({});
         if (sucursalId) {
           const sucursalSeleccionada = await sucursalService.get(
-            url + "sucursal",
-            sucursalId, await getAccessTokenSilently({})
+            url + "sucursales",
+            sucursalId,
+            token
           );
+          console.log(sucursalId)
           const empresaId = sucursalSeleccionada.empresa.id;
   
-          const sucursalesEmpresa = await sucursalService.sucursalEmpresa(url, empresaId, await getAccessTokenSilently({}));
+          const sucursalesEmpresa = await sucursalService.sucursalEmpresa(url, empresaId, token);
           setSucursales(sucursalesEmpresa);
         }
       } catch (error) {
@@ -199,7 +212,7 @@ interface ModalPromocionProps {
       console.log(totalPrecioPromocional)
     };
   
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: any, existingImages: Imagen[]) => {
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: any, existingImages: IImagenes[]) => {
       if (e.target.files && e.target.files.length > 0) {
         const newFilesArray = Array.from(e.target.files).map((file) => ({
           file,
@@ -226,7 +239,7 @@ interface ModalPromocionProps {
           const accessToken = await getAccessTokenSilently({});
           const uploadPromises = files.map(file =>
             promocionService.uploadFile(
-              `${url}promocion/uploads`,
+              `${url}promociones/uploads`,
               file,
               articuloId,
               accessToken
@@ -313,7 +326,7 @@ interface ModalPromocionProps {
                   // añadimos todas las sucursales seleccionadas al array de sucursales en values
                   values.sucursales = sucursalesSeleccionadas;
                   promocion = await promocionService.put(
-                    url + "promocion",
+                    url + "promociones",
                     values.id.toString(),
                     values, await getAccessTokenSilently({})
                   );
@@ -330,7 +343,7 @@ interface ModalPromocionProps {
                   values.sucursales = sucursalesSeleccionadas;
                   values.promocionDetalle = detalles;
                   values.precioPromocional = totalPrecioPromocional
-                  promocion = await promocionService.post(url + "promocion", values, await getAccessTokenSilently({}));
+                  promocion = await promocionService.post(url + "promociones", values, await getAccessTokenSilently({}));
   
                   const promocionId = promocion.id.toString();
                   if (files.length > 0 && promocionId) {
@@ -546,13 +559,14 @@ interface ModalPromocionProps {
                       type="button"
                       variant="primary"
                       onClick={() => setShowInsumoModal(true)}
+                      style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                     >
                       {promocionToEdit ? "Editar productos" : "Agregar productos"}
                     </Button>
                   </div>
                   {values.imagenes.length > 0 && (
                     <div className="col-md-4 mb-4">
-                      <ImageSlider images={values.imagenes} urlParteVariable="promocion" 
+                      <ImageControl images={values.imagenes} urlParteVariable="promocion" 
                       onDeleteImage={(images) => handleDeleteImage(images, setFieldValue)}
                       />
                     </div>
@@ -570,6 +584,7 @@ interface ModalPromocionProps {
                     type="submit"
                     variant="primary"
                     disabled={isSubmitting || detalles.length === 0}
+                    style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
                   >
                     {isSubmitting ? "Guardando..." : "Guardar"}
                   </Button>
