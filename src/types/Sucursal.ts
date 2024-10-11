@@ -1,14 +1,14 @@
 import DataModel from "./DataModel";
 import Domicilio from "./Domicilio";
 import IEmpresa from "./Empresa";
-import IImagenes from "./Imagenes";
+import Imagenes from "./Imagenes";
 
 interface ISucursal extends DataModel<ISucursal> {
     nombre: string;
     horarioApertura: string;
     horarioCierre: string;
     esCasaMatriz: boolean;
-    imagen: IImagenes;
+    imagenes: Imagenes[];
     domicilio: Domicilio;
     empresa: IEmpresa;
 }

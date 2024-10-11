@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Carousel, Spinner } from 'react-bootstrap';
-import ImagenArticuloService from '../../../services/ImagenArticuloService';
-
+import { useAuth0 } from '@auth0/auth0-react';
+import ImagenArticuloService from '../../services/ImagenArticuloService';
 
 interface Image {
   id: number;
@@ -9,16 +9,17 @@ interface Image {
   preview?: string; // Agregar una propiedad opcional para la previsualización
 }
 
-interface ImageSliderProps {
+interface ImageControlProps {
   images: Image[];
   urlParteVariable: string; // Nueva prop para la parte variable de la URL
   onDeleteImage: (images: Image[]) => Promise<void>; // Asegúrate de que onDeleteImage acepte un array de imágenes
 }
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ images: initialImages, urlParteVariable, onDeleteImage }) => {
+const ImageControl: React.FC<ImageControlProps> = ({ images: initialImages, urlParteVariable, onDeleteImage }) => {
   const [sliderImages, setSliderImages] = useState<Image[]>(initialImages);
   const [isLoading, setIsLoading] = useState<boolean>(false); // Estado para controlar la carga
   const imagenService = new ImagenArticuloService();
+  const { getAccessTokenSilently } = useAuth0();
   const url = import.meta.env.VITE_API_URL;
 
   // Actualizar el estado local cuando cambian las imágenes
@@ -45,7 +46,8 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images: initialImages, urlPar
       await imagenService.deleteImage(
         `${url}${urlParteVariable}`, // Concatenar la parte variable a la URL
         publicId,
-        imagenId.toString()
+        imagenId.toString(),
+        await getAccessTokenSilently()
       );
   
       // Actualizar el estado después de eliminar la imagen
@@ -101,4 +103,4 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images: initialImages, urlPar
   );
 };
 
-export default ImageSlider;
+export default ImageControl;

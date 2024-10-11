@@ -61,7 +61,21 @@ const CategoriaLista: React.FC<CategoriaListaProps> = ({ categorias, onEditar, o
       return (
         <React.Fragment key={categoria.id}>
           <ListItemButton onClick={() => handleClick(categoria.id)}>
-            <ListItemText primary={categoria.denominacion} />
+          <ListItemText 
+              primary={
+                <div className="d-flex align-items-center">
+                  {categoria.denominacion}
+                  {categoria.esInsumo && 
+                    <span 
+                      className="badge ms-2"
+                      style={{ backgroundColor: '#FB6376', color: 'white' }}
+                    >                      
+                    para elaborar
+                    </span>
+                  }
+                </div>
+              } 
+            />      
             <IconButton
               aria-label="more"
               aria-controls="categoria-menu"

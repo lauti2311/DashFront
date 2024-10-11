@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap"
-import { BaseNavBar } from "./BaseNavbar"
 import SideBar from "./BasicSidebar"
 import { Outlet } from "react-router-dom"
+import BaseNavBar from "./BaseNavbar"
 
 //Layout general
 export const Layout = () => {

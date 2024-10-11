@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import UsuarioService from '../../services/UsuarioService';
-import Usuario from '../../types/Usuario';
+import UsuarioService from '../../../services/UsuarioService';
+import Usuario from '../../../types/Usuario';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface EliminarUsuarioProps {
   show: boolean;
@@ -13,11 +14,13 @@ interface EliminarUsuarioProps {
 const EliminarUsuario: React.FC<EliminarUsuarioProps> = ({ show, onHide, usuario }) => {
   const usuarioService = new UsuarioService();
   const url = import.meta.env.VITE_API_URL;
+  const { getAccessTokenSilently } = useAuth0();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     try {
       if (usuario && usuario.id) {
-        await usuarioService.delete(url + 'usuarios', usuario.id.toString());
+        await usuarioService.delete(url + 'usuarios', usuario.id.toString(), await getAccessTokenSilently({}));
         console.log('Se ha eliminado el usuario correctamente.');
         onHide(); // Cerramos el modal
       } else {
@@ -28,20 +31,29 @@ const EliminarUsuario: React.FC<EliminarUsuarioProps> = ({ show, onHide, usuario
     }
   };
 
+  const handleDeleteClick = async () => {
+    setIsDeleting(true);
+    try {
+      await handleDelete();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
         <Modal.Title>Eliminar Usuario</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>¿Dseseas eliminar el usuario:  "{usuario?.username}"?</p>
+        <p>¿Estás seguro de que deseas eliminar al usuario "{usuario?.username}"?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Cancelar
         </Button>
-        <Button variant="danger" onClick={handleDelete}>
-          Eliminar
+        <Button className='text-light' variant="danger" onClick={handleDeleteClick} disabled={isDeleting}>
+            {isDeleting ? 'Eliminando...' : 'Eliminar'}
         </Button>
       </Modal.Footer>
     </Modal>

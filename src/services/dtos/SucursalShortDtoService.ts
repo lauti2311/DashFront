@@ -3,13 +3,14 @@ import BackendClient from "../BackendClient";
 
 
 export default class SucursalShortDtoService extends BackendClient<SucursalShorDto> {
-    public async sucursalEmpresa(url: string, idEmpresa: number): Promise<SucursalShorDto[]> {
+    public async sucursalEmpresa(url: string, idEmpresa: number, token: string): Promise<SucursalShorDto[]> {
         try {
-          const path = `${url}sucursales/empresa/${idEmpresa}`;
+          const path = `${url}sucursales/empresas/${idEmpresa}`;
           const response = await fetch(path, { method: "GET" ,
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },});      
           if (!response.ok) {
             throw new Error(response.statusText);

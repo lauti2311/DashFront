@@ -16,6 +16,7 @@ import UnidadMedida from "../../types/UnidadMedida";
 import EditIcon from '@mui/icons-material/Edit';
 import { useParams } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Row {
@@ -41,13 +42,15 @@ export const ListaArticulosInsumo = () => {
     (state) => state.articuloInsumo.data
   );
   const { sucursalId } = useParams();
+  const { getAccessTokenSilently } = useAuth0();
   const fetchArticulosInsumo = useCallback(async () => {
     try {
       if (sucursalId) {
         const sucursalIdNumber = parseInt(sucursalId);
         const articulosInsumo = await articuloInsumoService.insumos(
           url,
-          sucursalIdNumber
+          sucursalIdNumber,
+          await getAccessTokenSilently({})
         );
 
         dispatch(setArticuloInsumo(articulosInsumo));

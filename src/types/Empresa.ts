@@ -7,7 +7,7 @@ interface IEmpresa extends DataModel<IEmpresa> {
     cuil: number;
     nombre: string;
     razonSocial: string;
-    imagen: IImagenes;
+    imagenes: IImagenes[];
 }
 
 export default IEmpresa;
