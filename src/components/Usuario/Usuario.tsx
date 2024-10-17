@@ -10,7 +10,6 @@ import { toggleModal } from "../../redux/slices/Modal";
 import ModalUsuario from "../Modals/ModalUsuario/ModalUsuario";
 import Eliminarusuario from "../Modals/ModalUsuario/EliminarUsuario";
 import TableComponent from "../Table/Table";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import { handleSearch } from "../../utils/utils";
 import React from "react";
@@ -31,7 +30,6 @@ export const ListaUsuarios = () => {
   const dispatch = useAppDispatch();
   const { sucursalId } = useParams();
   const usuarioService = new UsuarioService();
-  const { getAccessTokenSilently } = useAuth0();
   const globalUsuario = useAppSelector(
     (state) => state.usuario.data
   );
@@ -45,7 +43,7 @@ export const ListaUsuarios = () => {
   // Definiendo fetchUsuarios con useCallback
   const fetchUsuarios = useCallback(async () => {
     try {
-      const usuarios = await usuarioService.getAll(url + 'usuarios', await getAccessTokenSilently({}));
+      const usuarios = await usuarioService.getAll(url + 'usuarios');
       dispatch(setUsuario(usuarios));
       setFilterData(usuarios);
       setLoading(false);
@@ -108,7 +106,7 @@ export const ListaUsuarios = () => {
   const handleDeleteUser = async () => {
     try {
       if (usuarioToEdit && usuarioToEdit.id) {
-        await usuarioService.delete(url + 'usuarios', usuarioToEdit.id.toString(), await getAccessTokenSilently({})); // Eliminar el usuario
+        await usuarioService.delete(url + 'usuarios', usuarioToEdit.id.toString()); // Eliminar el usuario
         console.log('Usuario eliminado correctamente.');
         // Cerrar el modal de eliminar
         handleCloseDeleteModal();

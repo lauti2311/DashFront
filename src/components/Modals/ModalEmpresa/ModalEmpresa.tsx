@@ -7,7 +7,6 @@ import * as Yup from 'yup';
 import EmpresaService from '../../../services/EmpresaService';import { useAppSelector, useAppDispatch } from '../../../hooks/redux';
 import { toggleModal } from '../../../redux/slices/Modal';
 import IEmpresa from '../../../types/Empresa';
-import { useAuth0 } from '@auth0/auth0-react';
 import ImageControl from '../../ImagesControl/ImagesControl';
 import IImagenes from '../../../types/Imagenes';
 
@@ -20,7 +19,6 @@ interface ModalEmpresaProps {
   const ModalEmpresa: React.FC<ModalEmpresaProps> = ({ modalName, getEmpresa, empresaToEdit }) => {
     const empresaService = new EmpresaService();
     const url = import.meta.env.VITE_API_URL;
-    const { getAccessTokenSilently } = useAuth0();
     const [file, setFile] = useState<File[]>([]);
   
   
@@ -75,13 +73,11 @@ interface ModalEmpresaProps {
     const handleUpload = async (articuloId: string) => {
       if (file.length > 0 && articuloId) {
         try {
-          const accessToken = await getAccessTokenSilently({});
           const uploadPromises = file.map(file =>
             empresaService.uploadFile(
               `${url}empresas/uploads`,
               file,
               articuloId,
-              accessToken
             )
           );
           const responses = await Promise.all(uploadPromises);
@@ -140,7 +136,7 @@ interface ModalEmpresaProps {
                 let newCompanyId: string | null = null; // Cambiado de const a let
   
                 if (empresaToEdit) {
-                  await empresaService.put(url + "empresas", values.id.toString(), values, await getAccessTokenSilently());
+                  await empresaService.put(url + "empresas", values.id.toString(), values);
                   console.log("Se ha actualizado correctamente.");
                   newCompanyId = values.id.toString();
                   if (file.length > 0 && newCompanyId) {
@@ -148,7 +144,7 @@ interface ModalEmpresaProps {
                   } 
                 } else {
                   values.imagenes = [];
-                  const response = await empresaService.post(url + "empresas", values, await getAccessTokenSilently());
+                  const response = await empresaService.post(url + "empresas", values);
                   console.log("Se ha agregado correctamente.");
             
                   // Obtener el id de la nueva empresa desde la respuesta

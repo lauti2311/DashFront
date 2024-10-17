@@ -1,7 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
 import SucursalService from "../../../services/Sucursal";
 import ISucursal from "../../../types/Sucursal";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 
 interface EliminarSucursalProps {
@@ -17,7 +16,6 @@ interface EliminarSucursalProps {
       const sucursalService = new SucursalService();
       const url = import.meta.env.VITE_API_URL;
       const [isDeleting, setIsDeleting] = useState(false);
-      const { getAccessTokenSilently } = useAuth0();
 
       const handleDeleteClick = async () => {
         setIsDeleting(true);
@@ -31,7 +29,7 @@ interface EliminarSucursalProps {
       const handleDelete = async () => {
         try {
           if (sucursal && sucursal.id) {
-            await sucursalService.delete(url + 'sucursales', sucursal.id.toString(), await getAccessTokenSilently({}));
+            await sucursalService.delete(url + 'sucursales', sucursal.id.toString());
               console.log('Se ha eliminado correctamente.');
               getSucursal();
               onDelete();

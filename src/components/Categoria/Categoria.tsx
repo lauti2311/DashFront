@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { setCategoria } from "../../redux/slices/categoria.ts";
 import { handleSearch } from "../../utils/utils.ts";
 import { useParams } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const Categoria = () => {
 
@@ -24,7 +23,6 @@ const Categoria = () => {
   const [selectedCategoria, setSelectedCategoria] = useState<ICategoria | null>(
     null
   );
-  const { getAccessTokenSilently } = useAuth0();
   const { sucursalId } = useParams();
   const [modalOpen, setModalOpen] = useState(false);
   const [eliminarModalOpen, setEliminarModalOpen] = useState(false);
@@ -34,7 +32,7 @@ const Categoria = () => {
       if(sucursalId){
         const parsedSucursalId = parseInt(sucursalId, 10); 
 
-        const categorias = await categoriaService.categoriaSucursal(url, parsedSucursalId, await getAccessTokenSilently({}));
+        const categorias = await categoriaService.categoriaSucursal(url, parsedSucursalId, );
   
         // Filtrar las subcategorías para obtener sus IDs
         const subCategoriaIds = categorias.filter(categoria => categoria.subCategorias.length > 0)
@@ -85,7 +83,7 @@ const Categoria = () => {
       if (selectedCategoria && selectedCategoria.id) {
         await categoriaService.delete(
           url + "categoria",
-          selectedCategoria.id.toString(), await getAccessTokenSilently({})
+          selectedCategoria.id.toString()
         );
         console.log("Se ha eliminado correctamente.");
         handleCloseModal(); // Cerramos el modal después de eliminar

@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Typography, Container, Button } from "@mui/material";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/redux";
 import PedidoService from "../../services/PedidoService";
-import UsuarioService from "../../services/UsuarioService";
 import Pedido from "../../types/Pedido";
-import Usuario from "../../types/Usuario";
 import SearchBar from "../common/SearchBar";
 import TableComponent from "../Table/Table";
 import { setPedido } from "../../redux/slices/Pedido";
@@ -26,7 +23,6 @@ interface Column {
 }
 
 export const ListaPedidos = () => {
-  const { getAccessTokenSilently } = useAuth0();
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
   const pedidoService = new PedidoService();
@@ -34,75 +30,37 @@ export const ListaPedidos = () => {
   const [pedidoToEdit, setPedidoToEdit] = useState<Pedido | null>(null);
   const { sucursalId } = useParams();
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const { user, isLoading, isAuthenticated } = useAuth0();
-  const [usuario, setUsuario] = useState<Usuario>();
-  const usuarioService = new UsuarioService();
-  const [usuarioIsLoading, setUsuarioIsLoading] = useState<boolean>(true);
-  const [rolUsuario, setRolUsuario] = useState<string | undefined>();
   const [showModal, setShowModal] = useState(false);
   const [currentDetallePedidos, setCurrentDetallePedidos] = useState([]);
   const [orderDate, setOrderDate] = useState("");
   const [cliente, setCliente] = useState<string | undefined>();
   const [originalData, setOriginalData] = useState<Row[]>([]);
 
-  const fetchUsuario = async () => {
-    try {
-      const usuario = await usuarioService.getByEmail(url + "usuarios/role/" + user?.email, {
-        headers: {
-            Authorization: `Bearer ${await getAccessTokenSilently({})}`
-        }
-    });
-      if (usuario) {
-        setUsuario(usuario);
-        setRolUsuario(usuario.rol);
-      } else {
-        // Manejar el caso en que usuario sea undefined
-      }
-    } catch (error) {
-      console.error("Error al obtener el usuario:", error);
-    } finally {
-      setUsuarioIsLoading(false);
-    }
-  };
 
   const fetchPedidos = useCallback(async () => {
     try {
-      if (rolUsuario) { // Verificar si se ha obtenido el rol del usuario
-        const pedidos = (await pedidoService.getPedidosFiltrados(url + 'pedidos', rolUsuario, await getAccessTokenSilently({}))).filter((v) => !v.eliminado);
+      const pedidos = (await pedidoService.getPedidosFiltrados(url + 'pedidos')).filter((v) => !v.eliminado);
   
-        let pedidosFiltrados = pedidos;
+      let pedidosFiltrados = pedidos;
   
-        if (sucursalId) {
-          const sucursalIdNumber = parseInt(sucursalId);
-          pedidosFiltrados = pedidos.filter(pedido =>
-            pedido.sucursal &&
-            pedido.sucursal.id === sucursalIdNumber
-          );
-        }
-  
-        // Actualizar el estado con los pedidos obtenidos o filtrados
-        dispatch(setPedido(pedidosFiltrados));
-        setFilterData(pedidosFiltrados);
-        setOriginalData(pedidosFiltrados)
+      if (sucursalId) {
+        const sucursalIdNumber = parseInt(sucursalId);
+        pedidosFiltrados = pedidos.filter(pedido =>
+          pedido.sucursal &&
+          pedido.sucursal.id === sucursalIdNumber
+        );
       }
+  
+      // Actualizar el estado con los pedidos obtenidos o filtrados
+      dispatch(setPedido(pedidosFiltrados));
+      setFilterData(pedidosFiltrados);
+      setOriginalData(pedidosFiltrados);
     } catch (error) {
       console.error("Error al obtener los pedidos:", error);
     }
-  }, [dispatch, pedidoService, url, sucursalId, getAccessTokenSilently, rolUsuario]);
+  }, [dispatch, pedidoService, url, sucursalId]);
   
 
-  useEffect(() => {
-    if (user) {
-      fetchUsuario();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (usuario) {
-      fetchPedidos();
-      onSearch("");
-    }
-  }, [usuario]);
 
   const onSearch = (query: string) => {
     console.log(query)
@@ -139,20 +97,6 @@ export const ListaPedidos = () => {
     // Actualizamos los datos filtrados con los resultados de la búsqueda
     setFilterData(filtered);
   };
-
-  if (isAuthenticated) {
-    if (isLoading || usuarioIsLoading) {
-      return (
-        <div
-          style={{ height: "calc(100vh - 88px)" }}
-          className="d-flex flex-column justify-content-center align-items-center"
-        >
-          <div className="spinner-border" role="status"></div>
-        </div>
-      );
-    }
-  }
-
   const handleOpenEditModal = (rowData: Row) => {
     setPedidoToEdit({
       id: rowData.id,
@@ -171,38 +115,37 @@ export const ListaPedidos = () => {
     });
     setEditModalOpen(true);
   };
+  
   const handleShow = (detallePedidos: any, fechaPedido:any, cliente: any) => {
     setCurrentDetallePedidos(detallePedidos);
-    setCliente(cliente)
+    setCliente(cliente);
     setOrderDate(new Date(fechaPedido).toLocaleDateString());
     setShowModal(true);
   };
-
+  
   const handleClose = () => {
     setShowModal(false);
     setCurrentDetallePedidos([]);
-    setCliente("")
+    setCliente("");
     setOrderDate("");
-    // window.location.reload();
     fetchPedidos();
   };
-
+  
   const handleCloseEditModal = () => {
     setEditModalOpen(false);
     fetchPedidos();
   };
-
+  
   const handleSavePedido = async (pedido: Pedido) => {
     try {
-      await pedidoService.cambiarEstado(url + 'pedido', pedido.id.toString(), pedido.estado, await getAccessTokenSilently({}) );
+      await pedidoService.cambiarEstado(url + 'pedido', pedido.id.toString(), pedido.estado );
       setEditModalOpen(false);
       fetchPedidos();
     } catch (error) {
       console.error('Error al guardar el pedido:', error);
     }
   };
-
-
+  
   const columns: Column[] = [
     { id: "horaEstimadaFinalizacion", label: "Hora Estimada Finalizacion", renderCell: (rowData) => <>{rowData.horaEstimadaFinalizacion}</> },
     { id: "cliente", label: "Cliente", renderCell: (rowData) => <>{rowData.cliente?.nombre + " " + rowData.cliente?.apellido}</> },
@@ -223,20 +166,7 @@ export const ListaPedidos = () => {
       ),
     },
   ];
-
-  // if (filteredData.length === 0 && originalData.length === 0) {
-  //   return (
-  //     <>
-  //       <div style={{ height: "calc(100vh - 56px)" }} className={"d-flex flex-column justify-content-center align-items-center w-100"}>
-  //         <div className="spinner-border" role="status">
-  //         </div>
-  //         <div>Cargando los pedidos</div>
-  //       </div>
-  //     </>
-  //   );
-  // }
   
-
   return (
     <React.Fragment>
       <Box
@@ -266,7 +196,7 @@ export const ListaPedidos = () => {
           <Box sx={{ mt: 2 }}>
             <SearchBar onSearch={onSearch} />
           </Box>
-
+  
           <TableComponent data={filteredData} columns={columns} handleOpenDeleteModal={handleOpenEditModal} handleOpenEditModal={handleOpenEditModal} isListaPedidos={true} />
           <ModalPedidoDetalle
             show={showModal}
@@ -277,7 +207,7 @@ export const ListaPedidos = () => {
           />
         </Container>
       </Box>
-
+  
       <ModalPedido
         open={editModalOpen}
         onClose={handleCloseEditModal}
@@ -286,4 +216,4 @@ export const ListaPedidos = () => {
       />
     </React.Fragment>
   );
-};
+}

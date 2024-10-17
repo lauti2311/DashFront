@@ -16,7 +16,6 @@ import SearchBar from "../common/SearchBar.tsx";
 import { useParams } from "react-router-dom";
 // import EditIcon from '@mui/icons-material/Edit';
 // import DeleteIcon from '@mui/icons-material/Delete';
-import { useAuth0 } from "@auth0/auth0-react";
 
 interface Row {
   [key: string]: any;
@@ -37,7 +36,6 @@ export const ListaProductos = () => {
   const [productToEdit, setProductToEdit] = useState<AManufacturado | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const {sucursalId} = useParams();
-  const { getAccessTokenSilently } = useAuth0();
 
   const globalArticuloManufacturado = useAppSelector(
       (state) => state.articuloManufacturado.data
@@ -49,7 +47,6 @@ export const ListaProductos = () => {
       const response = await productoService.get(
         url + 'articuloManufacturado/getAllImagesByArticuloManufacturadoId',
         productoId,
-        await getAccessTokenSilently({})
       );
       console.log(response);
       if (Array.isArray(response) && response.length > 0) {
@@ -67,7 +64,7 @@ export const ListaProductos = () => {
       // Asegúrate de que sucursalId esté definido y conviértelo a un número si es necesario
       if (sucursalId) {
         const sucursalIdNumber = parseInt(sucursalId, 10); // Convertir sucursalId a número si es una cadena
-        const productos = (await productoService.manufacturados(url, sucursalIdNumber, await getAccessTokenSilently({})));
+        const productos = (await productoService.manufacturados(url, sucursalIdNumber));
         console.log(productos);
         dispatch(setArticuloManufacturado(productos));
         setFilterData(productos);
@@ -114,7 +111,7 @@ export const ListaProductos = () => {
   const handleDelete = async () => {
     try {
       if (productToEdit && productToEdit.id) {
-        await productoService.delete(url + 'articuloManufacturado', productToEdit.id.toString(), await getAccessTokenSilently({})); // Eliminar el producto
+        await productoService.delete(url + 'articuloManufacturado', productToEdit.id.toString()); // Eliminar el producto
         console.log('Se ha eliminado correctamente.');
         handleCloseDeleteModal(); // Cerrar el modal de eliminación
         fetchProductos();
