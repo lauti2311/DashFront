@@ -5,7 +5,6 @@ import { Box, Typography, Button, Container } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
 import { useParams } from "react-router-dom";
-import {useAuth0} from "@auth0/auth0-react";
 import PromocionService from "../../services/PromocionService";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import Promocion from "../../types/Promocion";
@@ -28,7 +27,6 @@ interface Column {
 }
 
 export const ListaPromocion = () => {
-  const { getAccessTokenSilently } = useAuth0();
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +62,7 @@ const handleOpenDeleteModal = (rowData: Row) => {
   const handleDelete = async () => {
     try {
       if (promocionToEdit && promocionToEdit.id) {
-        await promocionService.delete(url + 'promociones', promocionToEdit.id.toString(), await getAccessTokenSilently({}));
+        await promocionService.delete(url + 'promociones', promocionToEdit.id.toString());
         console.log('Se ha eliminado correctamente.');
         handleCloseDeleteModal(); // Cerrar el modal de eliminación
         fetchPromocion(); // Actualizar la lista de promociones después de la eliminación
@@ -88,7 +86,7 @@ const handleOpenDeleteModal = (rowData: Row) => {
         
         const sucursalIdNumber = parseInt(sucursalId);
 
-        const promociones = await promocionService.promocionesSucursal(url, sucursalIdNumber, await getAccessTokenSilently({}));
+        const promociones = await promocionService.promocionesSucursal(url, sucursalIdNumber);
         // Actualizar el estado con las promociones 
         dispatch(setPromocion(promociones));
         setFilterData(promociones);

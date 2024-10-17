@@ -1,159 +1,80 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { cilBarChart, cilBlur, cilCart, cilFastfood, cilUser } from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
 import { CNavItem, CNavTitle, CSidebar, CSidebarNav } from "@coreui/react";
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { useAuth0 } from '@auth0/auth0-react';
-import Usuario from '../../types/Usuario';
-import UsuarioService from '../../services/UsuarioService';
-import * as icon from "@coreui/icons";
-import CIcon from '@coreui/icons-react';
+import { cilDollar } from "@coreui/icons";
 
 
 const SideBar: React.FC = () => {
-  const { sucursalId} = useParams();
-  const url = import.meta.env.VITE_API_URL;
-  const usuarioService = new UsuarioService();
-  const [ usuario, setUsuario ] = useState<Usuario>();
-  const [ usuarioIsLoading, setUsuarioIsLoading ] = useState<boolean>(true);
-  const { user, isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0();
-
-  const fetchUsuario = async () => {
-    try {
-      const usuario = await usuarioService.getByEmail(url + "usuarios/role/" + user?.email, {
-        headers: {
-          Authorization: `Bearer ${await getAccessTokenSilently({})}`
-        }
-      });
-
-      setUsuario(usuario);
-
-    } catch (error) {
-      console.error("Error al obtener el usuario:", error);
-    } finally {
-      setUsuarioIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if(user) {
-      fetchUsuario();
-    }
-  }, [user]);
-
-  if(isAuthenticated) {
-    if(isLoading || usuarioIsLoading) {
-      return <div style={{height: "calc(100vh - 88px)"}} className="d-flex flex-column justify-content-center align-items-center">
-        <div className="spinner-border" role="status"></div>
-      </div>
-    }
-  }
-
-  const hasRole = (roles: string[]) => {
-    return roles.some(role => [usuario?.rol].includes(role));
-  }
+const { sucursalId} = useParams();
     return (
-        <div className="border-end">
-      <CSidebar
-        className="d-flex flex-column"
-        style={{ width: "100%" }}
-      >
-        <CSidebarNav style={{ display: "flex", flexDirection: "column" }}>
-          <CNavTitle style={{ marginBottom: "10px" }}>Dashboard</CNavTitle>
-          {
-            ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                <Link to="/inicio/1" className="nav-link">
-                  <CIcon customClassName="nav-icon" icon={icon.cilHamburgerMenu} />
-                  Inicio
-                </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'COCINERO', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem hidden={hasRole(['ADMIN'])}>
-                <Link to={`/productos/lista/${sucursalId}`} className="nav-link">
-                  <CIcon customClassName="nav-icon" icon={icon.cilFastfood} />
-                    Productos
-                  </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                <Link to={`/categorias/${sucursalId}`} className="nav-link">
-                <CIcon customClassName="nav-icon" icon={icon.cilLineSpacing} />
-                  Categorías
-                </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                <Link to={`/unidadMedida/${sucursalId}`} className="nav-link">
-                  <CIcon customClassName="nav-icon" icon={icon.cilMediaStop} />
-                    Unidad de Medida
-                </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'COCINERO', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                  <Link
-                    to={`/articuloInsumo/Lista/${sucursalId}`} className="nav-link">
-                    <CIcon customClassName="nav-icon" icon={icon.cilClipboard} />
-                    Articulo Insumo
-                  </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'CAJERO', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                  <Link to={`/promociones/lista/${sucursalId}`} className="nav-link">
-                  <CIcon customClassName="nav-icon" icon={icon.cilCash} />
-                    Promociones
-                  </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
-            ? <CNavItem>
-                <Link to={`/usuarios/${sucursalId}`} className="nav-link">
-                  <CIcon customClassName="nav-icon" icon={icon.cilPeople} />
-                  Usuarios
-                </Link>
-              </CNavItem>
-            : ''
-          }
-          {
-            ['ADMIN', 'COCINERO', 'CAJERO', 'SUPERADMIN'].includes(usuario?.rol || '')
-              ? <CNavItem>
-                  <Link to={`/pedidos/${sucursalId}`} className="nav-link">
-                    <CIcon customClassName="nav-icon" icon={icon.cilApps} />
-                    Pedidos
-                  </Link>
+        <div>
+            <CSidebar className="border-end d-flex flex-column" style={{ height: '100vh' }}>
+                <CSidebarNav>
+                    <CNavTitle>
+                        Dashboard
+                    </CNavTitle>
+                    <CNavItem>
+                        <Link to="/" className="nav-link" >
+                            <CIcon customClassName="nav-icon" icon={cilBarChart} />
+                            Inicio
+                        </Link>
+                    </CNavItem>
+
+                    {/* <CNavItem>
+                        <Link to="/empresas" className="nav-link">
+                            <CIcon customClassName="nav-icon" icon={cilBuilding} />
+                            Empresa
+                        </Link>
+                    </CNavItem> */}
+                    <CNavItem>
+                        <Link to= {`/productos/lista/${sucursalId}`} className="nav-link">
+                        <CIcon customClassName="nav-icon" icon={cilFastfood} />
+                         Productos
+                        </Link>
+                    </CNavItem>
+                        <CNavItem>
+                            <Link to={`/categorias/${sucursalId}`}className="nav-link">
+                                <CIcon className="nav-icon" icon={cilBlur} />
+                                Categorías
+                            </Link>
+                        </CNavItem>
+
+                    <CNavItem>
+                        <Link to={`/promociones/lista/${sucursalId}`} className="nav-link">
+                            <CIcon customClassName="nav-icon" icon={cilDollar} />
+                            Promociones
+                        </Link>
+                    </CNavItem>
+                        <CNavItem>
+                            <Link to="/empleados" className="nav-link" >
+                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                Lista de Empleados
+                            </Link>
+                        </CNavItem>
+                        <CNavItem>
+                            <Link to="/roles" className="nav-link">
+                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
+                                Roles
+                            </Link>
+                        </CNavItem>
+                    <CNavItem>
+                    <Link to="/usuario" className="nav-link">
+                        <CIcon customClassName="nav-icon" icon={cilUser} />
+                        Usuario
+                    </Link>
                 </CNavItem>
-              : ''
-          }
-          {
-            ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol || '')
-                ? <CNavItem>
-                  <Link to={`/reportes/${sucursalId}`} className="nav-link">
-                    <CIcon customClassName="nav-icon" icon={icon.cilChart} />
-                    Reportes
-                  </Link>
-                </CNavItem>
-                : ''
-          }
-        </CSidebarNav>
-      </CSidebar>
-    </div>
+                    <CNavItem>
+                        <Link to={`/articuloInsumo/lista/${sucursalId}`} className="nav-link">
+                            <CIcon customClassName="nav-icon" icon={cilCart} />
+                            Insumos
+                        </Link>
+                    </CNavItem>
+                </CSidebarNav>
+            </CSidebar>
+        </div>
 
         
     );

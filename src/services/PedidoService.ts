@@ -5,31 +5,31 @@ import BackendClient from "./BackendClient";
 
 export default class PedidoService extends BackendClient<Pedido> {
 
-  async cambiarEstado(url: string, pedidoId: string, nuevoEstado: Estado, token: string): Promise<Pedido> {
+  async cambiarEstado(url: string, pedidoId: string, nuevoEstado: Estado, ): Promise<Pedido> {
     const path = `${url}/${pedidoId}/estado?nuevoEstado=${nuevoEstado}`;
     console.log(path)
     const options: RequestInit = {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     return this.request(path, options);
   }
 
-  async getPedidosFiltrados(url: string, rol: string, token: string): Promise<Pedido[]> {
-    const path = `${url}/filtrado?rol=${rol}`;
+  async getPedidosFiltrados(url: string ): Promise<Pedido[]> {
+    const path = `${url}/filtrado`;
     const options: RequestInit = {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     console.log(`GET Request to: ${path}`);
     return this.requestAll(path, options);
   }
 
-  public async pedidosSucursal(url: string, idSucursal: number, token: string): Promise<Pedido[]> {
+  public async pedidosSucursal(url: string, idSucursal: number, ): Promise<Pedido[]> {
     try {
       const path = `${url}pedido/sucursal/${idSucursal}`;
       const response = await fetch(path, {
@@ -37,7 +37,7 @@ export default class PedidoService extends BackendClient<Pedido> {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          
         },
       });
       if (!response.ok) {
@@ -52,7 +52,7 @@ export default class PedidoService extends BackendClient<Pedido> {
     }
   }
 
-  async getRankingInsumos(url: string, sucursalId: string | undefined, token: string): Promise<any[][]> {
+  async getRankingInsumos(url: string, sucursalId: string | undefined, ): Promise<any[][]> {
     const path = `${url}pedido/ranking/insumos/data/${sucursalId}`;
     console.log(path)
     const options: RequestInit = {
@@ -60,13 +60,12 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     };
     return (this.request(path, options) as unknown) as any[][];
   }
 
-  async getPedidosPorCliente(url: string, sucursalId: string | undefined, token: string): Promise<any[][]> {
+  async getPedidosPorCliente(url: string, sucursalId: string | undefined, ): Promise<any[][]> {
     const path = `${url}pedido/ranking/pedidos/cliente/data/${sucursalId}`;
     console.log(path)
     const options: RequestInit = {
@@ -74,13 +73,13 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     return (this.request(path, options) as unknown) as any[][];
   }
 
-  async getIngresos(url: string, sucursalId: string | undefined, token: string): Promise<any[][]> {
+  async getIngresos(url: string, sucursalId: string | undefined, ): Promise<any[][]> {
     const path = `${url}pedido/ranking/ingresos/data/${sucursalId}`;
     console.log(path)
     const options: RequestInit = {
@@ -88,13 +87,13 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     return (this.request(path, options) as unknown) as any[][];
   }
 
-  async getGanancias(url: string, sucursalId: string | undefined, token: string): Promise<any[][]> {
+  async getGanancias(url: string, sucursalId: string | undefined, ): Promise<any[][]> {
     const path = `${url}pedido/ranking/ganancias/data/${sucursalId}`;
     console.log(path)
     const options: RequestInit = {
@@ -102,26 +101,26 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     return (this.request(path, options) as unknown) as any[][];
   }
 
-  async crearFactura(url: string, pedidoId: string, token: string): Promise<any> {
+  async crearFactura(url: string, pedidoId: string, ): Promise<any> {
     const path = `${url}factura/crear/${pedidoId}`;
     const options: RequestInit = {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        
       },
     };
     return this.request(path, options);
   }
 
-  async enviarFactura(url: string, pedidoId: string, userEmail: string, token: string): Promise<void> {
+  async enviarFactura(url: string, pedidoId: string, userEmail: string, ): Promise<void> {
     try {
       const formData = new URLSearchParams();
       formData.append('to', userEmail);
@@ -131,7 +130,7 @@ export default class PedidoService extends BackendClient<Pedido> {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded", // Cambiar Content-Type
-          Authorization: `Bearer ${token}`,
+          
         },
         body: formData, // Enviar formData en lugar de JSON.stringify
       });

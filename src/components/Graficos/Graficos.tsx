@@ -2,8 +2,6 @@
 import {Col, Row} from "react-bootstrap";
 import {Chart} from "react-google-charts";
 import {useEffect, useState} from "react";
-import {useAuth0} from "@auth0/auth0-react";
-
 import {useParams} from "react-router-dom";
 import PedidoService from "../../services/PedidoService";
 
@@ -17,33 +15,31 @@ export const Graficos = () => {
     const [dataIngresos, setDataIngresos] = useState<any>();
     const [dataGanancias, setDataGanancias] = useState<any>();
 
-    const { getAccessTokenSilently } = useAuth0();
-
     const getChartRankingInsumos =  async () => {
         setDataRankingInsumos([
             ["Articulo", "Cantidad"],
-            ...(await pedidoService.getRankingInsumos(url, sucursalId, await getAccessTokenSilently({})))
+            ...(await pedidoService.getRankingInsumos(url, sucursalId))
         ]);
     }
 
     const getPedidosPorCliente =  async () => {
         setDataPedidosPorCliente([
             ["Cliente", "Cantidad"],
-            ...(await pedidoService.getPedidosPorCliente(url, sucursalId, await getAccessTokenSilently({})))
+            ...(await pedidoService.getPedidosPorCliente(url, sucursalId))
         ]);
     }
 
     const getIngresos =  async () => {
         setDataIngresos([
             ["Dia", "Cantidad"],
-            ...(await pedidoService.getIngresos(url, sucursalId, await getAccessTokenSilently({})))
+            ...(await pedidoService.getIngresos(url, sucursalId))
         ]);
     }
 
     const getGanancias =  async () => {
         setDataGanancias([
             ["Dia", "Cantidad"],
-            ...(await pedidoService.getGanancias(url, sucursalId, await getAccessTokenSilently({})))
+            ...(await pedidoService.getGanancias(url, sucursalId))
         ]);
     }
 

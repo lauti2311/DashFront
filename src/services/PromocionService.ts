@@ -4,14 +4,13 @@ import  BackendClient  from "./BackendClient";
 
 // Clase PromocionService que extiende BackendClient para interactuar con la API de personas
 export default class PromocionService extends BackendClient<Promocion> {
-    public async promocionesSucursal(url: string, idSucursal: number, token: string): Promise<Promocion[]> {
+    public async promocionesSucursal(url: string, idSucursal: number): Promise<Promocion[]> {
         try {
           const path = `${url}promociones/sucursal/${idSucursal}`;
           const response = await fetch(path, { method: "GET" ,
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
             },});      
           if (!response.ok) {
             throw new Error(response.statusText);

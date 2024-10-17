@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Typography } from "@mui/material";
 import EmpresaService from '../../services/EmpresaService';
 import '../../components/ui/Empresa/Empresa.css'; // Import the CSS file
@@ -13,13 +13,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EliminarEmpresa from '../Modals/ModalEmpresa/EliminarEmpresa';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BaseNavBar } from '../common/BaseNavbar';
-import { useAuth0 } from '@auth0/auth0-react';
-import UsuarioService from '../../services/UsuarioService';
-import Usuario from '../../types/Usuario';
-
-
 interface Row {
   [key: string]: any;
 }
@@ -27,22 +22,17 @@ interface Row {
 export const Empresas = () => {
   const url = import.meta.env.VITE_API_URL;
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const empresaService = new EmpresaService();
-  const usuarioService = new UsuarioService();
   const [filterData, setFilterData] = useState<Row[]>([]);
   const [empresaToEdit, setEmpresaToEdit] = useState<Empresa | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const { user, isLoading, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
-  const [ userIsLoading, setUserIsLoading ] = useState<boolean>(true);
-  const [ usuario, setUsuario ] = useState<Usuario>();
 
   const fetchImages = useCallback(
     async (empresaId: string) => {
       try {
         const response = await empresaService.get(
           url + "empresas/getAllImagesByEmpresaId",
-          empresaId, await getAccessTokenSilently({})
+          empresaId
         );
 
         if (Array.isArray(response) && response.length > 0) {
@@ -58,7 +48,7 @@ export const Empresas = () => {
 
   const fetchEmpresa = useCallback(async () => {
     try {
-      const empresas = await empresaService.getAll(url + "empresas", await getAccessTokenSilently({}));
+      const empresas = await empresaService.getAll(url + "empresas");
       console.log(empresas)
       dispatch(setEmpresa(empresas));
       setFilterData(empresas);
@@ -67,40 +57,7 @@ export const Empresas = () => {
     }
   }, [dispatch, empresaService, url, fetchImages]);
 
-  const fetchUser = async () =>{
-    try {
-      const usuario = await usuarioService.getByEmail(url + "usuarios/role/" + user?.email,{
-        headers: {
-          Authorization: `Bearer ${await getAccessTokenSilently({})}`,
-        }
-      });
-        setUsuario(usuario);
 
-        switch (usuario?.rol) {
-          case 'COCINERO':
-              navigate(`pedidos/${usuario?.empleado?.sucursal?.id}`);
-              break;
-          case 'CAJERO':
-              navigate(`pedidos/${usuario?.empleado?.sucursal?.id}`);
-              break;
-          case 'ADMIN':
-              navigate(`/inicio/${usuario?.empleado?.sucursal?.id}`);
-              break;
-      }
-  } catch (error) {
-    console.error("Error al obtener el usuario:", error);
-  } finally{
-    setUserIsLoading(false);
-  }
-}
-
-  useEffect(() => {
-    if(user){
-      fetchUser();
-    }
-    fetchEmpresa();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   const handleOpenDeleteModal = (rowData: Row) => {
     setEmpresaToEdit({
@@ -136,39 +93,7 @@ export const Empresas = () => {
     dispatch(toggleModal({ modalName: "modal" }));
   };
 
-  const handleLogout = () => {
-    logout({
-      logoutParams: {
-         returnTo: "http://localhost:5173/"
-      }
-    })
-  }
 
-  if(isAuthenticated) {
-    if(isLoading || userIsLoading) {
-        return <div style={{height: "calc(100vh - 88px)"}} className="d-flex flex-column justify-content-center align-items-center">
-            <div className="spinner-border" role="status"></div>
-        </div>
-    }
-}
-
-if (!user) {
-  return <div style={{height: "calc(100vh - 88px)"}}
-              className={"d-flex flex-column justify-content-center align-items-center"}>
-    <h1>Necesitas logearte para continuar</h1>
-    <p>Prueba iniciar session!</p>
-</div>;
-} else if(!usuario) {
-  return (
-    <>
-      <div style={{height: "calc(100vh - 88px)"}} className={"d-flex flex-column justify-content-center align-items-center"}>
-        <h1>No tienes permisos para usar este dashboard</h1>
-        <p>Prueba pedir permisos!</p>
-        <button className="btn btn-success text-light" onClick={handleLogout}>Cerrar sesión</button>
-      </div>
-    </>
-  );
-}
   return (
     <>
     <BaseNavBar title="Empresas" />
@@ -193,8 +118,7 @@ if (!user) {
                 style={{ minHeight: "80vh", paddingTop: "1rem" }}
             >
                 {
-                    ['ADMIN', 'SUPERADMIN'].includes(usuario?.rol)
-                     ? <Grid item xs={12} sm={6} md={4} onClick={handleAddEmpresa}>
+                  <Grid item xs={12} sm={6} md={4} onClick={handleAddEmpresa}>
                     <Card
                         sx={{
                             maxWidth: 345,
@@ -232,7 +156,6 @@ if (!user) {
                         </CardContent>
                     </Card>
                 </Grid>
-                        : ''
                 }
                 {filterData.map((empresa) => {
                     return (

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuth0 } from "@auth0/auth0-react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import UnidadMedidaService from "../../services/UnidadMedidaService";
 import { useCallback, useEffect, useState } from "react";
@@ -35,11 +34,10 @@ export const ListaUnidadMedida = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const globalUnidadMedida = useAppSelector((state) => state.unidadMedida.data);
     const [loading, setLoading] = useState(true);
-    const { getAccessTokenSilently } = useAuth0();
 
     const fetchUnidades = useCallback(async () => {
         try{
-            const unidades = await unidadMedidaService.getAll(url + 'unidadMedida', await getAccessTokenSilently({}));
+            const unidades = await unidadMedidaService.getAll(url + 'unidadMedida');
             dispatch(setUnidades(unidades));
             setFilterData(unidades);
             setLoading(false);
@@ -87,7 +85,7 @@ export const ListaUnidadMedida = () => {
       const handleDeleteUnidad = async () => {
         try {
           if (unidadMedidaToEdit && unidadMedidaToEdit.id) {
-            await unidadMedidaService.delete(url + 'unidades', unidadMedidaToEdit.id.toString(), await getAccessTokenSilently({}));
+            await unidadMedidaService.delete(url + 'unidades', unidadMedidaToEdit.id.toString());
             handleCloseDeleteModal();
             fetchUnidades();
           } else {

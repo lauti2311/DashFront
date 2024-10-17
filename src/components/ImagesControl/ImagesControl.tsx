@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Carousel, Spinner } from 'react-bootstrap';
-import { useAuth0 } from '@auth0/auth0-react';
 import ImagenArticuloService from '../../services/ImagenArticuloService';
 
 interface Image {
@@ -19,7 +18,6 @@ const ImageControl: React.FC<ImageControlProps> = ({ images: initialImages, urlP
   const [sliderImages, setSliderImages] = useState<Image[]>(initialImages);
   const [isLoading, setIsLoading] = useState<boolean>(false); // Estado para controlar la carga
   const imagenService = new ImagenArticuloService();
-  const { getAccessTokenSilently } = useAuth0();
   const url = import.meta.env.VITE_API_URL;
 
   // Actualizar el estado local cuando cambian las imágenes
@@ -47,7 +45,6 @@ const ImageControl: React.FC<ImageControlProps> = ({ images: initialImages, urlP
         `${url}${urlParteVariable}`, // Concatenar la parte variable a la URL
         publicId,
         imagenId.toString(),
-        await getAccessTokenSilently()
       );
   
       // Actualizar el estado después de eliminar la imagen
