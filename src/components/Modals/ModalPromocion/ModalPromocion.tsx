@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuth0 } from "@auth0/auth0-react";
 import { Formik, Field, ErrorMessage, Form } from "formik";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Modal, Button } from "react-bootstrap";
@@ -37,7 +36,6 @@ interface ModalPromocionProps {
     const [modalColor, setModalColor] = useState<string>(""); // Estado para controlar el color de fondo de la modal
     const [detalles, setDetalles] = useState<PromocionDetalle[]>([]);
     const url = import.meta.env.VITE_API_URL;
-    const { getAccessTokenSilently } = useAuth0();
     const { sucursalId } = useParams();
     const sucursalService = new SucursalShortDtoService();
     const [sucursales, setSucursales] = useState<SucursalShorDto[]>([]);
@@ -134,10 +132,10 @@ interface ModalPromocionProps {
           const sucursalIdNumber = parseInt(sucursalId); // Convertir sucursalId a número si es una cadena
   
           const productData = await productoService.manufacturados(
-            url, sucursalIdNumber, await getAccessTokenSilently({})
+            url, sucursalIdNumber
           );
           const insumData = await articuloInsumoService.insumos(
-            url, sucursalIdNumber, await getAccessTokenSilently({})
+            url, sucursalIdNumber
           );
           // Filtrar los productos manufacturados y los insumos
           const insumos = insumData.filter((insumo) => !insumo.esParaElaborar);
@@ -168,17 +166,15 @@ interface ModalPromocionProps {
     }, []);
     const fetchSucursales = async () => {
       try {
-        const token = await getAccessTokenSilently({});
         if (sucursalId) {
           const sucursalSeleccionada = await sucursalService.get(
             url + "sucursales",
             sucursalId,
-            token
-          );
+         );
           console.log(sucursalId)
           const empresaId = sucursalSeleccionada.empresa.id;
   
-          const sucursalesEmpresa = await sucursalService.sucursalEmpresa(url, empresaId, token);
+          const sucursalesEmpresa = await sucursalService.sucursalEmpresa(url, empresaId);
           setSucursales(sucursalesEmpresa);
         }
       } catch (error) {
@@ -236,13 +232,11 @@ interface ModalPromocionProps {
     const handleUpload = async (articuloId: string) => {
       if (files.length > 0 && articuloId) {
         try {
-          const accessToken = await getAccessTokenSilently({});
           const uploadPromises = files.map(file =>
             promocionService.uploadFile(
               `${url}promociones/uploads`,
               file,
               articuloId,
-              accessToken
             )
           );
           const responses = await Promise.all(uploadPromises);
@@ -328,7 +322,7 @@ interface ModalPromocionProps {
                   promocion = await promocionService.put(
                     url + "promociones",
                     values.id.toString(),
-                    values, await getAccessTokenSilently({})
+                    values
                   );
   
                   const promocionId = promocion.id.toString();
@@ -343,7 +337,7 @@ interface ModalPromocionProps {
                   values.sucursales = sucursalesSeleccionadas;
                   values.promocionDetalle = detalles;
                   values.precioPromocional = totalPrecioPromocional
-                  promocion = await promocionService.post(url + "promociones", values, await getAccessTokenSilently({}));
+                  promocion = await promocionService.post(url + "promociones", values);
   
                   const promocionId = promocion.id.toString();
                   if (files.length > 0 && promocionId) {

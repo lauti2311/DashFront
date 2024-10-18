@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Typography } from "@mui/material";
 import EmpresaService from '../../services/EmpresaService';
 import '../../components/ui/Empresa/Empresa.css'; // Import the CSS file
@@ -57,7 +57,9 @@ export const Empresas = () => {
     }
   }, [dispatch, empresaService, url, fetchImages]);
 
-
+  useEffect(() => {
+    fetchEmpresa();
+  }, []);
 
   const handleOpenDeleteModal = (rowData: Row) => {
     setEmpresaToEdit({

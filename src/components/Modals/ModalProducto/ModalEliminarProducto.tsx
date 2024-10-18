@@ -2,7 +2,6 @@ import { Button, Modal } from 'react-bootstrap';
 import ArticuloManufacturadoService from '../../../services/ArticuloManufacturadoService';
 import ArticuloManufacturado from '../../../types/ArticuloManufacturado';
 import { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 
 interface ModalDeleteProductsProps {
     show: boolean;
@@ -12,7 +11,6 @@ interface ModalDeleteProductsProps {
 }
 
 const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHide, product, onDelete }) => { 
-    const { getAccessTokenSilently } = useAuth0();
     const [isDeleting, setIsDeleting] = useState(false);
     const productService = new ArticuloManufacturadoService();
     const url = import.meta.env.VITE_API_URL;
@@ -24,7 +22,7 @@ const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHid
             if (product && product.id) {
                 const deleteUrl = `${url}articuloManufacturado`;
                 console.log(`Eliminando producto con URL: ${deleteUrl}`);
-                await productService.delete(deleteUrl, product.id.toString(), await getAccessTokenSilently({}));
+                await productService.delete(deleteUrl, product.id.toString());
                 console.log('Se ha eliminado correctamente.');
                 onDelete(); // Llama a la función onDelete
                 onHide(); // Cerramos el modal
