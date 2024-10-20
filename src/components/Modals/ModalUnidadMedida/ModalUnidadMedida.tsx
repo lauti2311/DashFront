@@ -2,7 +2,6 @@ import { Button, Modal } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import UnidadMedida from "../../../types/UnidadMedida";
 import UnidadMedidaService from "../../../services/UnidadMedidaService";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
@@ -16,7 +15,6 @@ interface ModalUnidadMedidaProps {
 
 const ModalUnidadMedida: React.FC<ModalUnidadMedidaProps> = ({ modalName, getUnidades, unidadToEdit }) => {
   const unidadMedidaService = new UnidadMedidaService();
-  const { getAccessTokenSilently } = useAuth0();
   const [initialValues, setInitialValues] = useState<UnidadMedida>({
     id: 0,
     eliminado: false,
@@ -59,10 +57,10 @@ const ModalUnidadMedida: React.FC<ModalUnidadMedidaProps> = ({ modalName, getUni
           onSubmit={async (values: UnidadMedida, { setSubmitting }) => {
             try {
               if (unidadToEdit) {
-                await unidadMedidaService.put(import.meta.env.VITE_API_URL + "unidadMedida", values.id.toString(), values,  await getAccessTokenSilently({}));
+                await unidadMedidaService.put(import.meta.env.VITE_API_URL + "unidadMedida", values.id.toString(), values);
                 console.log("Se ha actualizado correctamente.");
               } else {
-                await unidadMedidaService.post(import.meta.env.VITE_API_URL + "unidadMedida", values, await getAccessTokenSilently({}));
+                await unidadMedidaService.post(import.meta.env.VITE_API_URL + "unidadMedida", values);
                 console.log("Se ha agregado correctamente.");
               }
               getUnidades();

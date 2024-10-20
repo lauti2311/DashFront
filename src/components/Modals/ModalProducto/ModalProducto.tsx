@@ -18,7 +18,6 @@ import ArticuloInsumoShortService from "../../../services/dtos/ArticuloInsumoSho
 // import ArticuloManufacturadoDetalleService from "../../../../services/ArticuloManufacturadoDetalleService.ts";
 import { useParams } from "react-router-dom";
 import ImagenArticulo from "../../../types/ImagenArticulo.ts";
-import { useAuth0 } from "@auth0/auth0-react";
 import ImageControl from "../../ImagesControl/ImagesControl.tsx";
 
 interface ModalProductProps {
@@ -44,7 +43,6 @@ const ModalProducto: React.FC<ModalProductProps> = ({
   const [modalColor, setModalColor] = useState<string>(""); // Estado para controlar el color de fondo de la modal
   const [detalles, setDetalles] = useState<ArticuloManufacturadoDetalle[]>([]);
   const [totalPrecioVenta, setTotalPrecioVenta] = useState<number>(0);
-  const { getAccessTokenSilently } = useAuth0();
 
 
   const initialValues: ArticuloManufacturado = {
@@ -168,7 +166,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
 
   const fetchUnidadesMedida = async () => {
     try {
-      const unidades = await unidadService.getAll(`${url}unidadMedida`, await getAccessTokenSilently({}));
+      const unidades = await unidadService.getAll(`${url}unidadMedida`);
       setUnidadesMedida(unidades);
     } catch (error) {
       console.error("Error al obtener las unidades de medida:", error);
@@ -179,7 +177,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
     try {
       if (sucursalId) {
         const parsedSucursalId = parseInt(sucursalId, 10);
-        const categorias = await categoriaService.categoriaManufacturadoSucursal(url, parsedSucursalId, await getAccessTokenSilently({}));
+        const categorias = await categoriaService.categoriaManufacturadoSucursal(url, parsedSucursalId);
         setCategorias(categorias);
       }
     } catch (error) {
@@ -223,13 +221,12 @@ const ModalProducto: React.FC<ModalProductProps> = ({
   const handleUpload = async (articuloId: string) => {
     if (files.length > 0 && articuloId) {
       try {
-        const accessToken = await getAccessTokenSilently({});
         const uploadPromises = files.map(file =>
           productoService.uploadFile(
             `${url}articuloManufacturado/uploads`,
             file,
             articuloId,
-            accessToken
+            
           )
         );
         const responses = await Promise.all(uploadPromises);
@@ -321,7 +318,6 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                   url + "articuloManufacturado",
                   values.id.toString(),
                   values,
-                  await getAccessTokenSilently({})
                 );
                 productoId = productToEdit.id.toString();
                 if (files.length > 0 && productoId) {
@@ -338,7 +334,6 @@ const ModalProducto: React.FC<ModalProductProps> = ({
                 const response = await productoService.post(
                   url + "articuloManufacturado",
                   values,
-                  await getAccessTokenSilently({})
                 );
 
                 productoId = response.id.toString();

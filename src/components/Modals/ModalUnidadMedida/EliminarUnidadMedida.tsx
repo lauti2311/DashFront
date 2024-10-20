@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {useAuth0} from "@auth0/auth0-react";
 import UnidadMedida from '../../../types/UnidadMedida';
 import UnidadMedidaService from '../../../services/UnidadMedidaService';
 
@@ -14,7 +13,6 @@ interface EliminarUnidadMedidaProps {
 const EliminarUnidadMedida: React.FC<EliminarUnidadMedidaProps> = ({ show, onHide, unidad, onDelete }) => {
     const unidadMedidaService = new UnidadMedidaService();
     const url = import.meta.env.VITE_API_URL;
-    const { getAccessTokenSilently } = useAuth0();
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDeleteClick = async () => {
@@ -28,7 +26,7 @@ const EliminarUnidadMedida: React.FC<EliminarUnidadMedidaProps> = ({ show, onHid
     const handleDelete = async () => {
       try {
         if (unidad && unidad.id) {
-          await unidadMedidaService.delete(url + 'unidadMedida', unidad.id.toString(), await getAccessTokenSilently({}));
+          await unidadMedidaService.delete(url + 'unidadMedida', unidad.id.toString());
           console.log('Se ha eliminado correctamente.');
           onDelete(); // Actualiza la lista de unidades de medida
           onHide(); // Cerramos el modal

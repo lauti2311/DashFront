@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import UsuarioService from "../../../services/UsuarioService";
 import Usuario from "../../../types/Usuario";
 import { toggleModal } from "../../../redux/slices/Modal";
-import { useAuth0 } from "@auth0/auth0-react";
 
 interface ModalUsuarioProps {
   getUsuarios: () => void;
@@ -15,7 +14,6 @@ interface ModalUsuarioProps {
 }
 
 const ModalUsuario: React.FC<ModalUsuarioProps> = ({ getUsuarios, usuarioToEdit, sucursalId }) => {
-  const { getAccessTokenSilently } = useAuth0();
   const usuarioService = new UsuarioService();
   const url = import.meta.env.VITE_API_URL;
 
@@ -76,11 +74,11 @@ const ModalUsuario: React.FC<ModalUsuarioProps> = ({ getUsuarios, usuarioToEdit,
             try {
               if (usuarioToEdit) {
                 // Lógica para editar el usuario existente
-                await usuarioService.put(url + "usuarios", values.id.toString(), values, await getAccessTokenSilently({}));
+                await usuarioService.put(url + "usuarios", values.id.toString(), values);
                 console.log("Se ha actualizado correctamente.");
               } else {
                 // Lógica para agregar un nuevo usuario
-                await usuarioService.post(url + "usuarios", values, await getAccessTokenSilently({}));
+                await usuarioService.post(url + "usuarios", values);
                 console.log("Se ha agregado correctamente.");
               }
               getUsuarios();

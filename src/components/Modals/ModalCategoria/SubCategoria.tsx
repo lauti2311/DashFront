@@ -3,7 +3,6 @@ import { Modal, Button } from "react-bootstrap";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Categoria from "../../../types/Categoria";
 import CategoriaDto from "../../../types/dto/CategoriaDto";
-import { useAuth0 } from "@auth0/auth0-react";
 import CategoriaSDTO from "../../../services/serviceDTO/CategoriasDTO";
 import CategoriaService from "../../../services/CategoriaService";
 
@@ -27,7 +26,6 @@ const ModalSubCategoria: React.FC<AgregarSubcategoriaModalProps> = ({
   const CategoriaSservice = new CategoriaSDTO();
   const categoriaService = new CategoriaService();
   const url = import.meta.env.VITE_API_URL;
-  const { getAccessTokenSilently } = useAuth0();
 
   // Función para manejar el cierre del modal
   const handleClose = useCallback(() => {
@@ -68,7 +66,6 @@ const ModalSubCategoria: React.FC<AgregarSubcategoriaModalProps> = ({
                 const response = await categoriaService.get(
                   url + "categoria",
                   categoria.id.toString(),
-                  await getAccessTokenSilently({})
                 );
                 // la categoria que traemos se la asignamos a la categoria que recibe la modal
                 categoria = response;
@@ -82,7 +79,6 @@ const ModalSubCategoria: React.FC<AgregarSubcategoriaModalProps> = ({
                 const subCategoria = await CategoriaSservice.post(
                   url + "categoria",
                   values,
-                  await getAccessTokenSilently({})
                 );
 
                 // Agregar la subcategoría a la categoría actual
@@ -93,7 +89,6 @@ const ModalSubCategoria: React.FC<AgregarSubcategoriaModalProps> = ({
                     url + "categoria",
                     categoria.id.toString(),
                     categoria,
-                    await getAccessTokenSilently({})
                   );
                   console.log(
                     "Categoría actualizada con la nueva subcategoría:",

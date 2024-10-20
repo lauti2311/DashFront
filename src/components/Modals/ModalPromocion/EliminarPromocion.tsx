@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import {useAuth0} from "@auth0/auth0-react";
 import PromocionService from '../../../services/PromocionService';
 import Promocion from '../../../types/Promocion';
 
@@ -15,12 +14,11 @@ interface ModalEliminarPromocionProps {
   const ModalEliminarPromocion: React.FC<ModalEliminarPromocionProps> = ({ show, onHide, promocion }) => {
     const promocionService = new PromocionService();
     const url = import.meta.env.VITE_API_URL;
-    const { getAccessTokenSilently } = useAuth0();
   
     const handleDelete = async () => {
       try {
         if (promocion && promocion.id) {
-          await promocionService.delete(url + 'promocion', promocion.id.toString(), await getAccessTokenSilently({}));
+          await promocionService.delete(url + 'promocion', promocion.id.toString());
           console.log(promocion.id.toString())
           console.log('Se ha eliminado correctamente.');
           onHide(); // Cerramos el modal
