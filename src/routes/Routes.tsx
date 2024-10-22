@@ -6,7 +6,6 @@ import Inicio from '../components/Inicio/Inicio';
 import { ListaArticulosInsumo } from '../components/Insumo/Insumo';
 import { ListaProductos } from '../components/Producto/ListaProductos';
 import { ListaPromocion } from '../components/Promocion/Promocion';
-import Rol from '../components/Rol/Rol';
 import { Sucursales } from '../components/Sucursal/Sucursal';
 import Usuario from '../components/Usuario/Usuario';
 import Categoria from '../components/Categoria/Categoria';
@@ -23,8 +22,7 @@ const App: React.FC = () => {
         <Route path="/inicio/:sucursalId" element={<Inicio />} />
         <Route path='/articuloInsumo/lista/:sucursalId' element={<ListaArticulosInsumo />} />
         <Route path="/categorias/:sucursalId" element={<Categoria />} />
-        <Route path="/roles" element={<Rol />} />
-        <Route path="/usuarios" element={<Usuario />} />
+        <Route path="/usuarios/:sucursalId" element={<Usuario />} />
         <Route path="/promociones/lista/:sucursalId" element={<ListaPromocion />} />
         <Route path='/unidadMedida/:sucursalId' element={<ListaUnidadMedida />}/>
         <Route path="/reportes/:sucursalId" element={<Reportes />}/>
