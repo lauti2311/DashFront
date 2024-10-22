@@ -5,6 +5,7 @@ import CIcon from "@coreui/icons-react";
 import { CNavItem, CNavTitle, CSidebar, CSidebarNav } from "@coreui/react";
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { cilDollar } from "@coreui/icons";
+import * as icon from "@coreui/icons";
 
 
 const SideBar: React.FC = () => {
@@ -23,12 +24,6 @@ const { sucursalId} = useParams();
                         </Link>
                     </CNavItem>
 
-                    {/* <CNavItem>
-                        <Link to="/empresas" className="nav-link">
-                            <CIcon customClassName="nav-icon" icon={cilBuilding} />
-                            Empresa
-                        </Link>
-                    </CNavItem> */}
                     <CNavItem>
                         <Link to= {`/productos/lista/${sucursalId}`} className="nav-link">
                         <CIcon customClassName="nav-icon" icon={cilFastfood} />
@@ -49,21 +44,15 @@ const { sucursalId} = useParams();
                         </Link>
                     </CNavItem>
                         <CNavItem>
-                            <Link to="/empleados" className="nav-link" >
-                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                Lista de Empleados
-                            </Link>
-                        </CNavItem>
-                        <CNavItem>
-                            <Link to="/roles" className="nav-link">
-                                <span className="nav-icon"><span className="nav-icon-bullet"></span></span>
-                                Roles
+                        <Link to={`/unidadMedida/${sucursalId}`} className="nav-link">
+                        <CIcon customClassName="nav-icon" icon={icon.cilMediaStop} />
+                            Unidades de Medida
                             </Link>
                         </CNavItem>
                     <CNavItem>
-                    <Link to="/usuario" className="nav-link">
-                        <CIcon customClassName="nav-icon" icon={cilUser} />
-                        Usuario
+                    <Link to={`/usuarios/${sucursalId}`} className="nav-link">
+                    <CIcon customClassName="nav-icon" icon={cilUser} />
+                        Usuarios
                     </Link>
                 </CNavItem>
                     <CNavItem>
@@ -71,6 +60,18 @@ const { sucursalId} = useParams();
                             <CIcon customClassName="nav-icon" icon={cilCart} />
                             Insumos
                         </Link>
+                    </CNavItem>
+                    <CNavItem>
+                    <Link to={`/pedidos/${sucursalId}`} className="nav-link">
+                        <CIcon customClassName="nav-icon" icon={icon.cilApps} />
+                        Pedidos
+                    </Link>
+                    </CNavItem>
+                    <CNavItem>
+                    <Link to={`/reportes/${sucursalId}`} className="nav-link">
+                        <CIcon customClassName="nav-icon" icon={icon.cilChart} />
+                        Reportes
+                    </Link>
                     </CNavItem>
                 </CSidebarNav>
             </CSidebar>
