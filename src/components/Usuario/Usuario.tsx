@@ -156,6 +156,7 @@ export const ListaUsuarios = () => {
               variant="contained"
               startIcon={<Add />}
               onClick={handleAddUser}
+              style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
             >
               Usuario
             </Button>

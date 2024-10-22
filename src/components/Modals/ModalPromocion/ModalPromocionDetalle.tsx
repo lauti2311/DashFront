@@ -145,7 +145,7 @@ const ModalPromocionDetalle: React.FC<ModalPromocionDetalleProps> = ({
             </Button>
           )}
           {selectedInsumos.length === 1 && (
-            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4">
+            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4" style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}>
               Agregar producto
             </Button>
           )}
