@@ -64,10 +64,8 @@ const handleOpenDeleteModal = (rowData: Row) => {
       if (promocionToEdit && promocionToEdit.id) {
         await promocionService.delete(url + 'promociones', promocionToEdit.id.toString());
         console.log('Se ha eliminado correctamente.');
-        handleCloseDeleteModal(); // Cerrar el modal de eliminación
-        fetchPromocion(); // Actualizar la lista de promociones después de la eliminación
-      } else {
-        console.error('No se puede eliminar la Promocion porque no se proporcionó un ID válido.');
+        handleCloseDeleteModal();
+        setFilterData(prevData => prevData.filter(promo => promo.id !== promocionToEdit.id)); // Eliminar de filterData
       }
     } catch (error) {
       console.error('Error al eliminar la promocion:', error);
@@ -100,7 +98,7 @@ const handleOpenDeleteModal = (rowData: Row) => {
   
   useEffect(() => {
     fetchPromocion();
-    onSearch('');
+    onSearch(""); // Llamada a onSearch para filtrar los datos iniciales
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -44,6 +44,7 @@ const ModalProducto: React.FC<ModalProductProps> = ({
   const [detalles, setDetalles] = useState<ArticuloManufacturadoDetalle[]>([]);
   const [totalPrecioVenta, setTotalPrecioVenta] = useState<number>(0);
 
+  
 
   const initialValues: ArticuloManufacturado = {
     id: productToEdit ? productToEdit.id : 0,

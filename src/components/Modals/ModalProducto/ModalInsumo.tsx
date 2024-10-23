@@ -148,12 +148,13 @@ const ModalInsumo: React.FC<ModalInsumoProps> = ({
             onChange={handleSearchChange}
           />
           {selectedInsumos.length > 1 && (
-            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4">
+            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4" style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}>
               Agregar insumos
             </Button>
           )}
           {selectedInsumos.length === 1 && (
-            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4">
+            <Button variant="primary" onClick={handleAgregarInsumos} className="col-md-4" style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+>
               Agregar insumo
             </Button>
           )}
