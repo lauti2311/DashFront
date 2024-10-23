@@ -77,7 +77,7 @@ export const ListaProductos = () => {
   
   useEffect(() => {
     fetchProductos();
-    onSearch('');
+    onSearch("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -179,16 +179,7 @@ export const ListaProductos = () => {
         }
       }
     },
-    // { id: "acciones", label: "Acciones", renderCell: (rowData) => (
-    //   <>
-    //      <IconButton aria-label="editar" onClick={() => handleOpenEditModal(rowData)}>        
-    //      <EditIcon /> 
-    //           </IconButton>
-    //           <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(rowData)}>      
-    //           <DeleteIcon />         
-    //           </IconButton>
-    //   </>
-    // ) }
+
   ];
 
   return (

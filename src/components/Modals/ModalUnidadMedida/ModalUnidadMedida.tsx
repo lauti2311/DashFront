@@ -100,6 +100,7 @@ const ModalUnidadMedida: React.FC<ModalUnidadMedidaProps> = ({ modalName, getUni
                   type="submit"
                   variant="primary"
                   disabled={isSubmitting}
+                  style={{ backgroundColor: "#fb6376", borderColor: "#fb6376" }}
                 >
                   {isSubmitting ? "Guardando..." : "Guardar"}
                 </Button>
