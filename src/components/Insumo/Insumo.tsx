@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useCallback } from "react";
-import { Box, Typography, Button, Container, IconButton } from "@mui/material";
+import { Box, Typography, Button, Container } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux.ts";
 import ArticuloInsumoService from "../../services/ArticuloInsumoService.ts";
@@ -13,9 +13,9 @@ import ArticuloInsumo from "../../types/ArticuloInsumo";
 import { handleSearch } from "../../utils/utils";
 import { setArticuloInsumo } from "../../redux/slices/articuloInsumo";
 import UnidadMedida from "../../types/UnidadMedida";
-import EditIcon from '@mui/icons-material/Edit';
+//import EditIcon from '@mui/icons-material/Edit';
 import { useParams } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
+//import DeleteIcon from '@mui/icons-material/Delete';
 
 
 interface Row {
@@ -140,16 +140,7 @@ export const ListaArticulosInsumo = () => {
         }
       },
     },
-    { id: "acciones", label: "Acciones", renderCell: (rowData) => (
-      <>
-         <IconButton aria-label="editar" onClick={() => handleOpenEditModal(rowData)}>        
-         <EditIcon /> 
-              </IconButton>
-              <IconButton aria-label="eliminar" onClick={() => handleOpenDeleteModal(rowData)}>      
-              <DeleteIcon />         
-              </IconButton>
-      </>
-    ) }
+
   ];
 
   return (

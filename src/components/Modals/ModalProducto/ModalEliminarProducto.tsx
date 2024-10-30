@@ -31,8 +31,6 @@ const ModalEliminarProducto: React.FC<ModalDeleteProductsProps> = ({ show, onHid
             }
         } catch (error) {
             console.error('Error al eliminar el producto:', error);
-            onDelete(); // Llama a la función onDelete
-            onHide(); // Cerramos el modal
         }
     }
 

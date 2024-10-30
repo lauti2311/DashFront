@@ -45,7 +45,7 @@ interface ModalPromocionProps {
     const productoService = new ArticuloManufacturadoService();
     const articuloInsumoService = new ArticuloInsumoService();
     const [productos, setProductos] = useState<ArticuloDto[]>([]);
-  
+
     const initialValues: Promocion = {
       id: promocionToEdit ? promocionToEdit.id : 0,
       eliminado: promocionToEdit ? promocionToEdit.eliminado : false,
@@ -311,20 +311,25 @@ interface ModalPromocionProps {
             onSubmit={async (values) => {
               try {
                 let promocion = undefined;
-  
+            
+                // Filtrar detalles duplicados antes de enviar la solicitud
+                const uniqueDetalles = detalles.filter(
+                  (detalle, index, self) =>
+                    index === self.findIndex((d) => d.articuloId === detalle.articuloId)
+                );
+            
                 if (promocionToEdit) {
-                                  
                   const sucursalesSeleccionadas = values.sucursales;
-                  values.promocionDetalle = detalles;
-                  values.precioPromocional = totalPrecioPromocional
-                  // añadimos todas las sucursales seleccionadas al array de sucursales en values
+                  values.promocionDetalle = uniqueDetalles;
+                  values.precioPromocional = totalPrecioPromocional;
+                  // Añadimos todas las sucursales seleccionadas al array de sucursales en values
                   values.sucursales = sucursalesSeleccionadas;
                   promocion = await promocionService.put(
                     url + "promociones",
                     values.id.toString(),
                     values
                   );
-  
+            
                   const promocionId = promocion.id.toString();
                   if (files.length > 0 && promocionId) {
                     handleUpload(promocionId);
@@ -332,26 +337,25 @@ interface ModalPromocionProps {
                 } else {
                   // Realizar todas las solicitudes 'post' de manera concurrente y recolectar sus respuestas
                   const sucursalesSeleccionadas = values.sucursales;
-                  // Ahora, en lugar de agregar una sola sucursal (como la de ID 1),
-                  // añadimos todas las sucursales seleccionadas al array de sucursales en values
+                  // Añadimos todas las sucursales seleccionadas al array de sucursales en values
                   values.sucursales = sucursalesSeleccionadas;
-                  values.promocionDetalle = detalles;
-                  values.precioPromocional = totalPrecioPromocional
+                  values.promocionDetalle = uniqueDetalles;
+                  values.precioPromocional = totalPrecioPromocional;
                   promocion = await promocionService.post(url + "promociones", values);
-  
+            
                   const promocionId = promocion.id.toString();
                   if (files.length > 0 && promocionId) {
                     handleUpload(promocionId);
                   }
                 }
-  
+            
                 getPromocion();
                 handleClose();
               } catch (error) {
                 console.error("Error al realizar la operación:", error);
               }
             }}
-          >
+            >
             {({ values, setFieldValue, isSubmitting  }) => (
               <Form autoComplete="off">
                 <div className="row">
@@ -475,6 +479,8 @@ interface ModalPromocionProps {
                     >
                       <option value={TipoPromocion.HAPPY_HOUR}>HAPPY_HOUR</option>
                       <option value={TipoPromocion.PROMOCION}>PROMOCIÓN</option>
+                      <option value={TipoPromocion.HAMBURGUESAS}>HAMBURGUESAS</option>
+                      
                     </Field>
                     <ErrorMessage
                       name="tipoPromocion"

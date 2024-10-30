@@ -49,7 +49,7 @@ export const ListaUnidadMedida = () => {
 
     useEffect(() => {
      fetchUnidades();
-    }, []);
+    }, [fetchUnidades]);
 
     const handleAddUnidad = () => {
         setUnidadMedidaToEdit(null);

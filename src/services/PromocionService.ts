@@ -23,4 +23,5 @@ export default class PromocionService extends BackendClient<Promocion> {
           throw error;
         }
       }
+      
 }
