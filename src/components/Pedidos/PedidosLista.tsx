@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Box, Typography, Container, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/redux";
@@ -28,7 +28,6 @@ export const ListaPedidos = () => {
   const pedidoService = new PedidoService();
   const [filteredData, setFilterData] = useState<Row[]>([]);
   const [pedidoToEdit, setPedidoToEdit] = useState<Pedido | null>(null);
-  const { sucursalId } = useParams();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currentDetallePedidos, setCurrentDetallePedidos] = useState([]);
@@ -39,26 +38,20 @@ export const ListaPedidos = () => {
 
   const fetchPedidos = useCallback(async () => {
     try {
-      const pedidos = (await pedidoService.getPedidosFiltrados(url + 'pedidos')).filter((v) => !v.eliminado);
-  
-      let pedidosFiltrados = pedidos;
-  
-      if (sucursalId) {
-        const sucursalIdNumber = parseInt(sucursalId);
-        pedidosFiltrados = pedidos.filter(pedido =>
-          pedido.sucursal &&
-          pedido.sucursal.id === sucursalIdNumber
-        );
-      }
-  
-      // Actualizar el estado con los pedidos obtenidos o filtrados
-      dispatch(setPedido(pedidosFiltrados));
-      setFilterData(pedidosFiltrados);
-      setOriginalData(pedidosFiltrados);
+      const pedidos = (await pedidoService.getAll(url + 'pedido')).filter((v) => !v.eliminado);
+
+      // Actualizar el estado con los pedidos obtenidos
+      dispatch(setPedido(pedidos));
+      setFilterData(pedidos);
+      setOriginalData(pedidos);
     } catch (error) {
       console.error("Error al obtener los pedidos:", error);
     }
-  }, [dispatch, pedidoService, url, sucursalId]);
+  }, [dispatch, pedidoService, url]);
+
+  useEffect(() => {
+    fetchPedidos();
+  }, []);
   
 
 
