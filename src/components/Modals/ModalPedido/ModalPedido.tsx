@@ -1,10 +1,8 @@
 import { SelectChangeEvent, Dialog, DialogTitle, DialogContent, Grid, Typography, Select, MenuItem, DialogActions } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import UsuarioService from "../../../services/UsuarioService";
 import { Estado } from "../../../types/enums/Estado";
 import Pedido from "../../../types/Pedido";
-import Usuario from "../../../types/Usuario";
 
 interface ModalPedidoProps {
     open: boolean;
@@ -15,45 +13,7 @@ interface ModalPedidoProps {
 
 const ModalPedido: React.FC<ModalPedidoProps> = ({ open, onClose, pedido, onSave }) => {
     const [estado, setEstado] = useState<Estado>(Estado.PENDIENTE);
-    const [availableStates, setAvailableStates] = useState<Estado[]>([]);
-    const [usuario, setUsuario] = useState<Usuario>();
-    const usuarioService = new UsuarioService();
-    const [usuarioIsLoading, setUsuarioIsLoading] = useState<boolean>(true);
-    const url = import.meta.env.VITE_API_URL;
-
-    useEffect(() => {
-        fetchUsuario();
-    }, []);
-
-    const fetchUsuario = async () => {
-        try {
-            const usuario = await usuarioService.getByEmail(url + "usuarioCliente/role/");
-            setUsuario(usuario);
-            setAvailableStates(getAvailableStates(usuario?.rol, pedido?.estado)); // Pasar el rol del usuario y el estado del pedido
-            console.log(usuario?.rol);
-        } catch (error) {
-            console.error("Error al obtener el usuario:", error);
-        } finally {
-            setUsuarioIsLoading(false);
-        }
-    };
-
-    const getAvailableStates = (role?: string, currentState?: Estado): Estado[] => {
-        let availableStates: Estado[] = [];
-        if (role === "CAJERO") {
-            availableStates = [Estado.PREPARACION, Estado.EN_DELIVERY, Estado.FACTURADO, Estado.RECHAZADO];
-        } else if (role === "COCINERO") {
-            availableStates = [Estado.TERMINADO];
-        } else {
-            availableStates = Object.values(Estado);
-        }
-
-        if (currentState && !availableStates.includes(currentState)) {
-            availableStates.push(currentState);
-        }
-
-        return availableStates;
-    };
+    const [availableStates, setAvailableStates] = useState<Estado[]>(Object.values(Estado));
 
     useEffect(() => {
         if (pedido) {
@@ -69,21 +29,9 @@ const ModalPedido: React.FC<ModalPedidoProps> = ({ open, onClose, pedido, onSave
         if (pedido) {
             onSave({ ...pedido, estado });
         }
-        console.log(usuario);
     };
 
     if (!pedido) return null;
-
-    if (usuarioIsLoading) {
-        return (
-            <div
-                style={{ height: "calc(100vh - 88px)" }}
-                className="d-flex flex-column justify-content-center align-items-center"
-            >
-                <div className="spinner-border" role="status"></div>
-            </div>
-        );
-    }
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
