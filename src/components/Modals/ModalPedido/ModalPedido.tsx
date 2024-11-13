@@ -40,7 +40,7 @@ const ModalPedido: React.FC<ModalPedidoProps> = ({ open, onClose, pedido, onSave
                 <Grid container spacing={3}>
                     <Grid item xs={6}>
                         <Typography variant="body1" style={{ fontSize: '18px', lineHeight: '1.6' }}>
-                            <strong>Hora Estimada Finalización:</strong> {pedido.horaEstimadaFinalizacion.toString()}
+                        <strong>Hora Estimada Finalización:</strong> {pedido.horaEstimadaFinalizacion?.toString() || 'N/A'}
                         </Typography>
                         <Typography variant="body1" style={{ fontSize: '18px', lineHeight: '1.6' }}>
                             <strong>Total:</strong> {pedido.total}
