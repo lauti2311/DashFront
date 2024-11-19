@@ -44,6 +44,7 @@ const TableComponent: React.FC<Props> = ({ data, columns, handleOpenEditModal, h
   const crearFactura = async (pedidoId: string, clienteEmail: string) => {
     try {
       await pedidoService.crearFactura(url, pedidoId);
+      console.log(facturaCreada);
       setFacturaCreada(true);
       enviarFactura(pedidoId, clienteEmail);
     } catch (error) {
