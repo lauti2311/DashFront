@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import SucursalService from '../../services/Sucursal';
 import { useState } from 'react';
 import { Dialog, DialogTitle, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { useAuth } from '../Login/AuthContext';
 
 interface BaseNavBarProps{
   title: string;
@@ -22,11 +23,17 @@ interface BaseNavBarProps{
 export const BaseNavBar = ({ title} : BaseNavBarProps) =>{
 
   const[dialogOpen, setDialogOpen] = useState(false);
+  const { logout } = useAuth(); // Usa el método logout del contexto
+
 
   const handleProfileMenuOpen = () => {
     setDialogOpen(true);
   }
   
+  const handleLogout = () => {
+    logout(); // Llama al método logout para cerrar la sesión
+    window.location.href = "/"; // Redirige al usuario a la página de login
+  };
 
   const handleMenuClose = () => {
     setDialogOpen(false);
@@ -97,12 +104,12 @@ return(
           <ListItemText primary= "Configuración"/>
         </ListItem>
         <Divider />
-        <ListItem button>
-          <ListItemIcon>
-            <LunchDiningOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary= "Cerrar Sesión"/>
-        </ListItem>
+        <ListItem button onClick={handleLogout}>
+      <ListItemIcon>
+        <LunchDiningOutlinedIcon />
+      </ListItemIcon>
+      <ListItemText primary="Cerrar Sesión" />
+    </ListItem>
 
       </List>
     </Dialog>
