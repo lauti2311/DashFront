@@ -12,7 +12,14 @@ export default class AuthClient extends BackendClient<any> {
   }
 
   async loginEmpleado(data: LoginDTO): Promise<LoginResponse> {
-    return this.post(`${this.baseUrl}/login`, data);
+    try {
+      const response = await this.post(`${this.baseUrl}/login`, data);
+      console.log("Login response:", response); // Log para depuración
+      return response;
+    } catch (error) {
+      console.error("Error en loginEmpleado:", error);
+      throw error;
+    }
   }
 
   async registerEmpleado(data: any): Promise<LoginResponse> {
