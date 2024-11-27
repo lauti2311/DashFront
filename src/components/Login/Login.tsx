@@ -29,7 +29,7 @@ const Login: React.FC = () => {
         const decodedToken: any = jwtDecode(response.jwt);
         const userRole = decodedToken.tipoEmpleado;
         if (userRole === "ADMIN") {
-          window.location.href = "/admin";
+          window.location.href = "/empresas";
         } else {
           window.location.href = "/empresas";
         }

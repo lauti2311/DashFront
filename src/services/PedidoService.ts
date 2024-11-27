@@ -11,7 +11,9 @@ export default class PedidoService extends BackendClient<Pedido> {
     const options: RequestInit = {
       method: "PUT",
       headers: {
-        
+        Accept: "application/json",
+        "Content-Type": "application/json",
+
       },
     };
     return this.request(path, options);
@@ -22,7 +24,8 @@ export default class PedidoService extends BackendClient<Pedido> {
     const options: RequestInit = {
       method: "GET",
       headers: {
-        
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     };
     console.log(`GET Request to: ${path}`);
