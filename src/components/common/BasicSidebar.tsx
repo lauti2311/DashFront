@@ -18,7 +18,7 @@ const { sucursalId} = useParams();
                         Dashboard
                     </CNavTitle>
                     <CNavItem>
-                        <Link to="/" className="nav-link" >
+                        <Link to="/inicio/:sucursalId" className="nav-link" >
                             <CIcon customClassName="nav-icon" icon={cilBarChart} />
                             Inicio
                         </Link>

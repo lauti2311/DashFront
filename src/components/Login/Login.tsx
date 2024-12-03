@@ -4,6 +4,7 @@ import AuthClient from "../../services/Login";
 import { useAuth } from "./AuthContext";
 import { LoginResponse } from "../../types/dto/LoginResponseDTO";
 import { jwtDecode } from "jwt-decode";
+import "./Login.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -45,38 +46,43 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto", padding: "1rem" }}>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%" }}
-          />
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="clave">Contraseña:</label>
-          <input
-            type="password"
-            id="clave"
-            value={clave}
-            onChange={(e) => setClave(e.target.value)}
-            required
-            style={{ width: "100%" }}
-          />
-        </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Cargando..." : "Iniciar Sesión"}
-        </button>
-      </form>
+    <div className="login-container">
+      <div className="login-stripe top-stripe"></div>
+      <div className="login-box">
+  <h1 className="welcome-text">¡Bienvenido!</h1>
+  <p className="welcome-subtext">Por favor, inicia sesión para continuar</p>
+  <form onSubmit={handleLogin} className="login-form">
+    <div className="form-group">
+      <label htmlFor="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        className="form-control"
+      />
     </div>
+    <div className="form-group">
+      <label htmlFor="password">Contraseña:</label>
+      <input
+        type="password"
+        id="password"
+        value={clave}
+        onChange={(e) => setClave(e.target.value)}
+        required
+        className="form-control"
+      />
+    </div>
+    {error && <div className="error-message">{error}</div>}
+    <button type="submit" className="login-button" disabled={isLoading}>
+      {isLoading ? "Cargando..." : "Iniciar Sesión"}
+    </button>
+  </form>
+</div>
+</div>
   );
 };
+
 
 export default Login;
