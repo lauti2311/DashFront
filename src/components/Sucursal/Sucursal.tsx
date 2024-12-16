@@ -26,6 +26,7 @@ import {
 import EliminarSucursal from "../Modals/ModalSucursal/EliminarSucursal";
 import ModalSucursal from "../Modals/ModalSucursal/ModalSucursal";
 import { BaseNavBar } from "../common/BaseNavbar";
+import { useAuth } from "../Login/AuthContext";
 
 interface Row {
   [key: string]: any;
@@ -41,6 +42,8 @@ export const Sucursales = () => {
   const [sucursalToEdit, setSucursalToEdit] = useState<Sucursal | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [casaMatriz, setCasaMatriz] = useState(false);
+  const {role} = useAuth();
+
 
 
   const fetchEmpresa = useCallback(async () => {
@@ -223,7 +226,7 @@ export const Sucursales = () => {
             alignItems="center"
             style={{ minHeight: "80vh", paddingTop: "1rem" }}
           >
-            {
+               {(role === 'ADMIN' || role === 'SUPERADMIN') && (
                 <Grid item xs={12} sm={6} md={4} onClick={handleAddSucursal}>
                   <Card
                     sx={{
@@ -263,7 +266,7 @@ export const Sucursales = () => {
                   </Card>
                 </Grid>
 
-            }
+            )}
 
             {filterData.map((sucursal) => (
               <Grid item xs={12} sm={6} md={4} key={sucursal.id}>

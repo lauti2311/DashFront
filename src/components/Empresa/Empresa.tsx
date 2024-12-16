@@ -15,6 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import EliminarEmpresa from '../Modals/ModalEmpresa/EliminarEmpresa';
 import { Link } from "react-router-dom";
 import { BaseNavBar } from '../common/BaseNavbar';
+import { useAuth } from '../Login/AuthContext';
 interface Row {
   [key: string]: any;
 }
@@ -26,6 +27,7 @@ export const Empresas = () => {
   const [filterData, setFilterData] = useState<Row[]>([]);
   const [empresaToEdit, setEmpresaToEdit] = useState<Empresa | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const {role} = useAuth();
 
   const fetchImages = useCallback(
     async (empresaId: string) => {
@@ -119,46 +121,46 @@ export const Empresas = () => {
                 alignItems="center"
                 style={{ minHeight: "80vh", paddingTop: "1rem" }}
             >
-                {
-                  <Grid item xs={12} sm={6} md={4} onClick={handleAddEmpresa}>
-                    <Card
-                        sx={{
-                            maxWidth: 345,
-                            boxShadow: 3,
-                            borderRadius: 16,
-                            cursor: "pointer",
-                            transition: "transform 0.3s",
-                            "&:hover": { transform: "scale(1.05)" },
-                        }}
+                {(role === 'ADMIN' || role === 'SUPERADMIN') && (
+              <Grid item xs={12} sm={6} md={4} onClick={handleAddEmpresa}>
+                <Card
+                  sx={{
+                    maxWidth: 345,
+                    boxShadow: 3,
+                    borderRadius: 16,
+                    cursor: "pointer",
+                    transition: "transform 0.3s",
+                    "&:hover": { transform: "scale(1.05)" },
+                  }}
+                >
+                  <CardContent
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      minHeight: 250,
+                    }}
+                  >
+                    <AddIcon sx={{ fontSize: 48, marginBottom: 1 }} />
+                    <Typography
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                      sx={{
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        color: "#333",
+                        marginTop: 1,
+                      }}
                     >
-                        <CardContent
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                height: "100%",
-                                minHeight: 250,
-                            }}
-                        >
-                            <AddIcon sx={{ fontSize: 48, marginBottom: 1 }} />
-                            <Typography
-                                gutterBottom
-                                variant="h6"
-                                component="div"
-                                sx={{
-                                    fontWeight: "bold",
-                                    textAlign: "center",
-                                    color: "#333",
-                                    marginTop: 1,
-                                }}
-                            >
-                                Agregar Empresa
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                }
+                      Agregar Empresa
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
                 {filterData.map((empresa) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} key={empresa.id}>
