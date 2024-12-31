@@ -12,19 +12,20 @@ export const Reportes = () => {
     const [hasta, setHasta] = useState<any>();
 
 
-    const generarExcel = (sucursalId: string | undefined, desde: any, hasta: any, type: string) => {
-
-        console.log(desde, hasta)
-
-        if(!(desde && hasta)) {
-            alert("Complete el desde y hasta para generar el informe")
+    const generarExcel = (sucursalId: string | undefined, desde: string, hasta: string, type: string) => {
+        if (!(desde && hasta)) {
+            alert("Complete el desde y hasta para generar el informe");
             return;
         }
-
-        desde = new Date(desde?.target?.value).toISOString();
-        hasta = new Date(hasta?.target?.value).toISOString()
-
-        window.open(`http://localhost:8080/pedido/${type}/${sucursalId}?desde=${desde}&hasta=${hasta}`, "_blank");
+    
+        // Convertir los valores directamente a Date
+        const desdeISO = new Date(desde).toISOString();
+        const hastaISO = new Date(hasta).toISOString();
+    
+        window.open(
+            `http://localhost:8080/pedido/${type}/${sucursalId}?desde=${desdeISO}&hasta=${hastaISO}`,
+            "_blank"
+        );
     }
 
 
