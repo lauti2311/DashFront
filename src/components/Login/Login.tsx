@@ -5,6 +5,7 @@ import { useAuth } from "./AuthContext";
 import { LoginResponse } from "../../types/dto/LoginResponseDTO";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -12,6 +13,11 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRegisterClick = () => {
+    navigate('/register');
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +85,7 @@ const Login: React.FC = () => {
       {isLoading ? "Cargando..." : "Iniciar Sesión"}
     </button>
   </form>
+  <button onClick={handleRegisterClick} className="register-button">Registrar</button>
 </div>
 </div>
   );
