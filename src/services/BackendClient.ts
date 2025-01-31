@@ -28,6 +28,11 @@ export default abstract class BackendClient<T> extends AbstractBackendClient<T> 
 
   protected async requestAll(path: string, options: RequestInit): Promise<T[]> {
     try {
+      options.headers = {
+        ...options.headers,
+        Authorization: "Bearer " + localStorage.getItem("token")
+      };
+      
       const response = await fetch(path, options);
       const text = await response.text();
 

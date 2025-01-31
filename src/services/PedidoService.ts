@@ -13,6 +13,7 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
 
       },
     };

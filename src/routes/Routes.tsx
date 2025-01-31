@@ -13,6 +13,7 @@ import { ListaUnidadMedida } from '../components/UnidadMedida/ListaUnidadMedida'
 import { ListaPedidos } from '../components/Pedidos/PedidosLista';
 import { Reportes } from '../components/Reportes/Reportes';
 import Login from '../components/Login/Login';
+import Register from '../components/Login/Register'; // Importar el componente Register
 import ProtectedRoute from '../components/Login/ProtectedRoute';
 
 const App: React.FC = () => {
@@ -20,6 +21,7 @@ const App: React.FC = () => {
     <Routes>
       {/* Ruta pública */}
       <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} /> {/* Nueva ruta para Register */}
 
       {/* Rutas protegidas */}
       <Route

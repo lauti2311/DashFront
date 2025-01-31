@@ -86,10 +86,10 @@ const ModalPedido: React.FC<ModalPedidoProps> = ({ open, onClose, pedido, onSave
                 </Grid>
             </DialogContent>
             <DialogActions style={{ marginTop: '20px' }}>
-                <Button onClick={onClose} color="primary" style={{ fontSize: '20px' }}>
+                <Button onClick={onClose} color="primary" style={{ fontSize: '20px', backgroundColor: '#fb6376', borderColor: '#fb6376' }}>
                     Cancelar
                 </Button>
-                <Button onClick={handleSave} color="primary" style={{ fontSize: '20px' }}>
+                <Button onClick={handleSave} color="primary" style={{ fontSize: '20px', backgroundColor: '#fb6376', borderColor: '#fb6376' }}>
                     Guardar
                 </Button>
             </DialogActions>
