@@ -23,7 +23,7 @@ export default class AuthClient extends BackendClient<any> {
   }
 
   async registerEmpleado(data: any): Promise<LoginResponse> {
-    return this.post(`${this.baseUrl}/registerEmpleado`, data);
+    return this.post(`${this.baseUrl}/register`, data);
   }
 
   async loginCliente(data: LoginDTO): Promise<LoginResponse> {

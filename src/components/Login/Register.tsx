@@ -3,31 +3,24 @@ import React, { useState } from "react";
 import AuthClient from "../../services/Login"; // Cambiamos el nombre del import a 'AuthClient' ya que es donde definiste el método registerEmpleado
 import { Rol } from "../../types/enums/Rol"; // Asegúrate de que el path sea correcto
 import "./Login.css"; // Usamos el mismo archivo de estilos
-
-interface RegisterData {
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  email: string;
-  clave: string;
-  fechaNacimiento: string;
-  tipoEmpleado: Rol;
-
-}
+import { Empleado } from "../../types/Empleado";
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
-  const [formData, setFormData] = useState<RegisterData>({
+  const [formData, setFormData] = useState<Empleado>({
+    id: 0, // or any default value
     nombre: "",
     apellido: "",
     telefono: "",
     email: "",
     clave: "",
-    fechaNacimiento: "",
+    fechaNacimiento: new Date(),
     tipoEmpleado: Rol.EMPLEADO, // Valor por defecto
-
+    eliminado: false // or any default value
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -44,10 +37,10 @@ const Register: React.FC = () => {
     try {
       const response = await authClient.registerEmpleado(formData);
       console.log("Register response:", response); 
-      if (response.jwt) { 
-        window.location.href = "/login"; 
-      } else {
+      if (response.error) { 
         setError(response.error || "Error desconocido al registrarse");
+      } else {
+        navigate("/"); 
       }
     } catch (err) {
       console.error("Error en handleSubmit:", err);
@@ -56,7 +49,6 @@ const Register: React.FC = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="login-container">
       <div className="login-stripe top-stripe"></div>
@@ -135,23 +127,6 @@ const Register: React.FC = () => {
               required
               className="form-control"
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="tipoEmpleado">Rol:</label>
-            <select 
-              id="tipoEmpleado" 
-              name="tipoEmpleado" 
-              value={formData.tipoEmpleado} 
-              onChange={handleChange}
-              required
-              className="form-control"
-            >
-              {Object.values(Rol).map((rol) => (
-                <option key={rol} value={rol}>
-                  {rol}
-                </option>
-              ))}
-            </select>
           </div>
           {/* <div className="form-group">
             <label htmlFor="sucursal_id">Sucursal ID:</label>
