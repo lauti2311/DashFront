@@ -132,3 +132,16 @@
   color: #555; /* Color del icono */
   padding: 0;
 }
+
+.back-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #fb6376;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}

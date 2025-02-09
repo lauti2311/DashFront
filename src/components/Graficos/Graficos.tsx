@@ -44,7 +44,7 @@ export const Graficos = () => {
     }
 
     const options = {
-        colors: ['#B19CD9', '#D9A6B1', '#B1D9D1']
+      colors: ['#fb6376', '#3b82f6', '#facc15', '#10b981', '#a855f7']
     }
 
     useEffect(() => {

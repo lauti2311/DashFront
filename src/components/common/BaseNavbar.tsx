@@ -6,11 +6,12 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+//import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
+//import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
-import Divider from '@mui/material/Divider';
-import { useParams } from 'react-router-dom';
+//import Divider from '@mui/material/Divider';
+import HomeIcon from '@mui/icons-material/Home';
+import { useParams, useNavigate } from 'react-router-dom';
 import SucursalService from '../../services/Sucursal';
 import { useState } from 'react';
 import { Dialog, DialogTitle, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
@@ -24,6 +25,7 @@ export const BaseNavBar = ({ title} : BaseNavBarProps) =>{
 
   const[dialogOpen, setDialogOpen] = useState(false);
   const { logout } = useAuth(); // Usa el método logout del contexto
+  const navigate = useNavigate();
 
 
   const handleProfileMenuOpen = () => {
@@ -37,6 +39,10 @@ export const BaseNavBar = ({ title} : BaseNavBarProps) =>{
 
   const handleMenuClose = () => {
     setDialogOpen(false);
+  };
+
+  const handleHomeClick = () => {
+    navigate('/empresas'); // Redirige a la página de empresas
   };
 
   const url = import.meta.env.VITE_API_URL;
@@ -77,6 +83,17 @@ return(
           <IconButton
             size="large"
             edge="end"
+            aria-label="home"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleHomeClick}
+            color="inherit"
+          >
+            <HomeIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            edge="end"
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
@@ -90,27 +107,12 @@ return(
     <Dialog onClose={handleMenuClose} open={dialogOpen}>
       <DialogTitle>Perfil</DialogTitle>
       <List>
-        <ListItem button>
-          <ListItemIcon>
-            <Person2OutlinedIcon />
-            
-          </ListItemIcon>
-          <ListItemText primary= "Perfil"/>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <SettingsOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary= "Configuración"/>
-        </ListItem>
-        <Divider />
         <ListItem button onClick={handleLogout}>
       <ListItemIcon>
         <LunchDiningOutlinedIcon />
       </ListItemIcon>
       <ListItemText primary="Cerrar Sesión" />
     </ListItem>
-
       </List>
     </Dialog>
   </Box>

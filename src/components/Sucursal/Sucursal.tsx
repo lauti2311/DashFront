@@ -231,11 +231,15 @@ export const Sucursales = () => {
                   <Card
                     sx={{
                       maxWidth: 345,
-                      boxShadow: 3,
-                      borderRadius: 16,
-                      cursor: "pointer",
-                      transition: "transform 0.3s",
-                      "&:hover": { transform: "scale(1.05)" },
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    cursor: "pointer",
+                    transition: "transform 0.3s, box-shadow 0.3s",
+                    "&:hover": {
+                      boxShadow: 6,
+                      backgroundColor: "#f5f5f5",
+                      transform: "scale(1.05)"
+                    },
                     }}
                   >
                     <CardContent

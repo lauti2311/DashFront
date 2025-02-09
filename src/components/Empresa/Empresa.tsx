@@ -127,10 +127,14 @@ export const Empresas = () => {
                   sx={{
                     maxWidth: 345,
                     boxShadow: 3,
-                    borderRadius: 16,
+                    borderRadius: 2,
                     cursor: "pointer",
-                    transition: "transform 0.3s",
-                    "&:hover": { transform: "scale(1.05)" },
+                    transition: "transform 0.3s, box-shadow 0.3s",
+                    "&:hover": {
+                      boxShadow: 6,
+                      backgroundColor: "#f5f5f5",
+                      transform: "scale(1.05)"
+                    },
                   }}
                 >
                   <CardContent
@@ -166,12 +170,16 @@ export const Empresas = () => {
                         <Grid item xs={12} sm={6} md={4} key={empresa.id}>
                             <Card
                                 sx={{
-                                    maxWidth: 345,
-                                    boxShadow: 3,
-                                    borderRadius: 16,
-                                    cursor: "pointer",
-                                    transition: "transform 0.3s",
-                                    "&:hover": { transform: "scale(1.05)" },
+                                  maxWidth: 345,
+                                  boxShadow: 3,
+                                  borderRadius: 2,
+                                  cursor: "pointer",
+                                  transition: "transform 0.3s, box-shadow 0.3s",
+                                  "&:hover": {
+                                    boxShadow: 6,
+                                    backgroundColor: "#f5f5f5",
+                                    transform: "scale(1.05)"
+                                  },
                                 }}
                             >
                                 {empresa.imagenes && empresa.imagenes.length > 0 && empresa.imagenes[0].url !== "" && (

@@ -82,22 +82,41 @@ export const Reportes = () => {
                 </Row>
                 <Row className={"p-3"}>
                     <Col>
-                        <a className="btn btn-primary text-light col-md-12"
-                            onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/insumos/excel')}>Descargar ranking productos</a>
+                    <a
+                        className="btn btn-primary text-light col-md-12"
+                        style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+                        onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/insumos/excel')}
+                    >
+                        Descargar ranking productos</a>
                     </Col>
                     <Col>
-                        <a className="btn btn-primary text-light col-md-12"
-                            onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/pedidos/cliente/excel')}>Descargar pedidos por cliente</a>
-                    </Col>
+                    <a
+                        className="btn btn-primary text-light col-md-12"
+                        style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+                        onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/pedidos/cliente/excel')}
+                    >
+                        Descargar pedidos por cliente
+                    </a>
+                </Col>
                 </Row>
                 <Row className={"p-3"}>
                     <Col>
-                        <a className="btn btn-primary text-light col-md-12"
-                            onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/ingresos/excel')}>Descargar ingresos</a>
+                    <a
+                        className="btn btn-primary text-light col-md-12"
+                        style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+                        onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/ingresos/excel')}
+                    >
+                        Descargar ingresos
+                    </a>
                     </Col>
                     <Col>
-                        <a className="btn btn-primary text-light col-md-12"
-                            onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/ganancias/excel')}>Descargar ganancias</a>
+                    <a
+                        className="btn btn-primary text-light col-md-12"
+                        style={{ backgroundColor: '#fb6376', borderColor: '#fb6376' }}
+                        onClick={() => generarExcel(sucursalId, desde, hasta, 'ranking/ganancias/excel')}
+                    >
+                        Descargar ganancias
+                    </a>
                     </Col>
                 </Row>
                 <hr/>

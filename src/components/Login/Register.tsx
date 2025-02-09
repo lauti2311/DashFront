@@ -27,10 +27,20 @@ const Register: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$/;
+    return regex.test(password);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    if (!validatePassword(formData.clave)) {
+      setError("La contraseña debe tener más de 6 caracteres, al menos una mayúscula y un número.");
+      setIsLoading(false);
+      return;
+    }
 
     const authClient = new AuthClient();
 
@@ -44,10 +54,14 @@ const Register: React.FC = () => {
       }
     } catch (err) {
       console.error("Error en handleSubmit:", err);
-      setError("Error al registrarse");
+      setError("La contraseña debe tener más de 6 caracteres, al menos una mayúscula y un número.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleBackClick = () => {
+    navigate('/');
   };
   return (
     <div className="login-container">
@@ -115,6 +129,9 @@ const Register: React.FC = () => {
               required
               className="form-control"
             />
+              <small className="form-text text-muted">
+              La contraseña debe tener más de 6 caracteres, al menos una mayúscula y un número.
+            </small>
           </div>
           <div className="form-group">
             <label htmlFor="fechaNacimiento">Fecha de Nacimiento:</label>
@@ -143,6 +160,9 @@ const Register: React.FC = () => {
           {error && <div className="error-message">{error}</div>}
           <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? "Registrando..." : "Registrarse"}
+          </button>
+          <button type="button" className="back-button" onClick={handleBackClick}>
+            Volver
           </button>
         </form>
       </div>

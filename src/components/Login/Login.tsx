@@ -48,7 +48,7 @@ const Login: React.FC = () => {
       }
     } catch (err) {
       console.error("Error en handleLogin:", err);
-      setError("Error al comunicarse con el servidor");
+      setError("Contraseña Incorrecta");
     } finally {
       setIsLoading(false);
     }
