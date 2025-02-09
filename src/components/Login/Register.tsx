@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import AuthClient from "../../services/Login"; // Cambiamos el nombre del import a 'AuthClient' ya que es donde definiste el método registerEmpleado
-import { Rol } from "../../types/enums/Rol"; // Asegúrate de que el path sea correcto
-import "./Login.css"; // Usamos el mismo archivo de estilos
+import AuthClient from "../../services/Login"; 
+import { Rol } from "../../types/enums/Rol"; 
+import "./Login.css"; 
 import { Empleado } from "../../types/Empleado";
 import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState<Empleado>({
-    id: 0, // or any default value
+    id: 0, 
     nombre: "",
     apellido: "",
     telefono: "",
     email: "",
     clave: "",
     fechaNacimiento: new Date(),
-    tipoEmpleado: Rol.EMPLEADO, // Valor por defecto
-    eliminado: false // or any default value
+    tipoEmpleado: Rol.EMPLEADO,
+    eliminado: false 
   });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
