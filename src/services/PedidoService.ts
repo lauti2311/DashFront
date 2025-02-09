@@ -27,6 +27,8 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+
       },
     };
     console.log(`GET Request to: ${path}`);
@@ -41,6 +43,8 @@ export default class PedidoService extends BackendClient<Pedido> {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token")
+
           
         },
       });
@@ -64,6 +68,8 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+
       },
     };
     return (this.request(path, options) as unknown) as any[][];
@@ -77,6 +83,8 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+
         
       },
     };
@@ -91,6 +99,8 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+
         
       },
     };
@@ -105,6 +115,8 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+
         
       },
     };
@@ -118,6 +130,7 @@ export default class PedidoService extends BackendClient<Pedido> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        
         
       },
     };

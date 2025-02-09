@@ -6,12 +6,15 @@ import { LoginResponse } from "../../types/dto/LoginResponseDTO";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 import { useNavigate } from 'react-router-dom';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [clave, setClave] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [mostrarClave, setMostrarClave] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -55,41 +58,50 @@ const Login: React.FC = () => {
     <div className="login-container">
       <div className="login-stripe top-stripe"></div>
       <div className="login-box">
-  <h1 className="welcome-text">¡Bienvenido!</h1>
-  <p className="welcome-subtext">Por favor, inicia sesión para continuar</p>
-  <form onSubmit={handleLogin} className="login-form">
-    <div className="form-group">
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="form-control"
-      />
+        <h1 className="welcome-text">¡Bienvenido!</h1>
+        <p className="welcome-subtext">Por favor, inicia sesión para continuar</p>
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña:</label>
+            <div className="password-wrapper">
+              <input
+                type={mostrarClave ? 'text' : 'password'}
+                id="password"
+                value={clave}
+                onChange={(e) => setClave(e.target.value)}
+                required
+                className="form-control"
+              />
+              <button 
+                type="button" 
+                className="show-password-button" 
+                onClick={() => setMostrarClave(!mostrarClave)}
+                aria-label={mostrarClave ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {mostrarClave ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
+          </div>
+          {error && <div className="error-message">{error}</div>}
+          <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
+        </form>
+        <button onClick={handleRegisterClick} className="register-button">Registrar</button>
+      </div>
     </div>
-    <div className="form-group">
-      <label htmlFor="password">Contraseña:</label>
-      <input
-        type="password"
-        id="password"
-        value={clave}
-        onChange={(e) => setClave(e.target.value)}
-        required
-        className="form-control"
-      />
-    </div>
-    {error && <div className="error-message">{error}</div>}
-    <button type="submit" className="login-button" disabled={isLoading}>
-      {isLoading ? "Cargando..." : "Iniciar Sesión"}
-    </button>
-  </form>
-  <button onClick={handleRegisterClick} className="register-button">Registrar</button>
-</div>
-</div>
   );
 };
-
 
 export default Login;

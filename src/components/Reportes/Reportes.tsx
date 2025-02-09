@@ -3,6 +3,8 @@ import {Col, Row, Form} from "react-bootstrap";
 import {useState} from "react";
 import {useParams} from "react-router-dom";
 import { Graficos } from "../Graficos/Graficos";
+import { saveAs } from 'file-saver';
+
 
 export const Reportes = () => {
 
@@ -12,21 +14,34 @@ export const Reportes = () => {
     const [hasta, setHasta] = useState<any>();
 
 
-    const generarExcel = (sucursalId: string | undefined, desde: string, hasta: string, type: string) => {
+    const generarExcel = async (sucursalId: string | undefined, desde: string, hasta: string, type: string) => {
         if (!(desde && hasta)) {
-            alert("Complete el desde y hasta para generar el informe");
-            return;
+          alert("Complete el desde y hasta para generar el informe");
+          return;
         }
     
-        // Convertir los valores directamente a Date
         const desdeISO = new Date(desde).toISOString();
         const hastaISO = new Date(hasta).toISOString();
+        const token = localStorage.getItem("token");
     
-        window.open(
-            `http://localhost:8080/pedido/${type}/${sucursalId}?desde=${desdeISO}&hasta=${hastaISO}`,
-            "_blank"
-        );
-    }
+        try {
+          const response = await fetch(`http://localhost:8080/pedido/${type}/${sucursalId}?desde=${desdeISO}&hasta=${hastaISO}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+    
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+    
+          const blob = await response.blob();
+          saveAs(blob, `${type}.xlsx`);
+        } catch (error) {
+          console.error('Error al generar el Excel:', error);
+        }
+      };
 
 
 
