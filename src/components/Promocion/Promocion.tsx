@@ -135,8 +135,8 @@ const onSearch = (query: string) => {
   const columns: Column[] = [
     // { id: "id", label: "Id", renderCell: (rowData) => <>{rowData.id}</> },
     { id: "denominacion", label: "Nombre", renderCell: (rowData) => <>{rowData.denominacion}</> },
-    { id: "horaDesde", label: "Fecha Desde", renderCell: (rowData) => <>{rowData.horaDesde}</> },
-    { id: "horaHasta", label: "Fecha Desde", renderCell: (rowData) => <>{rowData.horaHasta}</> },
+    { id: "horaDesde", label: "Hora Desde", renderCell: (rowData) => <>{rowData.horaDesde}</> },
+    { id: "horaHasta", label: "Hora Hasta", renderCell: (rowData) => <>{rowData.horaHasta}</> },
     { id: "fechaDesde", label: "Fecha Desde", renderCell: (rowData) => <>{rowData.fechaDesde}</> },
     { id: "fechaHasta", label: "Fecha Hasta", renderCell: (rowData) => <>{rowData.fechaHasta}</> },
     { id: "descripcionDescuento", label: "Descripcion Descuento", renderCell: (rowData) => <>{rowData.descripcionDescuento}</> },
