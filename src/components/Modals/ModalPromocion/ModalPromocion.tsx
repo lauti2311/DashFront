@@ -479,7 +479,6 @@ interface ModalPromocionProps {
                     >
                       <option value={TipoPromocion.HAPPY_HOUR}>HAPPY_HOUR</option>
                       <option value={TipoPromocion.PROMOCION}>PROMOCIÓN</option>
-                      <option value={TipoPromocion.HAMBURGUESAS}>HAMBURGUESAS</option>
                       
                     </Field>
                     <ErrorMessage
